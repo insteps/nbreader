@@ -41,6 +41,7 @@ _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/li
 ## D. Fix Directory Permissions
 
 **Make sure following directory/files are web writable**
+
 1. `var/newsbeuter/db`
 2. `var/newsbeuter/data`
 3. `var/newsbeuter/session`
