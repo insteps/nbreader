@@ -12,7 +12,7 @@ _NOTE: Alpha-release_
 3. Search on active rss items.
 4. Responsive layout that adapts on mobile/desktop devices.
 5. Mark article as read (manual).
-6. Support for multiple databases (top category node).
+6. Support for multiple databases.
 7. Search multiple databases (cli only for now).
 
 ## Features (TODO)

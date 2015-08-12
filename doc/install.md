@@ -4,7 +4,7 @@
 
 1. Download and install CodeIgniter-3.0.0.
 2. Download 3rd party libs/css used in application,
-   extract libs content it in public/lib/<other web libs>
+   extract libs content it in `public/lib/`
 
 _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/lib.tar.gz`_
 
@@ -28,6 +28,7 @@ _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/li
 
 1. Add rss/atom feeds url in 'urls list file'.
    See `config/readme.notes`
+
 2. For every url list file in `config/url.local`
    there needs to be a corresponding database file
    in `var/newsbeuter/db`.
@@ -47,8 +48,9 @@ _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/li
    if you want to keep things simple and store all 
    data into single file.
 
-
 3. If so far things seem ok, run `sh run.sh config`
+
+_Note: you need to run `sh run.sh config` every time you edit files in `config/url/`_
 
 
 ## D. Fix Directory Permissions
