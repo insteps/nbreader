@@ -1,0 +1,168 @@
+/* 
+test
+*/
+
+	::selection { background-color: #E13300; color: white; }
+	::-moz-selection { background-color: #E13300; color: white; }
+
+	body {
+		background-color: #fff;
+		margin: 5px 0px 5px 0px;
+		padding-top: 50px;
+/*		font: 13px/20px normal Helvetica, Arial, sans-serif;*/
+		color: #4F5155;
+	}
+
+	.content {
+		margin: 0px;
+		border: 1px solid #D0D0D0;
+		box-shadow: 0 0 8px #D0D0D0;
+	}
+	
+	#body {
+		margin: 0 15px 0 15px;
+	}
+	
+	div.footer, p.footerX {
+		text-align: right;
+		font-size: 11px;
+		border-top: 1px solid #D0D0D0;
+		line-height: 32px;
+		padding: 0 10px 0 10px;
+		margin: 20px 0 0 0;
+	}
+
+	a {
+		color: #003399;
+		background-color: transparent;
+		font-weight: normal;
+	}
+
+	h1 {
+		color: #444;
+		background-color: transparent;
+		border-bottom: 1px solid #D0D0D0;
+		font-size: 19px;
+		font-weight: normal;
+		margin: 0 0 14px 0;
+		padding: 14px 15px 10px 15px;
+	}
+
+	code {
+		font-family: Consolas, Monaco, Courier New, Courier, monospace;
+		font-size: 12px;
+		background-color: #f9f9f9;
+		border: 1px solid #D0D0D0;
+		color: #002166;
+		display: block;
+		margin: 14px 5px 14px 5px;
+		padding: 12px 10px 12px 10px;
+	}
+
+	.grid-gutter-width {}
+
+
+/*.content-wrap .container,
+.content-wrap .container-fluid,
+*/
+.content-wrap .col-md-4,
+.bc-wrap .col-xs-6
+{
+  margin: 0px !important;
+  padding: 0px 5px !important;
+  
+}
+
+#navbar-header .btn {
+  margin-top: 8px;
+}
+#navbar .dropdown {
+}
+
+.breadcrumb {
+  margin: 0px 0px 2px 10px !important;
+  padding: 2px 5px !important;
+}
+
+.bc-wrap .col-xs-12,
+.sidebar .panel-body,
+.sidebar .list-group {
+  margin: 0px; padding: 0px;
+}
+
+.sidebar div.l0 .glyphicon { padding-left: 0px;  }
+.sidebar div.l1 .glyphicon { padding-left: 10pt; }
+.sidebar div.l2 .glyphicon { padding-left: 20pt; }
+.sidebar div.l3 .glyphicon { padding-left: 30pt; }
+.sidebar div.l4 .glyphicon { padding-left: 40pt; }
+.sidebar div.l5 .glyphicon { padding-left: 50pt; }
+.sidebar div.l6 .glyphicon { padding-left: 60pt; }
+#rsslist div .glyphicon { padding-right: 4px; }
+
+#collapseOne .list-group-item { padding: 5px 5px; border: 0px; }
+#collapseOne .list-group-item .text { display: inline-block; overflow: hidden; white-space: nowrap; }
+#collapseOne .l1 .list-group-item .text { width: 71%; }
+#collapseOne .l2 .list-group-item .text { width: 66%; }
+#collapseOne .l3 .list-group-item .text { width: 61%; }
+#collapseOne .l4 .list-group-item .text { width: 56%; }
+
+#collapseOne a.activexml .badge { background-color: #2B6699; color: white; }
+#collapseOne div.hiddenNO { display: block !important; }
+#collapseOne a.hiddenYES { display: none !important; }
+#collapseOne a.list-group-item span.allleft { padding-left: 0; }
+
+#rss .rss-items { margin-bottom: 5px; }
+#rss .list-group-item { background-color: #eee; }
+#rss .pubdate { float: right; padding: 0px 0px 0px 5px; font-size: 85%; }
+#rss .author { font-weight: bold; display: block; float: right; font-size: 85%; }
+#rss .title { display: block; float: none; font-size: 95%; }
+#rss .glyphicon-cog { float: right; margin-top: -10px; }
+#rss .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }
+#rss .red { color: red; }
+#rss .blue { color: blue; }
+#rss .yellow { color: yellow; }
+#rss .green { color: green; }
+#rss .unread { background-color: #fff; }
+#rss .unread .author { color: blue; }
+.rss .pagination { margin-top: 10px; }
+
+
+#rssview .pager-simple:first-child {
+  float: right;
+}
+#rssview .author,
+#rssview .pubdate {
+  font-size: 90%;
+}
+#rssview .readtog {
+  float: right;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+  #contentX { display: none; }
+  #sidebarX {
+    float: left; position: absolute;
+    top: 55px; left: 0px; max-height: 400px;
+    border: 1px solid red;
+    
+  }
+}
+
+@media all and (min-width: 64.000em) {
+  #navbar-header .btn {
+    display: none;
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+  
+}
+
+

@@ -1,0 +1,14 @@
+ 
+
+1. url/<file> cannot have spaces
+2. url/<file> should be of simple format i.e.
+      <url> "/some/category"
+      see, urls.sample (category is required)
+3. Keep url/ directory only for urls files.
+
+4. Some files/directory are generated in config folder,
+   i.e baseurl, dbname, urls.db, url.local
+   DO NOT ALTER OR DELETE THEM
+   If they are missing or corrupted run `config.sh` to 
+   regenerate them again.
+
