@@ -41,7 +41,7 @@ fi
 donedir="$DONEDIR/$YEAR/$MONTH";
 
 urldb="$CONFIGDIR/urls.db"
-feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep '^http')
+feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep -m 2 '^.*')
 #echo $feedsurl
 echo -e "${cBROWN}EPOCH -> $EPOCH${cNORMAL}";
 isEpoch=0

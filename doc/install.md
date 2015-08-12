@@ -22,7 +22,7 @@ _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/li
 
 5. Make sure feeds web url is properly installed and set.
 
-6. Make sure php or codeiginter's session path is set.
+6. Make sure Php or CodeIgniter's session path is set.
 
 ## C. Create rss/atom list file
 
