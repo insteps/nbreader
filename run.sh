@@ -53,7 +53,7 @@ fi
 
 #usage: sh run.sh search <search text> <limit>
 if [ "$1" = 'search' ]; then
-  sh $SCRIPTDIR/search.sh $2 $3;
+  sh $SCRIPTDIR/search.sh "$2" "$3";
 fi
 
 if [ "$1" = 'config' ]; then
