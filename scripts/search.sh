@@ -48,12 +48,11 @@ for db in $dbs; do
     str1=$str1" ATTACH DATABASE '$db' as $_db; ";
 
     if [ "$n" -eq 1 ]; then
-        str="select # from $_db.rss_item "
+        str="select * from $_db.rss_item "
     else
-        str=" union all select # from $_db.rss_item "
+        str=" union all select * from $_db.rss_item "
     fi
     str2=$str2$str;
-    str2=${str2/\#/"*"};
 
 done;
 
