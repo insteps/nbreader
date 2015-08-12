@@ -29,7 +29,7 @@ _NOTE: Alpha-release_
 ## Why an hybrid application
 
 1. Works for me !
-2. Nice cli support
+2. Nice cli support, simple database.
 3. Simple back-end, don't need to bother rss parsing.
 
 ## Requirements / Dependencies
