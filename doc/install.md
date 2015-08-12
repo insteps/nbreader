@@ -18,10 +18,13 @@
    if you want to keep things simple and store all 
    data into single file.
 
-## B. 3rd Party libs
+## B. 3rd Party frameworks/libs
 
-1. Download 3rd party libs/css used in application,
-   unzip it in public/lib/<other web libs>
+1. Download and install CodeIgniter-3.0.0.
+2. Download 3rd party libs/css used in application,
+   extract libs content it in public/lib/<other web libs>
+
+_For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/lib.tar.gz`_
 
 ## C. Configs
 

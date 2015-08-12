@@ -22,7 +22,7 @@ _NOTE: Alpha-release_
 5. ...
 6. See image doc/layout-alpha-todo.png for marked items as TODO.
 
-![Layout](https://github.com/insteps/nbreader/blob/master/doc/layout-alpha-todo.png)
+![Layout](http://dev1.insteps.net/nbreader/layout-alpha-todo.png)
 
 ## Why an hybrid application
 
@@ -37,8 +37,9 @@ _NOTE: Alpha-release_
 3. Wget
 4. PHP 5.4+
 5. Any PHP supporting web-server (tested on Apache with .htaccess file support).
-6. Fossil scm, https://www.fossil-scm.org  (optional),
+6. CodeIgniter-3.x (PHP Framework)
+7. Fossil scm, https://www.fossil-scm.org  (optional),
    easy way is download the precompiled single binary file.
-7. Jq (optional)
-8. 
+8. Jq (optional)
+9. 
 
