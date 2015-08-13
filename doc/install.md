@@ -50,7 +50,7 @@ _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/li
 
 3. If so far things seem ok, run `sh run.sh config`
 
-_Note: you need to run `sh run.sh config` every time you edit files in `config/url/`_
+_Note: you need to run `sh run.sh config` every time you edit/update files in `config/url/`_
 
 
 ## D. Fix Directory Permissions
@@ -63,9 +63,9 @@ _Note: you need to run `sh run.sh config` every time you edit files in `config/u
 
 ## E. Issues
 
-1. If you notice missing `var/newsbeuter/data/meta.json` (re-check permission),
+1. If you notice missing `var/newsbeuter/data/meta.json` (re-check folder permissions),
    or if its too small (less than 50 bytes), with no rss related data,
-   just delete it and refresh your browser.
+   then just delete it and refresh your browser.
    (Will think of a better solution sooner)
 
 

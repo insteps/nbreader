@@ -14,6 +14,8 @@ _NOTE: Alpha-release_
 5. Mark article as read (manual).
 6. Support for multiple databases.
 7. Search multiple databases (cli only for now).
+8. Rest api for accessing via web (json).
+9. Convert existing newsbeuter db to nbreader format (experimental).
 
 ![Layout](http://dev1.insteps.net/nbreader/layout-features.png)
 
@@ -28,7 +30,7 @@ _NOTE: Alpha-release_
 
 ![Layout](http://dev1.insteps.net/nbreader/layout-alpha-todo.png)
 
-## Why an hybrid application
+## Why a hybrid application
 
 1. Works for me !
 2. Nice cli support, simple database.
