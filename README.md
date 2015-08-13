@@ -15,6 +15,8 @@ _NOTE: Alpha-release_
 6. Support for multiple databases.
 7. Search multiple databases (cli only for now).
 
+![Layout](http://dev1.insteps.net/nbreader/layout-features.png)
+
 ## Features (TODO)
 
 1. Add way to mark/filter articles, eg. flag, tag and bookmark.
