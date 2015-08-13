@@ -61,6 +61,13 @@ _Note: you need to run `sh run.sh config` every time you edit files in `config/u
 2. `var/newsbeuter/data`
 3. `var/newsbeuter/session`
 
+## E. Issues
+
+1. If you notice missing `var/newsbeuter/data/meta.json` (re-check permission),
+   or if its too small (less than 50 bytes), with no rss related data,
+   just delete it and refresh your browser.
+   (Will think of a better solution sooner)
+
 
 
 **ENJOY !**
