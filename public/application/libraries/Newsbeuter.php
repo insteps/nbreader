@@ -84,6 +84,17 @@ class Newsbeuter
     // --------------------------------------------------------------------
 
 
+    public function get_version()
+    {
+        $file = $this->_newsbeuter_config['newsbeuter']['be']['path'].'/VERSION';
+        if (file_exists($file))
+        {
+            $flist = preg_split( '/[\\n\\s]/', file_get_contents($file) );
+            return trim($flist[0]);
+        }
+        return '';
+    }
+
     public function check_valid_dbname($name = '')
     {
         $c = $this->_newsbeuter_config;

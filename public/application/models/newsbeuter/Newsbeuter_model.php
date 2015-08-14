@@ -39,6 +39,13 @@ class Newsbeuter_model extends CI_Model
 
     }
 
+    public function get_version()
+    {
+        $apiurl = $this->newsbeuter->get_rss_api_url();
+        $a = file_get_contents($apiurl . "/version");
+        return json_decode($a, TRUE);
+    }
+
     public function get_max_rss_item_id()
     {
 

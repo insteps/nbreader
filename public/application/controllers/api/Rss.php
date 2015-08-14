@@ -45,6 +45,7 @@ class Rss extends REST_Controller {
         $dbname = $this->get('cat');
 
         $class = $this->uri->rsegment(2, 0);
+
         if ($class == 'appdb')
         {
             # test
@@ -57,9 +58,10 @@ class Rss extends REST_Controller {
                 $this->response(['error' => 'Invalid App db'], 404);
             }
 
-            //$this->load->database($db);
+            $this->load->database($db);
         }
-        if ($class !== 'category' && $class !== 'meta' && $class !== 'appdb')
+        if ($class !== 'category' && $class !== 'meta'
+             && $class !== 'appdb' && $class !== 'version')
         {
             # verify valid/active dbname
             if ($this->_check_valid_dbname($dbname)
@@ -77,11 +79,25 @@ class Rss extends REST_Controller {
                 $this->response(['error' => 'Invalid category'], 404);
             }
 
-            //$this->load->database($db);
+            $this->load->database($db);
         }
 
-        $this->load->database($db);
+        //$this->load->database($db);
 
+    }
+
+    public function version_get()
+    {
+        $data = array();
+        $data['version'] = $this->_get_version();
+        if ($data)
+        {
+            $this->response($data, 200);
+        }
+        else
+        {
+            $this->response(['error' => 'Version file not found'], 404);
+        }
     }
 
     public function appdb_get() # TODO
@@ -476,6 +492,11 @@ class Rss extends REST_Controller {
 
 
 
+    protected function _get_version()
+    {
+        $this->load->library('newsbeuter');
+        return $this->newsbeuter->get_version();
+    }
 
     protected function _check_valid_dbname($name)
     {
