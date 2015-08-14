@@ -1,10 +1,10 @@
  
 <div class="content">
   <h1>Welcome!
-<div class="btn-group" role="group" aria-label="...">
+<span class="btn-group" role="group" aria-label="...">
   <button type="button" class="btn btn-default btn-xs">Prev</button>
   <button type="button" class="btn btn-default btn-xs">Next</button>
-</div>
+</span>
 </h1>
 
   <div id="body">

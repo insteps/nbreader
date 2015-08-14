@@ -1,5 +1,5 @@
 
-<div class="bc-wrap container-fluid collapse in" aria-expanded="false">
+<div class="bc-wrap container-fluid collapse in">
 <div class="row">
 
 <div id='breadcrumb' class="col-xs-12">
