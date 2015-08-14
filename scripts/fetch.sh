@@ -114,6 +114,10 @@ fetch_by_url() {
     printf "${cBWHITE}fetch::by-url ->${cNORMAL} $url\n";
     local query='select rssurl from rss_url where rssurl='"'$url';";
     local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
+    if [ ! $s ]; then
+        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        return;
+    fi
     local extfetch="$RUNDIR/fetch/$epoch";
     echo "$s" > "$extfetch"
     for url in $s; do

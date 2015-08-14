@@ -135,6 +135,7 @@ update_fetch() {
 
     # 2a. commit rss/atom feed files
     cd "$APPDIR"
+    if [ ! -f $RUNDIR/fetch/$EPOCH.done ]; then exit 0; fi;
     printf "${cBBLUE}Prep committing -> fetch:${cNORMAL} $RUNDIR/fetch/$EPOCH\n"
     mkdir -p $donedir;
     cp "$RUNDIR/fetch/$EPOCH.done" "$RUNDIR/update/.todo/$EPOCH.todo"
@@ -209,6 +210,10 @@ update_by_tag() {
 update_by_hash() {
     query="select rssurl from rss_url where sha1sum='$2';";
     url=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
+    if [ ! $url ]; then
+        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        exit 0;
+    fi
     update_by_url 'url' $url;
 }
 
