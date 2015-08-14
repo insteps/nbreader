@@ -129,6 +129,10 @@ fetch_by_tag() {
     printf "${cBWHITE}fetch::by-tag ->${cNORMAL} $tag\n";
     local query='select rssurl from rss_url where tags='"'$tag';";
     local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
+    if [ ! $s ]; then
+        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        return;
+    fi
     local extfetch="$RUNDIR/fetch/$epoch";
     echo "$s" > "$extfetch"
     for url in $s; do
@@ -145,6 +149,10 @@ fetch_by_tagfolder() {
     local query='select rssurl from rss_url where tags like '"'$tag/%'"";";
     local s=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     local extfetch="$RUNDIR/fetch/$epoch";
+    if [ ! $s ]; then
+        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        exit 0;
+    fi
     echo "$s" > "$extfetch"
     while read url; do
         cd $APPDIR;
