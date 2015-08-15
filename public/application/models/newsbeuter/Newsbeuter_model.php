@@ -254,11 +254,6 @@ class Newsbeuter_model extends CI_Model
                         $url = trim($url);
                         $title = trim(@$f['query'][$url]['title']);
                         //$title = ($title) ? $title : @$aa[$c][$url]['title']; //not needed, see $f
-
-                        # Sanitize / filter 'title'
-                        $filter['textonly'] = 'yes'; // (mandatory filter)
-                        $title = $this->newsbeuter->apply_security_filter($filter, $title);
-
                         $title = ($title == '') ? 'untitled' : $title;
 
                         if (array_key_exists($url, $d['query'])) {
