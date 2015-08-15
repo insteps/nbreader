@@ -172,16 +172,18 @@ class Newsbeuter
     }
 
     ## Apply Security related filter on RSS contents/text
-    public function apply_security_filter($opts = array(), $data = array())
+    public function apply_security_filter($opts = array(), $str = '')
     {
         $this->CI->load->helper('security');
         foreach($opts as $k => $v)
         {
+
             if($k == 'img')
             {
-                $data['content'] = strip_image_tags($data['content']);
-                $data['content'] = preg_replace(array('#</img>#'), '', $data['content']);
+                $str = strip_image_tags($str);
+                $str = preg_replace(array('#</img>#'), '', $str);
             }
+
             if($k == 'default')
             {
                 $pat = array('/<iframe/', '#</iframe#', '/<img/', '#</img#',
@@ -200,14 +202,22 @@ class Newsbeuter
                              '<noembed/', '</noembed',
                              '<nobject/', '</nobject'
                             );
-                $data['content'] = preg_replace($pat, $rep, $data['content']);
+                $str = preg_replace($pat, $rep, $str);
             }
+
+            if($k == 'textonly')
+            {
+                $str = strip_tags($str);
+                $str = htmlentities($str, ENT_QUOTES); //of whats leftover
+            }
+
             if($k == 'xss')
             {
             }
+
         }
 
-        return $data;
+        return $str;
 
     }
 

@@ -2,8 +2,7 @@
 
 /**
  * CodeIgniter RSS Client Model (Fetch via RSS Rest API)
- *
- * A basic model for Newsbeuter Rssfeeds
+ * A basic data model + api wrapper for Newsbeuter Rssfeeds
  *
  * @package         CodeIgniter
  * @subpackage      Models
@@ -18,7 +17,8 @@
 | -------------------------------------------------------------------
 | RSS REST API ACCESS DATA MODELS
 | -------------------------------------------------------------------
-| This file will contain the methods needed to access rss api.
+| This file contains methods needed to access rss api and data
+|   internally, suited best from controllers.
 |
 | -------------------------------------------------------------------
 | EXPLANATION OF VARIABLES
@@ -34,7 +34,6 @@ class Newsbeuter_model extends CI_Model
         // Call the CI_Model constructor
         parent::__construct();
 
-        //$this->load->database('newsbeuter');
         $this->load->library('newsbeuter');
 
     }
@@ -44,6 +43,102 @@ class Newsbeuter_model extends CI_Model
         $apiurl = $this->newsbeuter->get_rss_api_url();
         $a = file_get_contents($apiurl . "/version");
         return json_decode($a, TRUE);
+    }
+
+    public function get_category()
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        # 
+        # /category : 
+        # category      = Function call (get list of top category i.e. dbnames)
+        #
+
+        $apiurl = $this->newsbeuter->get_rss_api_url();
+        $format = '/format/json';
+
+        $a = file_get_contents($apiurl . "/category{$format}");
+        return json_decode ($a, TRUE);
+
+        //alternate
+        //$data = array();
+        //$data['category'] = $this->newsbeuter->get_local_catogory();
+        //return $data;
+
+    }
+
+    public function get_urls($opts = array())
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        # 
+        # /urls/cat/dev : 
+        # urls      = Function call
+        #   cat/<dbname>         = Load category/database named <dbname>
+        #
+
+        $dbname = (isset($opts['dbname'])) ? '/cat/'.$opts['dbname'] : '';
+        $format = '/format/json';
+
+        $apiurl = $this->newsbeuter->get_rss_api_url();
+        $a = file_get_contents($apiurl . "/urls{$dbname}{$format}");
+        return json_decode ($a, TRUE);
+
+    }
+
+    # Return array with keys as localurl
+    public function get_urls_as_key($opts = array())
+    {
+        $data = array(); $data['category'] = array();
+        $c = $this->get_urls($opts);
+
+        foreach ($c['feedurls'] as $u) {
+            if ( trim($u) !== '') { 
+                //list($url, $cat) = explode('"/', $u);
+                list($url, $cat) = str_getcsv($u, ' ', '"'); // PHP 5 >= 5.3.0
+                $url = trim($url);
+                //$cat = trim($cat, '"');
+                $cat = ltrim($cat, '/');
+                //$data['by_url'][$url]['category'] = $cat; //not used
+                $data['by_cat'][$cat][] = $url;
+
+                $data['category'][] = $cat;
+                $p = $this->newsbeuter->get_parentcategory($cat);
+                    if ( ! in_array($p, $data['category']) ) {
+                    $data['category'][] = $p;
+                }
+
+            }
+        }
+        $data['category'] = array_unique($data['category']);
+        //natcasesort($data['category']); //not useful here
+
+        return $data;
+
+    }
+
+    public function get_rss_feed($opts = array())
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        # 
+        # /feed/cat/dev/row/<limit>-<offset>/hash/<sha1sum> : 
+        # feed      = Function call
+        #   cat/<dbname>         = Load category/database named <dbname>
+        #   row/<limit>-<offset> = Fetch number of rows = <limit> starting at <offset>
+        #   hash/<sha1sum>       = Fetch rss feeds list (with hash row values has no effect)
+        #
+
+        $dbname = (isset($opts['dbname'])) ? '/cat/'.$opts['dbname'] : '';
+
+        $limit = (isset($opts['limit'])) ? $opts['limit'] : '0';
+        $offset = (isset($opts['offset'])) ? $opts['offset'] : '0';
+        $row = "/row/$limit-{$offset}";
+
+        $hash = (isset($opts['hash'])) ? '/hash/'.$opts['hash'] : '';
+        $format = '/format/json';
+
+        $apiurl = $this->newsbeuter->get_rss_api_url();
+        $a = file_get_contents($apiurl . "/feed{$dbname}{$row}{$hash}{$format}");
+        return json_decode($a, TRUE);
+
     }
 
     public function get_max_rss_item_id()
@@ -105,100 +200,6 @@ class Newsbeuter_model extends CI_Model
 
     }
 
-    public function get_rss_feed($opts = array())
-    {
-        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
-        # 
-        # /feed/cat/dev/row/<limit>-<offset>/hash/<sha1sum> : 
-        # feed      = Function call
-        #   cat/<dbname>         = Load category/database named <dbname>
-        #   row/<limit>-<offset> = Fetch number of rows = <limit> starting at <offset>
-        #   hash/<sha1sum>       = Fetch rss feeds list (with hash row values has no effect)
-        #
-
-        $dbname = (isset($opts['dbname'])) ? '/cat/'.$opts['dbname'] : '';
-
-        $limit = (isset($opts['limit'])) ? $opts['limit'] : '0';
-        $offset = (isset($opts['offset'])) ? $opts['offset'] : '0';
-        $row = "/row/$limit-{$offset}";
-
-        $hash = (isset($opts['hash'])) ? '/hash/'.$opts['hash'] : '';
-        $format = '/format/json';
-
-        $apiurl = $this->newsbeuter->get_rss_api_url();
-        $a = file_get_contents($apiurl . "/feed{$dbname}{$row}{$hash}{$format}");
-        return json_decode($a, TRUE);
-
-    }
-
-    public function get_urls($opts = array())
-    {
-        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
-        # 
-        # /urls/cat/dev : 
-        # urls      = Function call
-        #   cat/<dbname>         = Load category/database named <dbname>
-        #
-
-        $dbname = (isset($opts['dbname'])) ? '/cat/'.$opts['dbname'] : '';
-        $format = '/format/json';
-
-        $apiurl = $this->newsbeuter->get_rss_api_url();
-        $a = file_get_contents($apiurl . "/urls{$dbname}{$format}");
-        return json_decode ($a, TRUE);
-
-    }
-
-    # Return array with keys as localurl
-    public function get_urls_as_key($opts = array())
-    {
-        $data = array(); $data['category'] = array();
-        $c = $this->get_urls($opts);
-
-        foreach ($c['feedurls'] as $u) {
-            if ( trim($u) !== '') { 
-                list($url, $cat) = explode('"/', $u);
-                $url = trim($url);
-                $cat = rtrim($cat, '"');
-                //$data['by_url'][$url]['category'] = $cat; //not used
-                $data['by_cat'][$cat][] = $url;
-
-                $data['category'][] = $cat;
-                $p = $this->newsbeuter->get_parentcategory($cat);
-                    if ( ! in_array($p, $data['category']) ) {
-                    $data['category'][] = $p;
-                }
-
-            }
-        }
-        $data['category'] = array_unique($data['category']);
-        //natcasesort($data['category']); //not useful here
-
-        return $data;
-
-    }
-
-    public function get_category()
-    {
-        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
-        # 
-        # /category : 
-        # category      = Function call (get list of top category i.e. dbnames)
-        #
-
-        $apiurl = $this->newsbeuter->get_rss_api_url();
-        $format = '/format/json';
-
-        $a = file_get_contents($apiurl . "/category{$format}");
-        return json_decode ($a, TRUE);
-
-        //alternate
-        //$data = array();
-        //$data['category'] = $this->newsbeuter->get_local_catogory();
-        //return $data;
-
-    }
-
     public function get_meta($opts = array(), $tag = '', $all = FALSE)
     {
         ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
@@ -245,7 +246,7 @@ class Newsbeuter_model extends CI_Model
                 $data[$dbname] = $this->get_urls_as_key($opts);
                 $d = $this->get_rss_item_count($opts);
                 $data['_cat'][] = $dbname;
-                $f = $this->get_rss_feed($opts); // this slow down
+                $f = $this->get_rss_feed($opts); // this slows down by 20%+
                 //print_r($f);
 
                 foreach ($data[$dbname]['by_cat'] as $c=>$urls) {
@@ -253,11 +254,17 @@ class Newsbeuter_model extends CI_Model
                         $url = trim($url);
                         $title = trim(@$f['query'][$url]['title']);
                         //$title = ($title) ? $title : @$aa[$c][$url]['title']; //not needed, see $f
+
+                        # Sanitize / filter 'title'
+                        $filter['textonly'] = 'yes'; // (mandatory filter)
+                        $title = $this->newsbeuter->apply_security_filter($filter, $title);
+
                         $title = ($title == '') ? 'untitled' : $title;
+
                         if (array_key_exists($url, $d['query'])) {
                             $aa[$c][$url] = $d['query'][$url];
                         } else {
-                            $aa[$c][$url]['title'] = 'untitled';
+                            //$aa[$c][$url]['title'] = 'untitled';
                             $aa[$c][$url]['count'] = 0;
                         }
                         $aa[$c][$url]['title'] = $dbname.'::'.$title;

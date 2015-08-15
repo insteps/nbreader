@@ -54,7 +54,7 @@ class Newsbeuter_rss_item_model extends CI_Model
     }
      
      
-    private function get_rss_item_result($search_options = array(), $limit = 0, $offset = 0)
+    private function _get_rss_item_result($search_options = array(), $limit = 0, $offset = 0)
     {
          
         $this->db->select("
@@ -183,7 +183,7 @@ class Newsbeuter_rss_item_model extends CI_Model
 
         $result = array();
          
-        $q = $this->get_rss_item_result($search_options, $limit, $offset);
+        $q = $this->_get_rss_item_result($search_options, $limit, $offset);
          
         if($q->num_rows() > 0)
         {
@@ -194,9 +194,14 @@ class Newsbeuter_rss_item_model extends CI_Model
                 $row_num--;
                 if(isset($filter) && is_array($filter))
                 {
-                  // apply_security_filter
-                  $row = $this->newsbeuter->apply_security_filter($filter, $row);
+                    // apply_security_filter
+                    $row['content'] = $this->newsbeuter->apply_security_filter($filter, $row['content']);
                 }
+                // apply_security_filter for 'title', 'author' # (mandatory filter)
+                $filter =  array(); $filter['textonly'] = 'yes';
+                $row['title'] = $this->newsbeuter->apply_security_filter($filter, $row['title']);
+                $row['author'] = $this->newsbeuter->apply_security_filter($filter, $row['author']);
+
                 $result[] = $row;
             }
         }
