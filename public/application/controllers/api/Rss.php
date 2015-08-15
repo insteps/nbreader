@@ -44,6 +44,8 @@ class Rss extends REST_Controller {
         # check get/request
         $dbname = $this->get('cat');
 
+        $this->load->library('newsbeuter');
+
         $class = $this->uri->rsegment(2, 0);
 
         if ($class == 'appdb')
@@ -88,8 +90,14 @@ class Rss extends REST_Controller {
 
     public function version_get()
     {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        #    (read contents of VERSION)
+        # 
+        # /version : 
+        # version      = Method/Function call (get application version)
+        #
         $data = array();
-        $data['version'] = $this->_get_version();
+        $data['version'] = $this->newsbeuter->get_version();
         if ($data)
         {
             $this->response($data, 200);
@@ -100,9 +108,60 @@ class Rss extends REST_Controller {
         }
     }
 
+    public function category_get()
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        #    (read contents of config/dbname)
+        # 
+        # /category : 
+        # category      = Method/Function call (get list of databases i.e. dbnames)
+        #
+
+        $data = array();
+        $this->load->library('newsbeuter');
+        $data['category'] = $this->newsbeuter->get_local_catogory();
+        $data['backend'] = 'newsbeuter';
+
+        if ($data['category'])
+        {
+            $this->response($data, 200); // 200 being the HTTP response code
+        }
+        else
+        {
+            $this->response(['error' => 'Category list not found'], 404);
+        }
+
+    }
+
+    public function urls_get()
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        #    (read contents of config/url.local/<dbname>)
+        # 
+        # /urls/cat/dev : 
+        # urls      = Method/Function call
+        #   cat/<dbname>         = Load category/database named <dbname>
+        #
+
+        $data['dbname'] = $this->get('cat');
+        $data['feedurls'] = $this->newsbeuter->get_local_feed_urls($data['dbname']);
+        $data['backend'] = 'newsbeuter';
+
+        if ($data['feedurls'])
+        {
+            $this->response($data, 200); // 200 being the HTTP response code
+        }
+        else
+        {
+            $this->response(['error' => 'Feed urls could not be found'], 404);
+        }
+
+    }
+
     public function appdb_get() # TODO
     {
         ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        #    (get from database config/urls.db)
         # 
         # /appdb/hash/<sha1sum>/cat/dev/tags/news~bbc.co.uk : 
         # appdb      = Method/Function call
@@ -134,7 +193,7 @@ class Rss extends REST_Controller {
             }
             if( $tags !== '' ) {
                 $search_options['tags'] = $tags;
-                $limit = 0;
+                $limit = 0; //no limit, get all by tags
             }
         }
 
@@ -148,6 +207,53 @@ class Rss extends REST_Controller {
         else
         {
             $this->response(['error' => 'Rss feed info not found'], 404);
+        }
+
+    }
+
+    public function feed_get()
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        # 
+        # /feed/cat/dev/row/<limit>-<offset>/hash/<sha1sum> : 
+        # feed      = Method/Function call
+        #   cat/<dbname>         = Load category/database named <dbname>
+        #   row/<limit>-<offset> = Fetch number of rows = <limit> starting at <offset>
+        #   hash/<sha1sum>       = Fetch rss feeds list (with hash row values has no effect)
+        #
+
+        $this->load->model('newsbeuter/newsbeuter_rss_feed_model', 'rssfeed');
+        $data['dbname'] = $this->get('cat');
+        $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
+        $search_options = array();
+        $search_options['id'] = NULL; //there is not 'id'
+
+        # add feedurl search_options, sha1sum eg. ffb1840d0a0c9bc303887e26277d7e28f7f31cad
+        if ( $this->get('hash') && strlen($this->get('hash')) >= 20 )
+        {
+            $feedurl = $this->get('hash');
+            $feedurl = $data['feedsurl'] .'/'. $feedurl[0] .'/'. $feedurl[0].$feedurl[1] .'/'. $feedurl . '.xml';
+            $search_options['rssurl'] = $feedurl;
+            $rec = explode('-', '0-0-0');
+        }
+        else
+        {
+            $rec = ($this->get('row')) ? explode('-', $this->get('row').'-0-0') : explode('-', '0-0-0');
+        }
+        $limit = ((int)$rec[0] >= 1) ? (int)$rec[0] : 0;
+        $offset = ((int)$rec[1] >= 1) ? (int)$rec[1] : 0;
+        $total_rows = ((int)$rec[2] >= 1) ? (int)$rec[2] : 0;
+
+        $data['query'] = $this->rssfeed->get_rss_feed($search_options, $limit, $offset, $total_rows);
+        $data['backend'] = 'newsbeuter';
+
+        if ($data)
+        {
+            $this->response($data, 200); // 200 being the HTTP response code
+        }
+        else
+        {
+            $this->response(['error' => 'Feed item could not be found'], 404);
         }
 
     }
@@ -166,7 +272,7 @@ class Rss extends REST_Controller {
 
         $this->load->model('newsbeuter/newsbeuter_rss_item_model', 'rss_item');
         $data['dbname'] = $this->get('cat');
-        $data['feedsurl'] = $this->_get_local_feed_baseurl(); //extra text
+        $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
         $search_options = array();
 
         if ( (int)$this->get('id') >= 1 )
@@ -202,7 +308,7 @@ class Rss extends REST_Controller {
             unset($search_options['unread']);
         }
 
-        ## Security related filter on RSS contents/text
+        ## Security/DNT related filter on RSS contents/text
         ## Experimental and may change in future
         if($this->get('filter'))
         {
@@ -240,7 +346,7 @@ class Rss extends REST_Controller {
 
         $this->load->model('newsbeuter/newsbeuter_rss_item_model', 'rss_item');
         $data['dbname'] = $this->get('cat');
-        $data['feedsurl'] = $this->_get_local_feed_baseurl(); //extra text
+        $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
         $search_options = array();
 
         $unread = strtolower($this->get('unread'));
@@ -272,78 +378,6 @@ class Rss extends REST_Controller {
         else
         {
             $this->response(['error' => 'Feed item could not be found'], 404);
-        }
-
-    }
-
-    public function feed_get()
-    {
-        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
-        # 
-        # /feed/cat/dev/row/<limit>-<offset>/hash/<sha1sum> : 
-        # feed      = Method/Function call
-        #   cat/<dbname>         = Load category/database named <dbname>
-        #   row/<limit>-<offset> = Fetch number of rows = <limit> starting at <offset>
-        #   hash/<sha1sum>       = Fetch rss feeds list (with hash row values has no effect)
-        #
-
-        $this->load->model('newsbeuter/newsbeuter_rss_feed_model', 'rssfeed');
-        $data['dbname'] = $this->get('cat');
-        $data['feedsurl'] = $this->_get_local_feed_baseurl(); //extra text
-        $search_options = array();
-        $search_options['id'] = NULL; //there is not 'id'
-
-        # add feedurl search_options, sha1sum eg. ffb1840d0a0c9bc303887e26277d7e28f7f31cad
-        if ( $this->get('hash') && strlen($this->get('hash')) >= 20 )
-        {
-            $feedurl = $this->get('hash');
-            $feedurl = $data['feedsurl'] .'/'. $feedurl[0] .'/'. $feedurl[0].$feedurl[1] .'/'. $feedurl . '.xml';
-            $search_options['rssurl'] = $feedurl;
-            $rec = explode('-', '0-0-0');
-        }
-        else
-        {
-            $rec = ($this->get('row')) ? explode('-', $this->get('row').'-0-0') : explode('-', '0-0-0');
-        }
-        $limit = ((int)$rec[0] >= 1) ? (int)$rec[0] : 0;
-        $offset = ((int)$rec[1] >= 1) ? (int)$rec[1] : 0;
-        $total_rows = ((int)$rec[2] >= 1) ? (int)$rec[2] : 0;
-
-        $data['query'] = $this->rssfeed->get_rss_feed($search_options, $limit, $offset, $total_rows);
-        $data['backend'] = 'newsbeuter';
-
-        if ($data)
-        {
-            $this->response($data, 200); // 200 being the HTTP response code
-        }
-        else
-        {
-            $this->response(['error' => 'Feed item could not be found'], 404);
-        }
-
-    }
-
-
-    public function urls_get()
-    {
-        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
-        # 
-        # /urls/cat/dev : 
-        # urls      = Method/Function call
-        #   cat/<dbname>         = Load category/database named <dbname>
-        #
-
-        $data['dbname'] = $this->get('cat');
-        $data['feedurls'] = $this->_get_local_feed_urls($data['dbname']);
-        $data['backend'] = 'newsbeuter';
-
-        if ($data['feedurls'])
-        {
-            $this->response($data, 200); // 200 being the HTTP response code
-        }
-        else
-        {
-            $this->response(['error' => 'Feed urls could not be found'], 404);
         }
 
     }
@@ -386,10 +420,13 @@ class Rss extends REST_Controller {
         }
 
         $data = $this->newsbeuter_model->_get_meta($opts, $tag);
-        $data['apiurl'] = $this->_get_rss_api_url();
-        $data['feedsurl'] = $this->_get_local_feed_baseurl();
+        $data['apiurl'] = $this->newsbeuter->get_rss_api_url();
+        $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
         $data['backend'] = 'newsbeuter';
-        $data['jsconf'] = $this->_get_frontend_jsconf();
+        if( $tag == '' )
+        {
+            $data['jsconf'] = $this->newsbeuter->get_frontend_jsconf();
+        }
 
         if (isset($data['_by_cat']))
         {
@@ -402,29 +439,6 @@ class Rss extends REST_Controller {
 
     }
 
-    public function category_get()
-    {
-        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
-        # 
-        # /category : 
-        # category      = Method/Function call (get list of top category i.e. dbnames)
-        #
-
-        $data = array();
-        $this->load->library('newsbeuter');
-        $data['category'] = $this->newsbeuter->get_local_catogory();
-        $data['backend'] = 'newsbeuter';
-
-        if ($data['category'])
-        {
-            $this->response($data, 200); // 200 being the HTTP response code
-        }
-        else
-        {
-            $this->response(['error' => 'Category list not found'], 404);
-        }
-
-    }
 
 
     /**
@@ -445,7 +459,7 @@ class Rss extends REST_Controller {
 
         $this->load->model('newsbeuter/newsbeuter_rss_item_model', 'rss_item');
         $data['dbname'] = $this->get('cat');
-        $data['feedsurl'] = $this->_get_local_feed_baseurl(); //extra text
+        $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
         $search_options = array();
 
         if ( (int)$this->get('id') >= 1 )
@@ -492,11 +506,6 @@ class Rss extends REST_Controller {
 
 
 
-    protected function _get_version()
-    {
-        $this->load->library('newsbeuter');
-        return $this->newsbeuter->get_version();
-    }
 
     protected function _check_valid_dbname($name)
     {
@@ -504,29 +513,9 @@ class Rss extends REST_Controller {
         return $this->newsbeuter->check_valid_dbname($name);
     }
 
-    protected function _get_rss_api_url()
-    {
-        $this->load->library('newsbeuter');
-        return $this->newsbeuter->get_rss_api_url();
-    }
 
-    protected function _get_frontend_jsconf()
-    {
-        $this->load->library('newsbeuter');
-        return $this->newsbeuter->get_frontend_jsconf();
-    }
 
-    protected function _get_local_feed_baseurl()
-    {
-        $this->load->library('newsbeuter');
-        return $this->newsbeuter->get_local_feed_baseurl();
-    }
 
-    protected function _get_local_feed_urls($name)
-    {
-        $this->load->library('newsbeuter');
-        return $this->newsbeuter->get_local_feed_urls($name);
-    }
 
 
 

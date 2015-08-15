@@ -95,6 +95,34 @@ class Newsbeuter
         return '';
     }
 
+    public function get_rss_api_url()
+    {
+        return $this->_newsbeuter_config['newsbeuter']['be']['rss_api_url'];
+    }
+
+    public function get_local_feed_baseurl()
+    {
+        $file = $this->_newsbeuter_config['newsbeuter']['be']['confpath'].'/feedsurl';
+        if (file_exists($file))
+        {
+            $flist = preg_split( '/[\\n\\s]/', file_get_contents($file) );
+            return trim($flist[0]);
+        }
+        return '';
+    }
+
+    public function get_local_catogory()
+    {
+        $c = $this->_newsbeuter_config;
+        $file = $c['newsbeuter']['be']['path'].'/config/dbname';
+        if (file_exists($file))
+        {
+            $flist = preg_split( '/[\\n]/', file_get_contents($file) );
+            return $flist;
+        }
+        return '';
+    }
+
     public function check_valid_dbname($name = '')
     {
         $c = $this->_newsbeuter_config;
@@ -117,29 +145,6 @@ class Newsbeuter
         return 0;
     }
 
-    public function get_local_catogory()
-    {
-        $c = $this->_newsbeuter_config;
-        $file = $c['newsbeuter']['be']['path'].'/config/dbname';
-        if (file_exists($file))
-        {
-            $flist = preg_split( '/[\\n]/', file_get_contents($file) );
-            return $flist;
-        }
-        return '';
-    }
-
-    public function get_local_feed_baseurl()
-    {
-        $file = $this->_newsbeuter_config['newsbeuter']['be']['confpath'].'/feedsurl';
-        if (file_exists($file))
-        {
-            $flist = preg_split( '/[\\n\\s]/', file_get_contents($file) );
-            return trim($flist[0]);
-        }
-        return '';
-    }
-
     public function get_local_feed_urls($name = '')
     {
         $file = $this->_newsbeuter_config['newsbeuter']['be']['confpath'].'/url.local/'.$name;
@@ -151,16 +156,6 @@ class Newsbeuter
         return '';
     }
 
-    public function get_rss_api_url()
-    {
-        return $this->_newsbeuter_config['newsbeuter']['be']['rss_api_url'];
-    }
-
-    public function get_frontend_jsconf()
-    {
-        return $this->_newsbeuter_config['newsbeuter']['fe']['jsconf'];
-    }
-
     # move to Newsbeuter helper ?
     public function get_parentcategory($cat, $esc=true)
     {
@@ -169,6 +164,11 @@ class Newsbeuter
       if(! $nc || $nc == '')  { $nc = '/'; }
       return $nc;
 
+    }
+
+    public function get_frontend_jsconf()
+    {
+        return $this->_newsbeuter_config['newsbeuter']['fe']['jsconf'];
     }
 
     ## Apply Security related filter on RSS contents/text
