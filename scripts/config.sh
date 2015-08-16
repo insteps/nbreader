@@ -64,7 +64,7 @@ create_sample_data() {
     echo "Msg: creating sample data ..."
     cp $CONFIGDIR/urls.sample $URLDIR/sample;
     sleep 0.5
-    create_url_csv && create_url_db
+    config
     sleep 2
     echo "Msg: fetching sample rss feed ..."
     echo "---------------------------------"
@@ -111,5 +111,20 @@ create_url_db() {
     ls -1 $URLLOCALDIR | sort > "$CONFIGDIR/dbname"
 }
 
-create_url_csv && create_url_db
+create_empty_db() {
+    ls $URLLOCALDIR | while read f; do
+        if [ ! -f "$DBDIR/$f.loc.db" ]; then
+            cp "$CONFIGDIR/empty.loc.db" "$DBDIR/$f.loc.db";
+        fi
+    done;
+}
+
+config() {
+    create_url_csv 
+    create_url_db 
+    create_empty_db
+}
+
+config
+
 
