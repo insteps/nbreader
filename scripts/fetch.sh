@@ -155,7 +155,7 @@ fetch_by_tagfolder() {
     local extfetch="$RUNDIR/fetch/$epoch";
     if [ ! $s ]; then
         printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
-        exit 0;
+        return;
     fi
     echo "$s" > "$extfetch"
     while read url; do
