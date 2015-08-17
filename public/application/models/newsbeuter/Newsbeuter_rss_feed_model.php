@@ -147,8 +147,9 @@ class Newsbeuter_rss_feed_model extends CI_Model
                 unset($row['rssurl']);
 
                 // Sanitize, apply_security_filter for 'title' # (mandatory filter)
-                $filter =  array(); $filter['textonly'] = 'yes';
-                $row['title'] = $this->newsbeuter->apply_security_filter($filter, $row['title']);
+                $fil =  array(); $fil['textonly'] = 'yes';
+                $row['title'] = $this->newsbeuter->apply_security_filter($fil, $row['title']);
+                unset($fil);
 
                 if($rssurl !== '')
                 {
