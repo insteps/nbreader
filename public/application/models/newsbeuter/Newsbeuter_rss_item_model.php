@@ -201,6 +201,7 @@ class Newsbeuter_rss_item_model extends CI_Model
                 $filter =  array(); $filter['textonly'] = 'yes';
                 $row['title'] = $this->newsbeuter->apply_security_filter($filter, $row['title']);
                 $row['author'] = $this->newsbeuter->apply_security_filter($filter, $row['author']);
+                unset($filter['textonly']);
 
                 $result[] = $row;
             }
