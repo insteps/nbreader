@@ -41,7 +41,7 @@ fi
 donedir="$DONEDIR/$YEAR/$MONTH";
 
 urldb="$CONFIGDIR/urls.db"
-feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep -m 2 '^.*')
+feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep -m 1 '^.*')
 #echo $feedsurl
 echo -e "${cBROWN}EPOCH -> $EPOCH${cNORMAL}";
 isEpoch=0
@@ -78,7 +78,7 @@ _update_by_dbname_list() {
     local localurl=$2
     local localdb="$DBDIR/$dbname.loc.db"
     if [ ! -f "$localurl" ]; then exit 0; fi
-    printf "${cBWHITE}Db-updating... ->${cNORMAL} $localdb\n"
+    printf "${cBWHITE}update::Db-updating... ->${cNORMAL} $localdb\n"
     newsbeuter -u $localurl -c $localdb -x reload
 }
 
@@ -167,7 +167,7 @@ update_fetched() {
 
     query='select sha1sum,tags,dbname from rss_url where rssurl in ('"$s2"');';
     t=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
-    printf "${cBWHITE}make-local-urlfile ->${cNORMAL} $epoch\n";
+    printf "${cBWHITE}update::make-local-urlfile ->${cNORMAL} $epoch\n";
     for record in $t; do
         make_local_urlfile $record;
     done
@@ -177,7 +177,7 @@ update_fetched() {
     #  eg. find './run/newsbeuter/update/' -name '1436381259'
     local updatelist=$(find "$RUNDIR/update/" -name "$epoch")
     for f in $updatelist; do
-        printf "${cBWHITE}db-update-list ->${cNORMAL} $f\n";
+        printf "${cBWHITE}update::db-update-list ->${cNORMAL} $f\n";
         local d=$(dirname $f)
         dbname=$(basename $(dirname $f))
         _update_by_dbname_list $dbname $f
