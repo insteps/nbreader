@@ -34,13 +34,27 @@ source $APPDIR/scripts/date.inc
 
 #usage: sh run.sh newsbeuter <dbname>
 if [ "$1" = 'newsbeuter' ]; then
-    if [ "$2" = '' ]; then db='news'; else db=$2; fi
-    newsbeuter -u "$CONFIGDIR/url.local/$db" -c $DBDIR/$db.loc.db
+    echo '---------------------------------'
+    if [ -f "$CONFIGDIR/dbname" ]; then
+        echo "Other databases are:"
+        cat "$CONFIGDIR/dbname" | while read f; do echo -n $f" "; done;
+        echo ''
+    fi
+    echo '---------------------------------'
+    db=$2;
+    if [ "$db" = '' ]; then
+        echo "Defaulting to news db"
+        echo '---------------------------------'
+        db='news';
+    fi
+    if [ -f "$DBDIR/$db.loc.db" ]; then
+        newsbeuter -u "$CONFIGDIR/url.local/$db" -c $DBDIR/$db.loc.db
+    fi
 fi
 
 #usage: sh run.sh update tag|folder|url|hash <relevant data>
 if [ "$1" = 'update' ]; then
-source $SCRIPTDIR/update.sh
+  source $SCRIPTDIR/update.sh
 
   case $2 in
     tag) update_by_tag $2 $3;;
@@ -61,20 +75,5 @@ if [ "$1" = 'config' ]; then
 fi
 
 
-
-# source $SCRIPTDIR/fetch.sh
-## examples
-# fetch_by_dbname business
-# fetch_by_tag '/business/crmbuyer.com' > /dev/null 2>&1
-# fetch_by_url 'http://www.crmbuyer.com/perl/syndication/rssfull.pl'
-# fetch_by_tag '/news/bbc.co.uk'
-
-
-
-# newsbeuter
-# update <opts> <data>
-# search <text> <limit>
-# user create|delete
-#
 
 
