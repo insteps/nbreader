@@ -56,7 +56,8 @@ for db in $dbs; do
 
 done;
 
-content=''; limit='';
+content=''; limit=''; offset='';
+
 if [ "$1" ]; then
  content="$1"
 fi
@@ -65,6 +66,12 @@ if [ "$2" ]; then
  limit="limit $2"
 else
  limit="limit 10"
+fi
+
+if [ "$3" ]; then
+ offset=" offset $3"
+else
+ offset=" offset 0"
 fi
 
 searchall() {
@@ -78,7 +85,7 @@ searchall() {
        id,title,url FROM ($str2)
        WHERE content LIKE '%$content%'
        OR title LIKE '%$content%'
-       ORDER BY pubDate DESC $limit;
+       ORDER BY pubDate DESC $limit $offset;
     ";
 }
 
