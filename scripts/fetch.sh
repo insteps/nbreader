@@ -63,6 +63,16 @@ sanitize_xml_feeds() {
     find ./ -name *.xml | while read f; do sanitize_xml $f; done;
 }
 
+fetch_update_feedicon() {
+    if [ $FEEDICON = '1' ]; then
+        local URLSUM=$1
+        source $SCRIPTDIR/feedicon.sh
+        update_feedicon $URLSUM;
+    else
+        printf "${cRED}Updating feeds icon is disabled, see env.sh${cNORMAL}\n";
+    fi
+}
+
 ## Example urls
 # URL="http://news.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml"
 # URL="http://www.rediff.com/rss/inrss.xml"
@@ -88,11 +98,9 @@ fetch_url() {
         mkdir -p "$a/$b"
         if [ -f '.current.xml' ]; then rm -f '.current.xml'; fi
     
-        USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
-        # wget --user-agent="" $URL -O "$a/$b/$URLSUM"
         mkdir -p $VARDIR/log
         local logfile="$VARDIR/log/$DATESTAMP.log"
-        wget --timeout=20 --tries=5 --user-agent="$USERAGENT_0" $URL -O ".current.xml" -a $logfile
+        wget "$WGETOPTS_1" "$USERAGENT_0" "$URL" -O ".current.xml" -a $logfile
         if [ -s '.current.xml' ]; then
             # checkpoints
             # 1. make git/fossil friendly
@@ -100,6 +108,10 @@ fetch_url() {
             # 2. checksize (<2mb) - TODO
             mv -f '.current.xml' "$a/$b/$URLSUM.xml"
             echo $EPOCH > .lastfetch
+
+            # fetch/update feeds icon
+            fetch_update_feedicon $URLSUM;
+            echo ''
         fi
     else
         echo "Incorrect feeds dir"

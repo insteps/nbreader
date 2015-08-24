@@ -88,7 +88,7 @@ create_url_csv() {
                     URLSUM=${URLSUM:0:40};
                     TAG=$(echo $line | awk '{print $2}');
                     local l="$(echo $line |
-                      awk '{print "\"" $1 "\"" "|" $2}')|"\""$filename"\""|"\""0"\""|"\""0"\""|"\""$URLSUM"\""";
+                      awk '{print "\"" $1 "\"" "|" $2}')|"\""$filename"\""|"\""0"\""|"\""0"\""|"\""$URLSUM"\""|"\""0"\""";
                     create_url_local "$filename" "$URLSUM" "$TAG"
                     #echo "$urlfile $l";
                     echo $l >> $csvfile;
@@ -119,10 +119,22 @@ create_empty_db() {
     done;
 }
 
+config_init_icon_status() {
+    if [ $FEEDICON = '1' ]; then
+        source $SCRIPTDIR/feedicon.sh
+        _remove_icons_dbstatus_all
+        update_icons_status_all
+        generate_icons_cache_hash_list
+    else
+        printf "${cRED}Updating feeds icon is disabled, see env.sh${cNORMAL}\n";
+    fi
+}
+
 config() {
     create_url_csv 
     create_url_db 
     create_empty_db
+    config_init_icon_status
 }
 
 config

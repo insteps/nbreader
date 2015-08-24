@@ -26,7 +26,15 @@ if [ ! "$APPDIR" ]; then APPDIR=$(dirname $(dirname $fpath)); fi
 PWD=$(pwd)
 
 SETSAMPLEDATA='1'
+
+# enable commiting changes to vcs eg. (git/hg/fossil)
 COMMITDATA='0'
+
+# enable fetching of feeds icon
+FEEDICON='1'
+
+# Path variables
+# --------------
 FEEDSDIR="$APPDIR/feeds/feeds"
 FEEDSURL="http://localhost/feeds"
 
@@ -40,12 +48,12 @@ URLDIR="$CONFIGDIR/url"
 URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
 DONEDIR="$VARDIR/.done"
+WEBAPPDIR="$APPDIR/public"
 
-
-# 
-# newsbeuter <default config>
+# newsbeuter <default configs>
 # wget
 # 
-# 
-
+_USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
+USERAGENT_0=" --user-agent=$_USERAGENT_0 "
+WGETOPTS_1=" --timeout=20 --tries=5 --no-check-certificate "
 
