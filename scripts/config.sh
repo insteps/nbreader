@@ -57,6 +57,8 @@ create_url_local() {
     mkdir -p "$VARDIR/.done";
 }
 
+# make some sample entry
+#  note: does not create temp files in rundir/vardir
 create_sample_data() {
     if [ $SETSAMPLEDATA != '1' ]; then
         echo "Error: no rss/atom entry found. See config/readme.notes OR set SETSAMPLEDATA=1"; exit 0;
@@ -111,7 +113,7 @@ create_url_db() {
     ls -1 $URLLOCALDIR | sort > "$CONFIGDIR/dbname"
 }
 
-create_empty_db() {
+create_empty_dbs() {
     ls $URLLOCALDIR | while read f; do
         if [ ! -f "$DBDIR/$f.loc.db" ]; then
             cp "$CONFIGDIR/empty.loc.db" "$DBDIR/$f.loc.db";
@@ -133,7 +135,7 @@ config_init_icon_status() {
 config() {
     create_url_csv 
     create_url_db 
-    create_empty_db
+    create_empty_dbs
     config_init_icon_status
 }
 

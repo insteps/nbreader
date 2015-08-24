@@ -110,7 +110,7 @@ make_local_urlfile() {
 }
 
 # usage:
-# Fetches rss url based on tag|tagfolder|url
+# Fetches rss/xml file based on tag|tagfolder|url input
 # update_fetch <tag|folder|url> <tagname|fullUrl>
 update_fetch() {
     type=$1;
@@ -149,9 +149,34 @@ update_fetch() {
 
 }
 
+fetch_update_feedicon() {
+    if [ $FEEDICON = '1' ]; then
+        source $SCRIPTDIR/feedicon.sh
+
+        local dbname=$1;
+        local list=$2;
+
+        local len=$(echo "$feedsurl" | wc -c);
+        len=$(($len+6))
+
+        while read line; do
+            if [ -n "$line" ]; then 
+                #local URLSUM=$(echo $line | cut -b $len-$(($len+39)) -)
+                local URLSUM=$(echo $line | grep -o -E '[0-9a-f]{40}')
+                # echo $URLSUM;
+                update_feedicon $URLSUM;
+                echo ''
+            fi
+        done < $list
+
+    else
+        printf "${cRED}Updating feeds icon is disabled, see env.sh${cNORMAL}\n";
+    fi
+}
+
 update_fetched() {
 
-    if [ -n "$1" ]; then epoch=$1; else epoch=$EPOCH; fi
+    if [ -n "$1" ]; then epoch=$1; else epoch=$EPOCH; fi # OR feeds/feeds/.lastfetch
 
     # 3a. Create update file in "$RUNDIR/update/<dbname>/$epoch
     # local s1=$(echo $s|sed -e 's/ /", "/g' -e 's/^/"/g' -e 's/$/"/g' -);
@@ -181,6 +206,10 @@ update_fetched() {
         local d=$(dirname $f)
         dbname=$(basename $(dirname $f))
         _update_by_dbname_list $dbname $f
+
+        # fetch/update feeds icon
+        fetch_update_feedicon $dbname $f;
+
         mv $f "$donedir/$epoch.update.$dbname"
     done
 
@@ -238,4 +267,6 @@ update() {
 # update_by_tag 'tag' '/news/timesofindia.indiatimes.com'
 # update_by_url url 'http://asia.nikkei.com/rss/feed/nar'
 # update_by_tag 'folder' '/infotech/linux/distrowatch.com'
+
+
 
