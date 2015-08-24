@@ -229,6 +229,15 @@ class Newsbeuter
         return $f;
     }
 
+    public function set_icon_cache_file($opts = array(), $tag = '', $all = FALSE)
+    {
+        $t = ($tag != '') ? sha1($tag).'.' : '';
+        $format = @$opts['format'];
+        $db = (@$opts['dbname'] != '') ? @$opts['dbname'].'.' : '';
+        $f = $this->_newsbeuter_config['newsbeuter']['be']['datapath'].'/icon.'.$db.$t.$format;
+        return $f;
+    }
+
     # get json saved cache
     public function get_json_cache($file)
     {
@@ -277,6 +286,16 @@ class Newsbeuter
         $m1 = filemtime($allmeta);
         $m2 = filemtime($meta);
         if( (int)$m2 >= (int)$m1 )
+        {
+            return true;
+        }
+        return false;
+    }
+
+    # is FILE1 newer than FILE2
+    public function is_newer_than($f1, $f2)
+    {
+        if( (int)filemtime($f1) > (int)filemtime($f2) )
         {
             return true;
         }

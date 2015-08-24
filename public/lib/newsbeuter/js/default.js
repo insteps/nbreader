@@ -48,6 +48,10 @@
       
       if ((obj.tagName) == 'INPUT') { return; }
 
+      if( (obj.tagName) == 'IMG' && $(obj).hasClass('favicon') ) {
+        return;
+      }
+      
       if( (obj.tagName) == 'SPAN' && $(obj).hasClass('glyphicon') ) {
         return;
       }
@@ -71,6 +75,7 @@
       // ## else not xml link (nodes/feedlist)
       $(NbReader.activenodeA).removeClass('active');
       NbReader.activenodeA = a; NbReader.nodeType = 'node';
+      
       if( NbReader.doNodeRefresh != 'yes' ) { NbReader.ToggleNode(a); } // TODO - add popup opts
       NbReader.GetFeedList(config); // no action if already fetched
       
@@ -299,6 +304,50 @@
     return false;
   }
 
+  NbReader.GetIconByDbname = function (dbname) {
+    console.log('GetIconByDbname:: '+dbname);
+    isfetch = $(NbReader.RssListRoot).data('isfetch.icon.'+dbname); //unset ?
+    isdata = $(NbReader.RssListRoot).data('icon.'+dbname);
+    NbReader.RefreshNodeIcon(NbReader.activenodeA);
+    if(isfetch == 'yes' || isdata) return;
+    $(NbReader.RssListRoot).data('isfetch.icon.'+dbname, 'yes');
+    setTimeout(function() {
+      $.ajax({
+        dataType: "json",
+        url: NbReader.Config.apiurl+'/icon/format/json/cat/'+dbname,
+        data: '',
+        success: function(data) {
+          $(NbReader.RssListRoot).data('icon.'+dbname, data);
+          $(NbReader.RssListRoot).data('isfetch.icon.'+dbname, 'done');
+          NbReader.RefreshNodeIcon(NbReader.activenodeA);
+        }
+      });
+    }, 500);
+  }
+
+  NbReader.RefreshNodeIcon = function (node) {
+    alist = $(NbReader.activenodeA).next('div').children('a');
+    for (var i = 0; i < alist.length; i++) {
+      var t1 = alist[i];
+      if( NbReader.IsXml(t1) ) {
+        hash = NbReader.GetUrl2Hash(t1);
+        db = $( t1 ).attr( "data-db" );
+        data = $(NbReader.RssListRoot).data('icon.'+db);
+        //console.log(data.icon[hash]);
+        if(data && data.icon[hash]) {
+          img = '<img class="favicon" src="data:'+data.icon[hash]+'" align="left" />';
+          span = $(t1).children('.glyphicon')[0];
+          if(span) {
+            $(span).removeClass('glyphicon-tags');
+            span.innerHTML = img;
+            //$(span).removeClass('.glyphicon');
+          }
+        }
+      }
+    }
+  }
+  
+  
 }( NbReader, jQuery = window.jQuery || {} ) );
 
 (function( NbReader, $, undefined ) {
@@ -324,17 +373,19 @@
       url: NbReader.Config.apiurl+'/meta/unread/yes/tag/'+title+'/format/json'+refresh,
       data: '',
       success: function(data) {
-        var items = []; var now = new Date(); var n = now.getTime();
+        var items = []; var now = new Date(); var n = now.getTime(); var dbs = [];
         $.each( data._by_cat[a.title], function( key, val ) {
           if( ! (/\.xml$/i).test(key) ) { return; }; //check for xml url
           var db = val.title.split(/::/);
-          items.push( 
-          "<a href='" + key + "' class='list-group-item'" + "title='"+a.title+"'" + "data-db='"+db[0]+"'" + ">" 
+          dbs.push( db[0] );
+          items.push(
+          "<a href='" + key + "' class='list-group-item xml'" + "title='"+a.title+"'" + "data-db='"+db[0]+"'" + ">" 
           + "<span class='badge'>" + val.count + "</span>"
           + "<span class='glyphicon glyphicon-tags' aria-hidden='true'></span> "
           + "<span class='text'>"+db[1]+"</span>"
           + "</a>" );
         });
+
         // update badge values/number
         $.each( data._category, function( key, val ) {
           _s = "a[title='"+key+"']";
@@ -371,6 +422,12 @@
 //          NbReader.A(a); //to check
         }
         if(cnShow == 'yes') { $(a).next("div").removeClass('hidden'); }
+        
+        // Fetch icon files
+        $.each( dbs, function( key, val ) {
+          NbReader.GetIconByDbname(val); //trigger icons fetch
+        });
+        
       }
     });
 
@@ -390,12 +447,12 @@
     db = $( a ).attr( "data-db" );
     if( ! db ) return;
     var hash = NbReader.activehash
-    var os = NbReader.feedoffset;
+    var ofs = NbReader.feedoffset;
 
-    console.log( 'GetFeed:: ' + hash + ' at ' + os );
+    console.log( 'GetFeed:: ' + hash + ' at ' + ofs );
     $.ajax({
       dataType: "json",
-      url: NbReader.Config.apiurl+'/item/cat/'+db+'/hash/'+hash+'/row/10-'+os+'/filter/default'+'/format/json',
+      url: NbReader.Config.apiurl+'/item/cat/'+db+'/hash/'+hash+'/row/10-'+ofs+'/filter/default'+'/format/json',
       data: '',
       success: function(data) {
         $(NbReader.RssAct).data(hash, data);
@@ -459,6 +516,7 @@
             });
           }, 100);
         }
+        // ---------------------------------------
 
         // if rss feed got updated
         if( NbReader.IsActiveXmlUpdated(data.count_unread) ) {
@@ -503,12 +561,18 @@
     rssfeeds = NbReader.RssListRoot = document.getElementById(config.nodes);
     list = NbReader.RssList = rssfeeds.getElementsByTagName(config.list);
     search = $("#collapseOne input.search");
+
+    $(search).keydown(function(e) {
+      if(this.value == '' && e.keyCode == 13) {
+        // ## reset styles first
+        $(list).removeClass('hiddenYES');
+        $(list).next('div').removeClass('hiddenNO');
+        $(list).next('div').next('div').removeClass('hiddenNO');
+        $(list).children('.glyphicon').removeClass('allleft');
+      }
+    });
+
     $( search[0] ).change(function() {
-      // ## reset styles first
-      $(list).removeClass('hiddenYES');
-      $(list).next('div').removeClass('hiddenNO');
-      $(list).children('.glyphicon').removeClass('allleft');
-      
       if(this.value == '') return false;
       $(list).next('div').addClass('hiddenNO');
       $(list).children('.glyphicon').addClass('allleft');

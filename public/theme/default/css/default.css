@@ -1,5 +1,6 @@
 /* 
 test
+lots of cleanup TODO
 */
 
 	::selection { background-color: #E13300; color: white; }
@@ -73,6 +74,9 @@ test
   
 }
 
+#navbar-header {
+  width: 50%;
+}
 #navbar-header .btn {
   margin-top: 8px;
 }
@@ -111,6 +115,9 @@ test
 #collapseOne a.hiddenYES { display: none !important; }
 #collapseOne a.list-group-item span.allleft { padding-left: 0; }
 
+#collapseOne a .favicon { border: 0px; width: 16px; height: 16px; padding: 0px; margin: 0px; }
+#collapseOne a.xml { line-height: 1; padding-top: 8px; padding-bottom: 8px; }
+
 #rss .rss-items { margin-bottom: 5px; }
 #rss .list-group-item { background-color: #eee; }
 #rss .pubdate { float: right; padding: 0px 0px 0px 5px; font-size: 85%; }
@@ -138,7 +145,7 @@ test
   float: right;
 }
 
-/* Small devices (tablets, 768px and up) */
+/* Small devices (smartphones, upto 768px) */
 @media (max-width: 768px) {
   #contentX { display: none; }
   #sidebarX {
@@ -147,9 +154,13 @@ test
     border: 1px solid red;
     
   }
+  #navbar-header {
+    width: auto;
+  }
 }
 
-@media all and (min-width: 64.000em) {
+/* Small devices (tablets, 768px and up) */
+@media all and (min-width: 768px) {
   #navbar-header .btn {
     display: none;
   }

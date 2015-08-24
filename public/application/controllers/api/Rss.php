@@ -21,6 +21,12 @@ class Rss extends REST_Controller {
 
     //protected $newsbeuter = array();
 
+    /**
+     * Constructor for the REST API
+     *
+     * @access public
+     *
+     */
     public function __construct()
     {
         // Construct the parent class
@@ -48,7 +54,7 @@ class Rss extends REST_Controller {
 
         $class = $this->uri->rsegment(2, 0);
 
-        if ($class == 'appdb')
+        if ($class == 'appdb' || $class == 'icon')
         {
             # test
             if ( file_exists($c['newsbeuter']['be']['confdb']) )
@@ -62,8 +68,10 @@ class Rss extends REST_Controller {
 
             $this->load->database($db);
         }
-        if ($class !== 'category' && $class !== 'meta'
-             && $class !== 'appdb' && $class !== 'version')
+        if ($class == 'urls' || $class == 'feed'
+             || $class == 'item' || $class == 'count'
+             || $class == 'unread_'
+           )
         {
             # verify valid/active dbname
             if ($this->_check_valid_dbname($dbname)
@@ -98,6 +106,24 @@ class Rss extends REST_Controller {
         #
         $data = array();
         $data['version'] = $this->newsbeuter->get_version();
+        if ($data)
+        {
+            $this->response($data, 200);
+        }
+        else
+        {
+            $this->response(['error' => 'Version file not found'], 404);
+        }
+    }
+
+    public function about_get() //OR apimeta_get ?
+    {
+        $data = array();
+        $data['version'] = $this->newsbeuter->get_version();
+        $data['backend'] = 'newsbeuter';
+        $data['apiurl'] = $this->newsbeuter->get_rss_api_url();
+        $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
+        $data['lastfetch'] = '';
         if ($data)
         {
             $this->response($data, 200);
@@ -389,7 +415,7 @@ class Rss extends REST_Controller {
     {
         ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
         # 
-        # /meta/cat/dev/tag/<tag>/unread/<yes|no> : 
+        # /meta/cat/dev/tag/<tag>/unread/<yes|no>/refresh/<yes|no> : 
         # meta      = Method/Function call
         #   cat/<dbname>        = Load from category/database named <dbname>
         #   tag/<rss category>  = Rss category (`~` as separator, eg business~seo~seochat.com)
@@ -407,7 +433,7 @@ class Rss extends REST_Controller {
             $opts['unread'] = $unread;
         }
         $tag = $this->get('tag');
-        $tag = str_replace('~', '/', $tag);
+        $tag = str_replace('~', '/', $tag); //browser js api call
 
         $refresh = (strtolower($this->get('refresh')) == 'yes') ? 'yes' : 'no';
         $opts['refresh'] = $refresh;
@@ -423,7 +449,7 @@ class Rss extends REST_Controller {
         $data['apiurl'] = $this->newsbeuter->get_rss_api_url();
         $data['feedsurl'] = $this->newsbeuter->get_local_feed_baseurl();
         $data['backend'] = 'newsbeuter';
-        if( $tag == '' )
+        if( $tag == '' ) // homepage welcome default call
         {
             $data['jsconf'] = $this->newsbeuter->get_frontend_jsconf();
         }
@@ -439,6 +465,46 @@ class Rss extends REST_Controller {
 
     }
 
+    public function icon_get()
+    {
+        ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
+        #
+        # /icon/cat/dev/tag/<tag>/hash/<sha1sum>/refresh/<yes|no> :
+        # icon      = Method/Function call
+        #   hash/<sha1sum>              = Fetch icons by hash (filter records by hash)
+        #   cat/<dbname>                = Load from category/database named <dbname>
+        #   group/<sha1sum 1st letter>  = Fetch icons by hash group (filter records by sha1sum 1st letter) # TODO
+        #   tag/<rss category>          = Rss category (`~` as separator, eg business~seo~seochat.com) # TODO
+        #   refresh/<yes|no>            = yes|no (use cached data)
+        #
+
+        $this->load->model('newsbeuter/newsbeuter_icon', 'newsbeuter_icon');
+
+        $opts = array(); $data = array();
+
+        $opts['dbname'] = $this->get('cat');
+
+        # add hash search_options, sha1sum eg. ffb1840d0a0c9bc303887e26277d7e28f7f31cad
+        if ( $this->get('hash') && strlen($this->get('hash')) >= 20 )
+        {
+            $opts['sha1sum'] = $this->get('hash');
+        }
+
+        //$refresh = (strtolower($this->get('refresh')) == 'yes') ? 'yes' : 'no';
+        //$opts['refresh'] = $refresh;
+
+        $data = $this->newsbeuter_icon->get_icon($opts);
+
+        if (isset($data['icon']))
+        {
+            $this->response($data, 200); // 200 being the HTTP response code
+        }
+        else
+        {
+            $this->response(['error' => 'Icon list error'], 404);
+        }
+
+    }
 
 
     /**

@@ -65,6 +65,7 @@ class Newsbeuter_rss_url_model extends CI_Model
             , ru.lastmodified
             , ru.lastfetch
             , ru.sha1sum
+            , ru.icon
      
         ");
          

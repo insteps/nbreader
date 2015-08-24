@@ -54,24 +54,48 @@ fi
 
 #usage: sh run.sh update tag|folder|url|hash <relevant data>
 if [ "$1" = 'update' ]; then
-  source $SCRIPTDIR/update.sh
+    source $SCRIPTDIR/update.sh
 
-  case $2 in
-    tag) update_by_tag $2 $3;;
-    folder) update_by_tag $2 $3;;
-    url) update_by_url $2 $3;;
-    hash) update_by_hash $2 $3;;
-  esac
+    case $2 in
+        tag) update_by_tag $2 $3;;
+        folder) update_by_tag $2 $3;;
+        url) update_by_url $2 $3;;
+        hash) update_by_hash $2 $3;;
+    esac
 
 fi
+
+if [ "$1" = 'refresh' ]; then
+    source $SCRIPTDIR/feedicon.sh
+
+    case $2 in
+        iconstatus) _remove_icons_dbstatus_all && update_icons_status_all;;
+    esac
+fi
+
+#usage: sh run.sh reload <dbname>
+if [ "$1" = 'reload' ]; then
+    source $SCRIPTDIR/update.sh
+
+    case $2 in
+        *) update_by_dbname $2;;
+    esac
+fi
+
+#usage: sh run.sh reloadall
+if [ "$1" = 'reloadall' ]; then
+    source $SCRIPTDIR/update.sh
+    update_all;
+fi
+
 
 #usage: sh run.sh search <search text> <limit>
 if [ "$1" = 'search' ]; then
-  sh $SCRIPTDIR/search.sh "$2" "$3";
+    sh $SCRIPTDIR/search.sh "$2" "$3";
 fi
 
 if [ "$1" = 'config' ]; then
-  sh $SCRIPTDIR/config.sh;
+    sh $SCRIPTDIR/config.sh;
 fi
 
 
