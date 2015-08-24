@@ -49,7 +49,7 @@ get_siteurl_from_db() {
     local hash=$2
     db="$DBDIR/${db}.loc.db"
     if [ ! -f "$db" ]; then return; fi;
-    local query="SELECT url FROM rss_feed WHERE rssurl LIKE '%$hash%' limit 1;"
+    local query="SELECT url FROM rss_feed WHERE rssurl LIKE '%$hash%' LIMIT 1;"
     rssurl=$(echo "$query" | sqlite3 "$db")
 
     parse_url $rssurl
@@ -234,7 +234,7 @@ update_icons_status_all() {
 
 _update_icon_dbstatus() {
     local sha1=$1; local status=$2
-    query="UPDATE rss_url SET icon='$status' WHERE sha1sum='$sha1' LIMIT 1;";
+    query="UPDATE rss_url SET icon='$status' WHERE sha1sum='$sha1';";
     echo "$query" | sqlite3 "$CONFIGDIR/urls.db";
 }
 
