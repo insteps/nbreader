@@ -152,23 +152,16 @@ update_fetch() {
 fetch_update_feedicon() {
     if [ $FEEDICON = '1' ]; then
         source $SCRIPTDIR/feedicon.sh
-
-        local dbname=$1;
         local list=$2;
-
         local len=$(echo "$feedsurl" | wc -c);
         len=$(($len+6))
-
         while read line; do
             if [ -n "$line" ]; then 
                 #local URLSUM=$(echo $line | cut -b $len-$(($len+39)) -)
                 local URLSUM=$(echo $line | grep -o -E '[0-9a-f]{40}')
-                # echo $URLSUM;
                 update_feedicon $URLSUM;
-                echo ''
             fi
         done < $list
-
     else
         printf "${cRED}Updating feeds icon is disabled, see env.sh${cNORMAL}\n";
     fi
