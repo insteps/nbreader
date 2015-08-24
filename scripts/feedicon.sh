@@ -62,7 +62,7 @@ get_siteurl_from_db() {
     parse_url $rssurl
     if [ $host = 'localhost' ]; then rssurl=''; fi
 
-    echo -e "$hash -> $rssurl";
+    echo -e "$hash --> $rssurl";
 }
 
 parse_feed_icon_url() {
@@ -171,6 +171,7 @@ get_feedicon() {
 
 update_feedicon() {
 
+    echo '';
     echo -e ${cBWHITE}'feedicon::update-feedicon -> start icon update ... '${cNORMAL};
 
     local URLSUM=$1
