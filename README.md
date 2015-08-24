@@ -24,9 +24,8 @@ _NOTE: Alpha-release_
 1. Add way to mark/filter articles, eg. flag, tag and bookmark.
 2. Improve search on active rss (all pages).
 3. Special folders.
-4. Settings/configs.
+4. Browser based settings/configs for changes on backend.
 5. ...
-6. See image doc/layout-alpha-todo.png for marked items as TODO.
 
 ![Layout](http://dev1.insteps.net/nbreader/layout-alpha-todo.png)
 
