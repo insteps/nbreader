@@ -53,14 +53,14 @@ get_siteurl_from_db() {
     rssurl=$(echo "$query" | sqlite3 "$db")
 
     parse_url $rssurl
-    if [ $host = 'localhost' ]; then
+    if [ "$host" = 'localhost' ]; then
         rssurl='';
         query="SELECT rssurl FROM rss_url WHERE sha1sum='$URLSUM';";
         rssurl=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     fi
 
     parse_url $rssurl
-    if [ $host = 'localhost' ]; then rssurl=''; fi
+    if [ "$host" = 'localhost' ]; then rssurl=''; fi
 
     echo -e "$hash --> $rssurl";
 }

@@ -2,6 +2,8 @@
 
 ## scrapped from somewhere on net
 parse_url () {
+    if [ ! -n "$1" ]; then return; fi
+
     # extract the protocol
     proto="$(echo $1 | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 

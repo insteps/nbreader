@@ -142,9 +142,10 @@ update_fetch() {
     mv "$RUNDIR/fetch/$EPOCH.done" "$donedir/$EPOCH.fetch"
 
     if [ $COMMITDATA = '1' ]; then
-        _epoch=$EPOCH
+        local _epoch=$EPOCH
         source $SCRIPTDIR/commit.sh
-        commit_fetch $_epoch $type $tag
+        local _commitmsg="fetch: $epoch (by $type - $tag)"
+        commit_feeddir "$_epoch" "fetch" "$_commitmsg"
     fi
 
 }
@@ -162,6 +163,14 @@ fetch_update_feedicon() {
                 update_feedicon $URLSUM;
             fi
         done < $list
+
+        if [ $COMMITDATA = '1' ]; then
+            local _epoch=$EPOCH
+            source $SCRIPTDIR/commit.sh
+            local _commitmsg="fetchicon: $epoch (by $type - $tag)"
+            commit_feeddir "$_epoch" "fetchicon" "$_commitmsg"
+        fi
+
     else
         printf "${cRED}Updating feeds icon is disabled, see env.sh${cNORMAL}\n";
     fi
