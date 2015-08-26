@@ -185,7 +185,8 @@
       //$(hash).css('display', 'block');
       $('html, body').finish().animate({
          'scrollTop': ($(hash).offset().top)-55,
-      }, 1500, 'swing');
+      }, 1200, 'swing');
+      return false;
     }
 
     // ## ------------
