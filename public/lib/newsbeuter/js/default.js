@@ -109,13 +109,19 @@
       var dt = dateFormat(now, "ddd, mmm dS, yyyy, h:MM TT");
       var items = [];
         items.push( 
-        "<div class='list-group-item l0'>" + NbReader.pagersm
+        "<div class='list-group-item l0'>" + NbReader.readsm
         + "<a href='"+d.url+"'" + "class=' '" + "title='"+d.title+"'" + ">" 
-        + "<span class='glyphicon glyphicon-tags " + "' aria-hidden='true'></span> "
         + "<span class='title'>" + d.title + "</span>"
         + "</a>"
         + "<div class='author'><strong>Author:</strong> " + d.author + "</div>"
-        + NbReader.readsm + "<div class='pubdate'><strong>Published:</strong> " + dt + "</div>"
+        + "<div class='pubdate'><strong>Published:</strong> " + dt + "</div>"
+        + "<div class='status'>" + NbReader.pagersm
+        + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span> "
+        + "<span class='glyphicon glyphicon-tags blue " + "' aria-hidden='true'></span> "
+        + "<span class='glyphicon glyphicon-bookmark " + "' aria-hidden='true'></span> "
+        + "&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-edit " + "' aria-hidden='true'></span> "
+        + "&nbsp;&nbsp;<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span> "
+        + "</div>"
         + "<hr />"
         + "<div class='text'>" + d.content + "</div>"
         + NbReader.pagersm + "</div>"

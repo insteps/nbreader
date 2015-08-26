@@ -3,9 +3,10 @@
 * single feed's combined pages search in browser
 * feed's favicon support
 * global search in browser
-* use require.js if necessary
 * make scripts more modular
 * convert old newsbeuter db to nbreader compatible format
 * make use of http2/web2.0 features
+* use require.js/angular.js if necessary
+* make use ofjsonapi.org
 
 

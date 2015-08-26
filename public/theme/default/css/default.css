@@ -125,23 +125,26 @@ lots of cleanup TODO
 #rss .title { display: block; float: none; font-size: 95%; }
 #rss .glyphicon-cog { float: right; margin-top: -10px; }
 #rss .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }
-#rss .red { color: red; }
-#rss .blue { color: blue; }
-#rss .yellow { color: yellow; }
-#rss .green { color: green; }
 #rss .unread { background-color: #fff; }
 #rss .unread .author { color: blue; }
 .rss .pagination { margin-top: 10px; }
 
+span.red { color: red; }
+span.blue { color: blue; }
+span.yellow { color: yellow; }
+span.green { color: green; }
 
-#rssview .pager-simple:first-child {
+#rssview .readtog {
   float: right;
 }
 #rssview .author,
 #rssview .pubdate {
   font-size: 90%;
 }
-#rssview .readtog {
+#rssview .status span {
+  padding: 10px 8px 0px 0px;
+}
+#rssview .status .pager-simple {
   float: right;
 }
 
