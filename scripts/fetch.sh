@@ -128,7 +128,7 @@ fetch_by_url() {
     url=$1; if [ "$url" = "" ]; then exit 0; fi;
     epoch=$2; if [ "$epoch" = "" ]; then exit 0; fi;
     printf "${cBWHITE}fetch::by-url ->${cNORMAL} $url\n";
-    local query='select rssurl from rss_url where rssurl='"'$url';";
+    local query='SELECT rssurl FROM rss_url WHERE rssurl='"'$url';";
     local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
 
     _fetch_querylist "$s" $epoch
@@ -138,7 +138,7 @@ fetch_by_tag() {
     tag=$1; if [ "$tag" = "" ]; then exit 0; fi;
     epoch=$2; if [ "$epoch" = "" ]; then exit 0; fi;
     printf "${cBWHITE}fetch::by-tag ->${cNORMAL} $tag\n";
-    local query='select rssurl from rss_url where tags='"'$tag';";
+    local query='SELECT rssurl FROM rss_url WHERE tags='"'$tag';";
     local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
 
     _fetch_querylist "$s" $epoch
@@ -148,7 +148,7 @@ fetch_by_tagfolder() {
     tag=$1; if [ "$tag" = "" ]; then exit 0; fi;
     epoch=$2; if [ "$epoch" = "" ]; then exit 0; fi;
     printf "${cBWHITE}fetch::by-tagfolder ->${cNORMAL} $tag\n";
-    local query='select rssurl from rss_url where tags like '"'$tag/%'"";";
+    local query='SELECT rssurl FROM rss_url WHERE tags LIKE '"'$tag/%'"";";
     local s=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
 
     _fetch_querylist "$s" $epoch
@@ -158,7 +158,7 @@ fetch_by_dbname() {
     dbname=$1; if [ "$dbname" = "" ]; then exit 0; fi;
     if [ ! -f "$URLDIR/$dbname" ]; then echo 'Run config/setup first.'; exit 0; fi
     printf "${cBWHITE}fetch::by-db ->${cNORMAL} $dbname\n";
-    query='select rssurl from rss_url where dbname='"'$dbname';";
+    query='SELECT rssurl FROM rss_url WHERE dbname='"'$dbname';";
     s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
     for url in $s; do
         cd $APPDIR;
