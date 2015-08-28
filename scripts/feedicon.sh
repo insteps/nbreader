@@ -25,24 +25,20 @@ fpath=$(readlink -f $0)
 if [ ! "$APPDIR" ]; then APPDIR=$(dirname $(dirname $fpath)); fi
 PWD=$(pwd)
 
-# Icon store path
-ICONTXTDIR="$FEEDSDIR"
-#ICONDIR="$WEBAPPDIR/lib/icon"
-
-# Temp files
-localSHdr="$FEEDSDIR/.site.hdr.txt"
-localIco="$FEEDSDIR/.site.ico"
-localHtml="$FEEDSDIR/.site.html"
-
+source $APPDIR/scripts/env.sh
+source $SCRIPTDIR/url.inc
 # only for testing
 if [ "$1" = 'runtest' ]; then 
-  source $APPDIR/scripts/env.sh
   source $SCRIPTDIR/color2.inc
   source $SCRIPTDIR/date.inc
 fi
-source $SCRIPTDIR/url.inc
 
-isIco=0; iconType=''; FeedIconSize='';
+# Temp files
+localSHdr="$ICONTXTDIR/.site.hdr.txt"
+localIco="$ICONTXTDIR/.site.ico"
+localHtml="$ICONTXTDIR/.site.html"
+
+iconType='';
 
 get_siteurl_from_db() {
     local db=$1
@@ -65,6 +61,7 @@ get_siteurl_from_db() {
     echo -e "$hash --> $rssurl";
 }
 
+# look for 'shortcut icon' in <link ... />
 parse_feed_icon_url() {
     sed -i -e "s/</\n</g" "$localHtml"
     ICONURL=$(cat "$localHtml" | grep -i "rel\=[\"\']shortcut icon" )
@@ -83,40 +80,55 @@ parse_feed_icon_url() {
     # echo $ICONURL;
 }
 
+# get baseurl site to look for 'shortcut icon' in <link ... />
+get_site_base() {
+    clean_temp_icon
+    local BURL=$1
+    echo -e ${cYELLOW}'msg: fetching base site...'${cNORMAL};
+    local logfile="$VARDIR/log/$DATESTAMP.log"
+    wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
+    parse_feed_icon_url
+}
+
 is_file_ico() {
     # TODO 1. check for binary or magicnumber
-    isIco=0; iconType='';
-    if [ ! -f "$1" ]; then return; fi
-    # test for .ico file # dependencies=file, need another option if possible
-    is_ico=$(file $1 | grep 'icon')
-    if [ "$is_ico" ]; then isIco=1; iconType='ico'; return; fi
-    if [ ! "$is_ico" ]; then is_ico=$(file $1 | grep -i 'PNG image'); fi
-    if [ "$is_ico" ]; then isIco=1; iconType='png'; return; fi
-    if [ ! "$is_ico" ]; then is_ico=$(file $1 | grep -i 'gif'); fi
-    if [ "$is_ico" ]; then isIco=1; iconType='gif'; return; fi
+    iconType='';
+    if [ ! -f "$1" ]; then return 1; fi
+    # dependencies=file, need another option if possible
+
+    # get mime/encoding
+    local mime=$(file --mime-type --mime-encoding $1)
+    local charset=${mime##*=}
+    mime=${mime##*/}; mime=${mime%%;*}
+    if [ ! "$charset" = 'binary' ]; then return 1; fi
+
+    # test for .ico file
+    case $mime in
+        x-icon|png|gif|jpeg) iconType=$mime ;;
+    esac
+    return 0;
 }
 
 check_icon_size() {
     if [ -f "$localSHdr" ]; then rm -f "$localSHdr"; fi
-    url=$1
+    local url=$1
     wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" -S --spider "$url" -a "$localSHdr"
     local len=$(cat "$localSHdr" | grep -i '^Length' | awk '{print $2}')
-    if [ 102400 -ge "$(($len))" ]; then # 100Kb limit
-        FeedIconSize='OK';
+    if [ 102400 -ge "$(($len))" -a 0 -lt "$(($len))" ]; then # 100Kb limit
+        return 0;
     else
-        echo -e ${cRED}"msg: icon size too large ->${cNORMAL} $_fi ...";
+        echo -e ${cRED}"msg: icon size too large or zero size ->${cNORMAL} $url ...";
+        return 1
     fi
 }
 
 fetch_feedicon() {
-    clean_temp_icon; _fi=$1
+    clean_temp_icon; local _fi=$1
     local logfile="$VARDIR/log/$DATESTAMP.log"
     echo -e ${cYELLOW}"msg: fetching icon from ->${cNORMAL} $_fi ...";
-    check_icon_size "$_fi"
-    if [ "$FeedIconSize" = 'OK' ]; then
+    if check_icon_size "$_fi"; then
         wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$_fi" -O "$localIco" -a $logfile
     fi
-    FeedIconSize='';
 }
 
 clean_temp_icon() {
@@ -133,19 +145,13 @@ get_feedicon() {
     if [ ! "$BURL" ]; then return; fi
     fetch_feedicon "$BURL/favicon.ico"
 
-    is_file_ico "$localIco"
-    if [ "$isIco" -eq 1 ]; then
+    if is_file_ico $localIco; then
         echo -e ${cGREEN}'msg: favicon.ico is available, downloaded successfully'${cNORMAL};
-        isIco=0; return;
+        return;
     fi
     echo -e ${cRED}'msg: favicon.ico not available'${cNORMAL};
 
-    # get baseurl site and look for 'shortcut icon'
-    echo -e ${cYELLOW}'msg: fetching base site...'${cNORMAL};
-    local logfile="$VARDIR/log/$DATESTAMP.log"
-    clean_temp_icon
-    wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
-    parse_feed_icon_url
+    get_site_base "$BURL"
 
     if [ ! "$ICONURL" ]; then
         echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
@@ -159,10 +165,9 @@ get_feedicon() {
         fetch_feedicon "$BURL/$ICONURL"
     fi
 
-    is_file_ico "$localIco"
-    if [ "$isIco" -eq 1 ]; then
+    if is_file_ico $localIco; then
         echo -e ${cGREEN}'msg: shortcut icon downloaded successfully'${cNORMAL};
-        isIco=0; return;
+        return;
     fi
     clean_temp_icon
     echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
@@ -217,7 +222,7 @@ update_icon_status() {
 }
 
 update_icons_status_all() {
-    find $FEEDSDIR -name *.ico.txt |
+    find $ICONTXTDIR -name *.ico.txt |
     while read f; do
         local a=${f%%.ico*};
         local b=$(basename $a);
@@ -244,8 +249,8 @@ _remove_icons_dbstatus_all() {
 }
 
 generate_icons_cache_hash_list() {
-    find "$FEEDSDIR" -name '*.ico.txt' | grep -o -E '[0-9a-f]{40}' - > "$FEEDSDIR/icons-hash.txt"
-    # find "$FEEDSDIR" -name '*.ico.txt' | rev | cut -b 9-48 - | rev > "$FEEDSDIR/icons-hash.txt"
+    find "$ICONTXTDIR" -name '*.ico.txt' | grep -o -E '[0-9a-f]{40}' - > "$ICONTXTDIR/icons-hash.txt"
+    # find "$ICONTXTDIR" -name '*.ico.txt' | rev | cut -b 9-48 - | rev > "$ICONTXTDIR/icons-hash.txt"
 }
 
 generate_icons_cache_by_dbname() {
@@ -266,7 +271,7 @@ remove_icon() {
 }
 
 remove_icon_all() {
-    # find $FEEDSDIR -name *.ico.txt | xargs rm -f -
+    # find $ICONTXTDIR -name *.ico.txt | xargs rm -f -
     echo '--'
 }
 

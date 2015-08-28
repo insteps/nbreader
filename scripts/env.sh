@@ -49,6 +49,9 @@ URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
 DONEDIR="$VARDIR/.done"
 WEBAPPDIR="$APPDIR/public"
+# Icon store path
+ICONTXTDIR="$FEEDSDIR"
+#ICONDIR="$WEBAPPDIR/lib/icon"
 
 # newsbeuter <default configs>
 # wget
