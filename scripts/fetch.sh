@@ -106,23 +106,32 @@ fetch_url() {
             
 }
 
+_fetch_querylist() {
+    local s=$1; local epoch=$2;
+    if [ ! "$s" ]; then
+        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        return;
+    fi
+
+    local extfetch="$RUNDIR/fetch/$epoch";
+    echo "$s" > "$extfetch"
+    while read url; do
+        cd $APPDIR;
+        fetch_url $url;
+    done < $extfetch
+
+    cat $extfetch >> "$extfetch.done"
+    rm -f $extfetch
+}
+
 fetch_by_url() {
     url=$1; if [ "$url" = "" ]; then exit 0; fi;
     epoch=$2; if [ "$epoch" = "" ]; then exit 0; fi;
     printf "${cBWHITE}fetch::by-url ->${cNORMAL} $url\n";
     local query='select rssurl from rss_url where rssurl='"'$url';";
     local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
-    if [ ! "$s" ]; then
-        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
-        return;
-    fi
-    local extfetch="$RUNDIR/fetch/$epoch";
-    echo "$s" > "$extfetch"
-    for url in $s; do
-        cd $APPDIR;
-        fetch_url $url;
-    mv $extfetch "$extfetch.done"
-    done
+
+    _fetch_querylist "$s" $epoch
 }
 
 fetch_by_tag() {
@@ -131,17 +140,8 @@ fetch_by_tag() {
     printf "${cBWHITE}fetch::by-tag ->${cNORMAL} $tag\n";
     local query='select rssurl from rss_url where tags='"'$tag';";
     local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
-    if [ ! "$s" ]; then
-        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
-        return;
-    fi
-    local extfetch="$RUNDIR/fetch/$epoch";
-    echo "$s" > "$extfetch"
-    for url in $s; do
-        cd $APPDIR;
-        fetch_url $url;
-    done
-    mv $extfetch "$extfetch.done"
+
+    _fetch_querylist "$s" $epoch
 }
 
 fetch_by_tagfolder() {
@@ -150,22 +150,8 @@ fetch_by_tagfolder() {
     printf "${cBWHITE}fetch::by-tagfolder ->${cNORMAL} $tag\n";
     local query='select rssurl from rss_url where tags like '"'$tag/%'"";";
     local s=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
-    local extfetch="$RUNDIR/fetch/$epoch";
-    if [ ! "$s" ]; then
-        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
-        return;
-    fi
-    echo "$s" > "$extfetch"
-    while read url; do
-        cd $APPDIR;
-        fetch_url $url;
-    done < $extfetch
-    if [ -f "$extfetch.done" ]; then
-        cat $extfetch >> "$extfetch.done"
-        rm -f $extfetch
-    else
-        mv $extfetch "$extfetch.done"
-    fi
+
+    _fetch_querylist "$s" $epoch
 }
 
 fetch_by_dbname() {
