@@ -280,22 +280,35 @@
     }
   }
 
+  NbReader.SetRssPagerPrev = function () {
+    prev = $(NbReader.RssActPgs).children('li.prev').children('a');
+    $(prev[0]).trigger( "click" );
+  }
+  NbReader.SetRssPagerNext = function () {
+    next = $(NbReader.RssActPgs).children('li.next').children('a');
+    $(next[0]).trigger( "click" );
+  }
   NbReader.SetRssPagerSimple = function (e) {
     obj = e.target;
     var li = $(NbReader.RssActPgs).children('li');
     if(li.length < 3) { return; }
-    prev = $(NbReader.RssActPgs).children('li.prev').children('a');
-    next = $(NbReader.RssActPgs).children('li.next').children('a');
-    if( $(obj).hasClass('prev') ) { $(prev[0]).trigger( "click" ); }
-    if( $(obj).hasClass('next') ) { $(next[0]).trigger( "click" ); }
+    if( $(obj).hasClass('prev') ) { NbReader.SetRssPagerPrev(); }
+    if( $(obj).hasClass('next') ) { NbReader.SetRssPagerNext(); }
   }
   NbReader.SetRssViewPgrSm = function (e) {
     obj = e.target;
     if( $(obj).hasClass('prev') ) {
-      $(NbReader.activerss).prev('a').trigger( "click" ); }
+      if ( $(NbReader.activerss).prev('a')[0] ) {
+        $(NbReader.activerss).prev('a').trigger( "click" );
+      } else { NbReader.SetRssPagerPrev(); }
+    }
     if( $(obj).hasClass('next') ) {
-      $(NbReader.activerss).next('a').trigger( "click" ); }
+      if ( $(NbReader.activerss).next('a')[0] ) {
+        $(NbReader.activerss).next('a').trigger( "click" ); 
+      } else { NbReader.SetRssPagerNext(); }
+    }
   }
+
   NbReader.SetRssViewReadTog = function (e, isInit) {
     if(e.target) { obj = e.target } else { obj = e; }; obj.preventDefault; 
     if(obj.tagName == 'SPAN') { obj = obj.parentNode; }
