@@ -90,7 +90,7 @@ fetch_url() {
     
         mkdir -p $VARDIR/log
         local logfile="$VARDIR/log/$DATESTAMP.log"
-        wget "$WGETOPTS_1" "$USERAGENT_0" "$URL" -O ".current.xml" -a $logfile
+        wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O ".current.xml" -a $logfile
         if [ -s '.current.xml' ]; then
             # checkpoints
             # 1. make git/fossil friendly
@@ -192,6 +192,6 @@ fetch() {
 # fetch_by_dbname business
 # fetch_by_tag '/business/crmbuyer.com' > /dev/null 2>&1
 # fetch_by_url 'http://www.crmbuyer.com/perl/syndication/rssfull.pl'
-
+# fetch_url http://distrowatch.com/news/dwp.xml $EPOCH
 
 

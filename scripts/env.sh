@@ -54,6 +54,6 @@ WEBAPPDIR="$APPDIR/public"
 # wget
 # 
 _USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
-USERAGENT_0=" --user-agent=$_USERAGENT_0 "
+USERAGENT_0=" --user-agent='$_USERAGENT_0' "
 WGETOPTS_1=" --timeout=20 --tries=5 --no-check-certificate "
 

@@ -99,7 +99,7 @@ is_file_ico() {
 check_icon_size() {
     if [ -f "$localSHdr" ]; then rm -f "$localSHdr"; fi
     url=$1
-    wget "$WGETOPTS_1" "$USERAGENT_0" -S --spider "$url" -a "$localSHdr"
+    wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" -S --spider "$url" -a "$localSHdr"
     local len=$(cat "$localSHdr" | grep -i '^Length' | awk '{print $2}')
     if [ 102400 -ge "$(($len))" ]; then # 100Kb limit
         FeedIconSize='OK';
@@ -114,7 +114,7 @@ fetch_feedicon() {
     echo -e ${cYELLOW}"msg: fetching icon from ->${cNORMAL} $_fi ...";
     check_icon_size "$_fi"
     if [ "$FeedIconSize" = 'OK' ]; then
-        wget "$WGETOPTS_1" "$USERAGENT_0" "$_fi" -O "$localIco" -a $logfile
+        wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$_fi" -O "$localIco" -a $logfile
     fi
     FeedIconSize='';
 }
@@ -144,7 +144,7 @@ get_feedicon() {
     echo -e ${cYELLOW}'msg: fetching base site...'${cNORMAL};
     local logfile="$VARDIR/log/$DATESTAMP.log"
     clean_temp_icon
-    wget "$WGETOPTS_1" "$USERAGENT_0" "$BURL" -O "$localHtml" -a $logfile
+    wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
     parse_feed_icon_url
 
     if [ ! "$ICONURL" ]; then
