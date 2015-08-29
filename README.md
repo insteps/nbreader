@@ -43,8 +43,9 @@ _NOTE: Alpha-release_
 4. PHP 5.4+
 5. Any PHP supporting web-server (tested on Apache with .htaccess file support).
 6. CodeIgniter-3.x (PHP Framework)
-7. Fossil scm, https://www.fossil-scm.org  (optional),
+7. File (for icon download)
+8. Fossil scm, https://www.fossil-scm.org  (optional),
    easy way is download the precompiled single binary file.
-8. Jq (optional)
-9. 
+9. Jq (optional)
+10. 
 
