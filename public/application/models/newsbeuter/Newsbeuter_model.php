@@ -10,7 +10,6 @@
  * @author          V.Krishn
  * @license         MIT
  * @link            https://github.com/insteps/nbreader
- * @version         0.1.0
  */
 
 /*
