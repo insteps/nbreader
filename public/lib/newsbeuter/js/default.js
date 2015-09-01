@@ -89,19 +89,14 @@
       newslist = NbReader.NewsList = NbReader.RssAct.getElementsByTagName(config.list);
       $(newslist).removeClass('active');
 
-      if ((obj.tagName) == 'SPAN') {
-        a = obj.parentNode;
-      }
-      if ((obj.tagName) == 'A') {
-        a = obj;
-      }
+      if ((obj.tagName) == 'SPAN') { a = obj.parentNode; }
+      if ((obj.tagName) == 'A') { a = obj; }
       var id = (/(\#)([\d]+)$/).exec(a.href)[2];
       data = $(NbReader.RssAct).data(NbReader.activehash);
       now = new Date();
       $.each( data.query, function( key ) {
-        if(id == data.query[key].id)
-        d = data.query[key];
-        return;
+        if(id == data.query[key].id) {
+          d = data.query[key]; return; }
       });
       var mEpoch = parseInt(d.pubDate); 
       if(mEpoch < 10000000000) { mEpoch *= 1000; }
@@ -119,6 +114,7 @@
         + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span> "
         + "<span class='glyphicon glyphicon-tags blue " + "' aria-hidden='true'></span> "
         + "<span class='glyphicon glyphicon-bookmark " + "' aria-hidden='true'></span> "
+        + "<span class='glyphicon glyphicon-picture " + "' aria-hidden='true'></span> "
         + "&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-edit " + "' aria-hidden='true'></span> "
         + "&nbsp;&nbsp;<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span> "
         + "</div>"
@@ -578,23 +574,28 @@
   NbReader.SearchFeedList = function (config) {
     obj = NbReader.activenode;
 
-    rssfeeds = NbReader.RssListRoot = document.getElementById(config.nodes);
-    list = NbReader.RssList = rssfeeds.getElementsByTagName(config.list);
+    list = NbReader.RssList;
     search = $("#collapseOne input.search");
 
     $(search).keydown(function(e) {
       if(this.value == '' && e.keyCode == 13) {
-        // ## reset styles first
-        $(list).removeClass('hiddenYES');
-        $(list).next('div').removeClass('hiddenNO');
-        $(list).next('div').next('div').removeClass('hiddenNO');
-        $(list).children('.glyphicon').removeClass('allleft');
+        NbReader.SearchFeedListReset(list)
       }
     });
 
+    // reset styles first
+    NbReader.SearchFeedListReset = function (list) {
+      $(list).removeClass('hiddenYES');
+      $(list).next('div').removeClass('hiddenNO');
+      $(list).next('div').next('div').removeClass('hiddenNO');
+      $(list).children('.glyphicon').removeClass('allleft');
+    }
+
     $( search[0] ).change(function() {
+      NbReader.SearchFeedListReset(list);
       if(this.value == '') return false;
       $(list).next('div').addClass('hiddenNO');
+      $(list).next('div').next('div').addClass('hiddenNO');
       $(list).children('.glyphicon').addClass('allleft');
       for (var i = 0; i < list.length; i++) {
         var t1 = list[i].title; var e1 = 't1.search(/'+this.value+'/i)';
