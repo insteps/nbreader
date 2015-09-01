@@ -39,7 +39,7 @@ _NOTE: Alpha-release_
 
 1. Newsbeuter
 2. Sqlite3
-3. Wget
+3. Curl(default) or Wget
 4. PHP 5.4+
 5. Any PHP supporting web-server (tested on Apache with .htaccess file support).
 6. CodeIgniter-3.x (PHP Framework)

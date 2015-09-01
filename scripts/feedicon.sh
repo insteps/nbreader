@@ -88,7 +88,7 @@ get_site_base() {
     local logfile="$VARDIR/log/$DATESTAMP.log"
 
     if [ $USECURL = '1' ]; then
-      curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$BURL" -o "$localHtml" -v --stderr $logfile
+      curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
     else
       wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
     fi
@@ -142,7 +142,7 @@ fetch_feedicon() {
     echo -e ${cYELLOW}"msg: fetching icon from ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
         if [ $USECURL = '1' ]; then
-          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$_fi" -o "$localIco" -v --stderr $logfile
+          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$_fi" -o "$localIco" -v --stderr - >> $logfile
         else
           wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$_fi" -O "$localIco" -a $logfile
         fi

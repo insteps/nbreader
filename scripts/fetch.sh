@@ -92,7 +92,7 @@ fetch_url() {
         local logfile="$VARDIR/log/$DATESTAMP.log"
 
         if [ $USECURL = '1' ]; then
-          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o ".current.xml" -v --stderr $logfile
+          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o ".current.xml" -v --stderr - >> $logfile
         else
           wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O ".current.xml" -a $logfile
         fi

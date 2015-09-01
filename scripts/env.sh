@@ -65,6 +65,6 @@ WGETOPTS_1=" --timeout=20 --tries=5 --no-check-certificate "
 
 # curl
 # 
-CURLOPTS_1=" --connect-timeout 20 --retry 5 "
+CURLOPTS_1=" -L --connect-timeout 20 --retry 5 "
 
 
