@@ -90,7 +90,13 @@ fetch_url() {
     
         mkdir -p $VARDIR/log
         local logfile="$VARDIR/log/$DATESTAMP.log"
-        wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O ".current.xml" -a $logfile
+
+        if [ $USECURL = '1' ]; then
+          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o ".current.xml" -v --stderr $logfile
+        else
+          wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O ".current.xml" -a $logfile
+        fi
+
         if [ -s '.current.xml' ]; then
             # checkpoints
             # 1. make git/fossil friendly
@@ -158,8 +164,9 @@ fetch_by_dbname() {
     dbname=$1; if [ "$dbname" = "" ]; then exit 0; fi;
     if [ ! -f "$URLDIR/$dbname" ]; then echo 'Run config/setup first.'; exit 0; fi
     printf "${cBWHITE}fetch::by-db ->${cNORMAL} $dbname\n";
-    query='SELECT rssurl FROM rss_url WHERE dbname='"'$dbname';";
-    s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
+    local query='SELECT rssurl FROM rss_url WHERE dbname='"'$dbname';";
+    local s=$(printf "$query" | sqlite3 "$CONFIGDIR/urls.db");
+
     for url in $s; do
         cd $APPDIR;
         fetch_url $url;

@@ -46,7 +46,7 @@ _For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/li
 
    There is no need to have multiple urls list file,
    if you want to keep things simple and store all 
-   data into single file.
+   data into single file/database.
 
 3. If so far things seem ok, run `sh run.sh config`
 

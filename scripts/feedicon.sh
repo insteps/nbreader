@@ -86,7 +86,13 @@ get_site_base() {
     local BURL=$1
     echo -e ${cYELLOW}'msg: fetching base site...'${cNORMAL};
     local logfile="$VARDIR/log/$DATESTAMP.log"
-    wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
+
+    if [ $USECURL = '1' ]; then
+      curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$BURL" -o "$localHtml" -v --stderr $logfile
+    else
+      wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
+    fi
+
     parse_feed_icon_url
 }
 
@@ -104,7 +110,7 @@ is_file_ico() {
 
     # test for .ico file
     case $mime in
-        x-icon|png|gif|jpeg) iconType=$mime ;;
+        x-icon|x-ms-bmp|png|gif|jpeg) iconType=$mime ;;
     esac
     return 0;
 }
@@ -112,8 +118,16 @@ is_file_ico() {
 check_icon_size() {
     if [ -f "$localSHdr" ]; then rm -f "$localSHdr"; fi
     local url=$1
-    wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" -S --spider "$url" -a "$localSHdr"
-    local len=$(cat "$localSHdr" | grep -i '^Length' | awk '{print $2}')
+
+    if [ $USECURL = '1' ]; then
+        curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$url" -f -s --dump-header "$localSHdr" > /dev/null 2>&1
+        lentxt='^Content-Length'
+    else
+        wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" -S --spider "$url" -a "$localSHdr"
+        lentxt='^Length'
+    fi
+
+    local len=$(cat "$localSHdr" | grep -i "$lentxt" | awk '{print $2}' | grep -i -o '^[0-9]*')
     if [ 102400 -ge "$(($len))" -a 0 -lt "$(($len))" ]; then # 100Kb limit
         return 0;
     else
@@ -127,7 +141,11 @@ fetch_feedicon() {
     local logfile="$VARDIR/log/$DATESTAMP.log"
     echo -e ${cYELLOW}"msg: fetching icon from ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
-        wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$_fi" -O "$localIco" -a $logfile
+        if [ $USECURL = '1' ]; then
+          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$_fi" -o "$localIco" -v --stderr $logfile
+        else
+          wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$_fi" -O "$localIco" -a $logfile
+        fi
     fi
 }
 
