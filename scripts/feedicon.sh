@@ -127,7 +127,7 @@ check_icon_size() {
         lentxt='^Length'
     fi
 
-    local len=$(cat "$localSHdr" | grep -i "$lentxt" | awk '{print $2}' | grep -i -o '^[0-9]*')
+    local len=$(cat "$localSHdr" | grep -i "$lentxt" | awk '{print $2}' | tac | grep -i -m1 -o '^[0-9]*')
     if [ 102400 -ge "$(($len))" -a 0 -lt "$(($len))" ]; then # 100Kb limit
         return 0;
     else
