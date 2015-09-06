@@ -39,8 +39,8 @@
 
     // ## ------------
     NbReader.A = rssfeeds.onclick = function(e) {
-      e.preventDefault();
-      if(e.target) { obj = e.target } else { obj = e; }; title = obj.title;
+      if(e.target) { e.preventDefault(); obj = e.target; }
+        else { obj = e; }; title = obj.title;
       NbReader.activenode = obj;
       
       if ((obj.tagName) == 'INPUT') { return; }
@@ -175,7 +175,7 @@
     // ## ------------
     h = $('#navbar-header');
     h[0].onclick = function(e) {
-      e.preventDefault; obj = e.target;
+      e.preventDefault(); obj = e.target;
       if(obj.tagName != 'A') { return; }
       //$('#accordion').hide(); //# TODO basic transitions/effects
       //$('#rss').hide();
@@ -183,7 +183,7 @@
       hash = obj.hash;
       //$(hash).css('display', 'block');
       $('html, body').finish().animate({
-         'scrollTop': ($(hash).offset().top)-55,
+         'scrollTop': ($(hash).offset().top)-55
       }, 1200, 'swing');
       return false;
     }
@@ -303,7 +303,7 @@
   }
 
   NbReader.SetRssViewReadTog = function (e, isInit) {
-    if(e.target) { obj = e.target } else { obj = e; }; obj.preventDefault; 
+    if(e.target) { e.preventDefault(); obj = e.target; } else { obj = e; };
     if(obj.tagName == 'SPAN') { obj = obj.parentNode; }
     if( isInit != true ) { $(NbReader.activerss).trigger( "dblclick" ); }
     // NOTE: activexml badge color turns default // FIXED
