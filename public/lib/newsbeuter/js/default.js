@@ -9,10 +9,10 @@
  */
 
 (function( NbReader, undefined ) {
-  var config = NbReader.Config = function (config) {
-    NbReader.Config = config;
+  var config = NbReader.Config = function (conf) {
+    NbReader.config = conf;
+    NbReader.version = conf.version;
   }
-  NbReader.version = config.version;
   NbReader.copyright = 'Copyright (c) 2015 V.Krishn (insteps.net)';
   NbReader.about = function () {
     alert(
@@ -22,12 +22,9 @@
   }
 }( this.NbReader = this.NbReader || {} ) );
 
-//var NBR_CONFIG = {"nodes" : "nbrroot"};
-//NbReader.Config(NBR_CONFIG);
-
 (function( NbReader, $, undefined ) {
   var SetRssList = NbReader.SetRssList = function (config) {
-    NbReader.Config(config); root = config.nodes;
+    root = config.nodes;
     if(typeof root !== 'object') {
       rssfeeds = NbReader.RssListRoot = document.getElementById(root);
       list = NbReader.RssList = rssfeeds.getElementsByTagName(config.list);
@@ -98,7 +95,7 @@
         if(id == data.query[key].id) {
           d = data.query[key]; return; }
       });
-      var mEpoch = parseInt(d.pubDate); 
+      var mEpoch = parseInt(d.pubDate);
       if(mEpoch < 10000000000) { mEpoch *= 1000; }
       now.setTime(mEpoch);
       var dt = dateFormat(now, "ddd, mmm dS, yyyy, h:MM TT");
@@ -126,7 +123,7 @@
 
       $(a).toggleClass('active');
       NbReader.RssView.innerHTML = content;
-      console.log(newslist.length);
+//      console.log(newslist.length);
       NbReader.activerss = a;
 
       rssViewPgrSm = $('#rssview .list-group-item .pager-simple');
@@ -159,11 +156,11 @@
       a = NbReader.activenodeXml;
       atn = $(a)[0].title; _s = "a[title='"+atn+"']";
       db = $( a ).attr( "data-db" ); if( ! db ) return;
-      url = NbReader.Config.apiurl+'/unread_/cat/'+db+'/id/'+id+'/unread/'+unread+'/format/json';
+      url = NbReader.config.apiurl+'/unread_/cat/'+db+'/id/'+id+'/unread/'+unread+'/format/json';
 
       $.getJSON( url, function( data ) {
         if(String(data.result) == 'true') {
-          console.log('change read status of: ' + id);
+          console.log('change read status of: ' + db+'::'+id);
           $(r).toggleClass('unread');
           NbReader.doNodeRefresh = 'yes';
           $( "#collapseOne " + _s).children('.badge').first().trigger( "click" );
@@ -216,11 +213,11 @@
   }
   
   NbReader.ToggleNode = function (obj) {
-      $(obj).toggleClass('active');
-      $(obj).next("div").toggleClass('hidden');
-      if($(obj).next("div").next('div')) { $(obj).next("div").next('div').toggleClass('hidden'); }
-      $(obj).children('.glyphicon').toggleClass('glyphicon-folder-close');
-      $(obj).children('.glyphicon').toggleClass('glyphicon-folder-open');
+    $(obj).toggleClass('active');
+    $(obj).next("div").toggleClass('hidden');
+    if($(obj).next("div").next('div')) { $(obj).next("div").next('div').toggleClass('hidden'); }
+    $(obj).children('.glyphicon').toggleClass('glyphicon-folder-close');
+    $(obj).children('.glyphicon').toggleClass('glyphicon-folder-open');
   }
   NbReader.ToggleNodeXml = function (obj) {
     if( ! $(obj).hasClass('activexml') ) { $(obj).toggleClass('activexml'); }
@@ -246,7 +243,7 @@
     if(hash == NbReader.activehash && NbReader.doXmlRefresh != 'yes')
       { return false; } //same as previous
     NbReader.activehash = hash; NbReader.feedoffset = 0;
-    NbReader.GetFeed(NbReader.Config);
+    NbReader.GetFeed(NbReader.config);
   }
   NbReader.IsActiveXmlUpdated = function (newNum) {
     var oldn = NbReader.GetNodeCount(NbReader.activenodeXml);
@@ -330,7 +327,7 @@
     setTimeout(function() {
       $.ajax({
         dataType: "json",
-        url: NbReader.Config.apiurl+'/icon/format/json/cat/'+dbname,
+        url: NbReader.config.apiurl+'/icon/format/json/cat/'+dbname,
         data: '',
         success: function(data) {
           $(NbReader.RssListRoot).data('icon.'+dbname, data);
@@ -386,7 +383,7 @@
 
     $.ajax({
       dataType: "json",
-      url: NbReader.Config.apiurl+'/meta/unread/yes/tag/'+title+'/format/json'+refresh,
+      url: NbReader.config.apiurl+'/meta/unread/yes/tag/'+title+'/format/json'+refresh,
       data: '',
       success: function(data) {
         var items = []; var now = new Date(); var n = now.getTime(); var dbs = [];
@@ -468,7 +465,7 @@
     console.log( 'GetFeed:: ' + hash + ' at ' + ofs );
     $.ajax({
       dataType: "json",
-      url: NbReader.Config.apiurl+'/item/cat/'+db+'/hash/'+hash+'/row/10-'+ofs+'/filter/default'+'/format/json',
+      url: NbReader.config.apiurl+'/item/cat/'+db+'/hash/'+hash+'/row/10-'+ofs+'/filter/default'+'/format/json',
       data: '',
       success: function(data) {
         $(NbReader.RssAct).data(hash, data);
@@ -501,7 +498,7 @@
         if( ! items.length ) { return; }
         rsslist = "<div class='list-group rss-items l0 '" + ">" + items.join("") + "</div>";
         NbReader.RssAct.innerHTML = rsslist;
-        NbReader.SearchRSS(NbReader.Config);
+        NbReader.SearchRSS(NbReader.config);
         setTimeout(function() {
           $(NbReader.RssAct).children('.rss-items').children('a').first().trigger( "click" );
         }, 100);
@@ -526,7 +523,7 @@
               last: '&gt;&gt;',
               onPageClick: function (event, page) {
                 NbReader.feedoffset = (parseInt(page)-1)*10;
-                NbReader.GetFeed(NbReader.Config);
+                NbReader.GetFeed(NbReader.config);
                 $(search2).attr( "placeholder", 'Search for...      Pgs: '+page+'/'+pgs );
               }
             });
@@ -614,4 +611,6 @@
 
 
 
+
+/*]]>*/
 

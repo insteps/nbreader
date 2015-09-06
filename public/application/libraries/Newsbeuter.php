@@ -168,7 +168,10 @@ class Newsbeuter
 
     public function get_frontend_jsconf()
     {
-        return $this->_newsbeuter_config['newsbeuter']['fe']['jsconf'];
+        $jsconf = array();
+        $jsconf = $this->_newsbeuter_config['newsbeuter']['fe']['jsconf'];
+        $jsconf['version'] = $this->get_version();
+        return json_encode($jsconf);
     }
 
     ## Apply Security related filter on RSS contents/text

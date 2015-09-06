@@ -47,7 +47,7 @@ $jsconf['apiurl'] = $config['newsbeuter']['be']['rss_api_url'];
 $jsconf['nodes'] = 'collapseOne';
 $jsconf['rssactive'] = 'rssactive';
 $jsconf['list'] = 'a';
-$config['newsbeuter']['fe']['jsconf'] = json_encode($jsconf);
+$config['newsbeuter']['fe']['jsconf'] = $jsconf;
 
 # computed paths, generally not be changed
 $config['newsbeuter']['be']['confpath'] = $config['newsbeuter']['be']['path'].'/config';

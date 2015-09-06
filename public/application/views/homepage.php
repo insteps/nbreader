@@ -103,9 +103,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 setTimeout(function() {
 
   var NbReader_Config = <?php echo $jsconf."\n"; ?>
-  NbReader.SetRssList(NbReader_Config);
+  NbReader.Config(NbReader_Config); 
+  NbReader.SetRssList(NbReader.config);
   NbReader.SearchFeedList(NbReader_Config);
-  //NbReader.SetRssPagerSimple();
+  ////NbReader.SetRssPagerSimple();
 
 }, 50);
 /*]]>*/

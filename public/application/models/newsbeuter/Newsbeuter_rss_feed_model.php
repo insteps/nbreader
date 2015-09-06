@@ -123,11 +123,6 @@ class Newsbeuter_rss_feed_model extends CI_Model
  
     public function get_rss_feed($search_options = array(), $limit = 0, $offset = 0, $total_rows = 0)
     {
-        //if(empty($search_options)){ return array(); }
-         
-        $search_options['limit'] = $limit;
-        $search_options['offset'] = $offset;
-        $search_options['total_rows'] = $total_rows;
          
         $result = array();
          

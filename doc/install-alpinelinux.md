@@ -3,7 +3,7 @@
 
 * newsbeuter
 * sqlite
-* wget
+* curl(default) / wget
 * php-apache2
 * php-xml
 * php-phar
@@ -16,7 +16,7 @@
 * jq (optional)
 
 eg.
-`apk add newsbeuter sqlite wget file php-apache2 php-xml php-phar php-sqlite3 php-json php-ctype php-curl`
+`apk add newsbeuter sqlite curl file php-apache2 php-xml php-phar php-sqlite3 php-json php-ctype php-curl`
 
 ### Issues (see `doc/install.md`):
 1. Download required 3rd party framework/libs used in application.

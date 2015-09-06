@@ -45,6 +45,8 @@ for db in $dbs; do
     n=$(($n+1));
     db=$(basename $db);
     _db=${db%%\.*};
+
+    # default (10), upper-limit (125)
     str1=$str1" ATTACH DATABASE '$db' as $_db; ";
 
     if [ "$n" -eq 1 ]; then
