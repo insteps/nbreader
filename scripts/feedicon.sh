@@ -63,6 +63,7 @@ get_siteurl_from_db() {
 
 # look for 'shortcut icon' in <link ... />
 parse_feed_icon_url() {
+    if [ ! -f "$localHtml" ]; then return 0; fi
     sed -i -e "s/</\n</g" "$localHtml"
     ICONURL=$(cat "$localHtml" | grep -i "rel\=[\"\']shortcut icon" )
     if [ ! "$ICONURL" ]; then
@@ -72,7 +73,7 @@ parse_feed_icon_url() {
         grep -i -o "href\=[\"\']\(.*\)[\"\']" |
         sed -e "s/href//" \
             -e "s/\"//g" \
-            -e "s/\'//" \
+            -e "s/'//g" \
             -e "s/\=//" \
             -e "s/>.*$//g"
         )
@@ -84,7 +85,7 @@ parse_feed_icon_url() {
 get_site_base() {
     clean_temp_icon
     local BURL=$1
-    echo -e ${cYELLOW}'msg: fetching base site...'${cNORMAL};
+    echo -e ${cYELLOW}'msg: fetching base site... -> '${cNORMAL}${BURL};
     local logfile="$VARDIR/log/$DATESTAMP.log"
 
     if [ $USECURL = '1' ]; then
@@ -92,8 +93,6 @@ get_site_base() {
     else
       wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
     fi
-
-    parse_feed_icon_url
 }
 
 is_file_ico() {
@@ -170,6 +169,7 @@ get_feedicon() {
     echo -e ${cRED}'msg: favicon.ico not available'${cNORMAL};
 
     get_site_base "$BURL"
+    parse_feed_icon_url
 
     if [ ! "$ICONURL" ]; then
         echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
@@ -204,7 +204,7 @@ update_feedicon() {
     local iconfile="$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
 
     if [ -f "$iconfile" ]; then
-        printf "${cGREEN}Nothing to do !! icon file already available.${cNORMAL}\n";
+        printf "${cGREEN}Nothing to do !! icon already downloaded${cNORMAL} -> $URLSUM\n";
         return;
     fi
 
