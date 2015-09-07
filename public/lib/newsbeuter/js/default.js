@@ -54,7 +54,7 @@
       }
 
       if( (obj.tagName) == 'SPAN' && $(obj).hasClass('badge') ) {
-        a = obj.parentNode;
+        a = obj.parentNode; // TODO - add popup opts
         if( NbReader.IsXml(a) ) { NbReader.doXmlRefresh = 'yes'; }
           else { NbReader.doNodeRefresh = 'yes'; }
       }
@@ -73,8 +73,9 @@
       $(NbReader.activenodeA).removeClass('active');
       NbReader.activenodeA = a; NbReader.nodeType = 'node';
       
-      if( NbReader.doNodeRefresh != 'yes' ) { NbReader.ToggleNode(a); } // TODO - add popup opts
-      NbReader.GetFeedList(config); // no action if already fetched
+      if( NbReader.doNodeRefresh != 'yes' ) {
+        NbReader.ToggleNode(a); NbReader.SetBreadCrumb(obj, false); }
+      NbReader.GetFeedList(config);
       
       return false;
     }
@@ -367,10 +368,10 @@
   var GetFeedList = NbReader.GetFeedList = function (config) {
     obj = NbReader.activenode; a = NbReader.activenodeA;
 
-    f = $(a).data('fetched'); refresh = '/refresh/no'
-    if( typeof f != 'undefined' && NbReader.doNodeRefresh != 'yes' ) { return; }
-    if (NbReader.doNodeRefresh != 'yes')
-    { NbReader.SetBreadCrumb(obj, false); } else { refresh = '/refresh/yes';  }
+    refresh = NbReader.doNodeRefresh == 'yes' ? 'yes' : 'no';
+    f = $(a).data('fetched'); // no action if already fetched
+    if( typeof f != 'undefined' && refresh != 'yes' ) { return; }
+
     NbReader.doNodeRefresh = '';
     console.log('GetFeedList:: '+a.title+' (unfetched)');
 
@@ -383,7 +384,7 @@
 
     $.ajax({
       dataType: "json",
-      url: NbReader.config.apiurl+'/meta/unread/yes/tag/'+title+'/format/json'+refresh,
+      url: NbReader.config.apiurl+'/meta/unread/yes/tag/'+title+'/format/json/refresh/'+refresh,
       data: '',
       success: function(data) {
         var items = []; var now = new Date(); var n = now.getTime(); var dbs = [];

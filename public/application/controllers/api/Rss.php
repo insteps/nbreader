@@ -134,6 +134,10 @@ class Rss extends REST_Controller {
         }
     }
 
+    public function template_get()
+    {
+    }
+
     public function category_get()
     {
         ## Api urls example (api baseurl: http://localhost/nbreader/api/rss)
@@ -330,7 +334,7 @@ class Rss extends REST_Controller {
             ## get items count unread by feedurl/hash
             $search_options['unread'] = '1';
             $_d = $this->rss_item->get_rss_item_count($search_options);
-            $data['count_unread'] = $_d[$feedurl]['count'];
+            $data['count_unread'] = @$_d[$feedurl]['count'] ? $_d[$feedurl]['count'] : 0;
             unset($search_options['unread']);
         }
 

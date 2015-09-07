@@ -7,6 +7,7 @@
 * convert old newsbeuter db to nbreader compatible format
 * make use of http2/web2.0 features
 * use require.js/angular.js if necessary
-* make use ofjsonapi.org
+* make use of jsonapi.org
+* make use of www.w3.org/2013/csvw/wiki/ where possible
 
 
