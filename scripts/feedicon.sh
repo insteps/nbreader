@@ -38,6 +38,7 @@ localSHdr="$ICONTXTDIR/.site.hdr.txt"
 localIco="$ICONTXTDIR/.site.ico"
 localHtml="$ICONTXTDIR/.site.html"
 
+size_limit=102400; # 100Kb limit
 iconType='';
 
 get_siteurl_from_db() {
@@ -127,7 +128,7 @@ check_icon_size() {
     fi
 
     local len=$(cat "$localSHdr" | grep -i "$lentxt" | awk '{print $2}' | tac | grep -i -m1 -o '^[0-9]*')
-    if [ 102400 -ge "$(($len))" -a 0 -lt "$(($len))" ]; then # 100Kb limit
+    if [ $size_limit -ge "$(($len))" -a 0 -lt "$(($len))" ]; then
         return 0;
     else
         echo -e ${cRED}"msg: icon size too large or zero size ->${cNORMAL} $url ...";
@@ -163,7 +164,7 @@ get_feedicon() {
     fetch_feedicon "$BURL/favicon.ico"
 
     if is_file_ico $localIco; then
-        echo -e ${cGREEN}'msg: favicon.ico is available, downloaded successfully'${cNORMAL};
+        echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'downloaded successfully'${cNORMAL};
         return;
     fi
     echo -e ${cRED}'msg: favicon.ico not available'${cNORMAL};
