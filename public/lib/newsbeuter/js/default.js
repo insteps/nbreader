@@ -220,9 +220,9 @@
     $(obj).children('.glyphicon').toggleClass('glyphicon-folder-close');
     $(obj).children('.glyphicon').toggleClass('glyphicon-folder-open');
   }
-  NbReader.ToggleNodeXml = function (obj) {
-    if( ! $(obj).hasClass('activexml') ) { $(obj).toggleClass('activexml'); }
-  }
+//   NbReader.ToggleNodeXml = function (obj) {
+// //    if( ! $(obj).hasClass('activexml') ) { $(obj).toggleClass('activexml'); }
+//   }
 
   NbReader.GetUrl2Hash = function (obj) {
     return (/\/[^\/]*\.xml$/i).exec(obj.href)[0].replace(/\//g, '').replace(/\.xml$/, '');
@@ -234,13 +234,16 @@
     if( (/\.xml$/i).test(obj.href) ) { return true; }
     return false;
   }
+  NbReader.SetActiveXmlNode = function (a) {
+    $(this.activenodeXml).removeClass('activexml');
+    $(a).addClass('activexml');
+    this.activenodeXml = a; this.activenodeXmlHref = a.href;
+  }
   NbReader.SetXml = function (obj) {
-    $(NbReader.activenodeXml).removeClass('activexml');
-    NbReader.activenodeXml = obj; NbReader.nodeType = 'xml';
-    NbReader.activenodeXmlHref = obj.href;
-    var hash = NbReader.GetUrl2Hash(obj);
+    NbReader.nodeType = 'xml';
+    NbReader.SetActiveXmlNode(obj);
     NbReader.SetBreadCrumb(obj, true);
-    NbReader.ToggleNodeXml(obj);
+    var hash = NbReader.GetUrl2Hash(obj);
     if(hash == NbReader.activehash && NbReader.doXmlRefresh != 'yes')
       { return false; } //same as previous
     NbReader.activehash = hash; NbReader.feedoffset = 0;
@@ -319,11 +322,11 @@
   }
 
   NbReader.GetIconByDbname = function (dbname) {
-    console.log('GetIconByDbname:: '+dbname);
     isfetch = $(NbReader.RssListRoot).data('isfetch.icon.'+dbname); //unset ?
     isdata = $(NbReader.RssListRoot).data('icon.'+dbname);
-    NbReader.RefreshNodeIcon(NbReader.activenodeA);
+    if(isdata) { NbReader.RefreshNodeIcon(NbReader.activenodeA); }
     if(isfetch == 'yes' || isdata) return;
+    console.log('GetIconByDbname:: '+dbname);
     $(NbReader.RssListRoot).data('isfetch.icon.'+dbname, 'yes');
     setTimeout(function() {
       $.ajax({
@@ -340,21 +343,19 @@
   }
 
   NbReader.RefreshNodeIcon = function (node) {
-    alist = $(NbReader.activenodeA).next('div').children('a');
+    alist = $(node).next('div').children('a');
     for (var i = 0; i < alist.length; i++) {
       var t1 = alist[i];
       if( NbReader.IsXml(t1) ) {
         hash = NbReader.GetUrl2Hash(t1);
         db = $( t1 ).attr( "data-db" );
         data = $(NbReader.RssListRoot).data('icon.'+db);
-        //console.log(data.icon[hash]);
         if(data && data.icon[hash]) {
           img = '<img class="favicon" src="data:'+data.icon[hash]+'" align="left" />';
           span = $(t1).children('.glyphicon')[0];
           if(span) {
             $(span).removeClass('glyphicon-tags');
             span.innerHTML = img;
-            //$(span).removeClass('.glyphicon');
           }
         }
       }
@@ -374,12 +375,7 @@
 
     NbReader.doNodeRefresh = '';
     console.log('GetFeedList:: '+a.title+' (unfetched)');
-
-    ai = a.parentNode;
     //$(obj).css('background-color', 'red');
-    var ac = (/ (l)(\d)/i).exec(ai.className);
-    l = 'l'+(parseInt(ac[2])+1);
-
     title = a.title; title = title.replace(/\//g, '~');
 
     $.ajax({
@@ -387,55 +383,46 @@
       url: NbReader.config.apiurl+'/meta/unread/yes/tag/'+title+'/format/json/refresh/'+refresh,
       data: '',
       success: function(data) {
-        var items = []; var now = new Date(); var n = now.getTime(); var dbs = [];
-        $.each( data._by_cat[a.title], function( key, val ) {
-          if( ! (/\.xml$/i).test(key) ) { return; }; //check for xml url
-          var db = val.title.split(/::/);
-          dbs.push( db[0] );
-          items.push(
-          "<a href='" + key + "' class='list-group-item xml'" + "title='"+a.title+"'" + "data-db='"+db[0]+"'" + ">" 
-          + "<span class='badge'>" + val.count + "</span>"
-          + "<span class='glyphicon glyphicon-tags' aria-hidden='true'></span> "
-          + "<span class='text'>"+db[1]+"</span>"
-          + "</a>" );
-        });
+        var now = new Date(); var n = now.getTime(); 
+        $(a).data('fetched', { time: n, count: 1 });
 
         // update badge values/number
         $.each( data._category, function( key, val ) {
           _s = "a[title='"+key+"']";
           $( "#collapseOne " + _s).children('.badge')[0].innerHTML = val;
         });
-        $(a).data('fetched', { time: n, count: 1 });
+
+        var items = []; var dbs = [];
+        $.each( data._by_cat[a.title], function( key, val ) {
+          if( ! (/\.xml$/i).test(key) ) { return; }; //check for xml url
+          var db = val.title.split(/::/);
+          dbs.push( db[0] );
+          axml = NbReader.activenodeXmlHref == key ? 'activexml' : '';
+          items.push(
+          "<a href='" + key + "' class='list-group-item xml " + axml + "' title='"+a.title+"' data-db='"+db[0]+"'>" 
+          + "<span class='badge'>" + val.count + "</span>"
+          + "<span class='glyphicon glyphicon-tags' aria-hidden='true'></span> "
+          + "<span class='text'>"+db[1]+"</span>"
+          + "</a>" );
+        });
         if( ! items.length ) { return; }
-        rsslist = "<div class='list-group hidden " + l + "'" 
-                   + "title='" + a.title + "'"
-                   + ">" + items.join("") 
-                   + "</div>";
-        cnShow = '';
-        if( typeof $(a).next()[0] != 'undefined' ) {
+        if( typeof $(a).next()[0] != 'undefined'  ) {
+          h = $(a).next('div').hasClass('hidden') ? 'hidden ' : '';
           if( $(a).next()[0].tagName == 'DIV' && $(a).next()[0].title !== '') {
-            cnShow = ($(a).next("div").next('div').hasClass('hidden')) ? 'no' : 'yes';
             $(a).next("div").remove();
           }
         }
+        var ac = (/ (l)(\d)/i).exec(a.parentNode.className);
+        l = 'l'+(parseInt(ac[2])+1);
+        rsslist = "<div class='list-group " + h + l + "' title='" + a.title + "'>"
+                   + items.join("") 
+                   + "</div>";
         $(a).after(rsslist);
 
-        // re-activate activenodeXml as active
         setTimeout(function() {
-          da = $(a).next("div").first().children('a');
-          $.each( da, function( key, val ) {
-            if ( NbReader.activenodeXmlHref == val.href) {
-              $(val).toggleClass('activexml'); NbReader.activenodeXml = val;
-              return; }
-          });
+          aXML = $(a).next('div').first().children('.activexml')[0];
+          if(aXML) NbReader.SetActiveXmlNode(aXML);
         }, 100);
-
-        if( $(a).hasClass('active')) {
-          $(a).next("div").toggleClass('hidden');
-        } else {
-//          NbReader.A(a); //to check
-        }
-        if(cnShow == 'yes') { $(a).next("div").removeClass('hidden'); }
         
         // Fetch icon files
         $.each( dbs, function( key, val ) {
