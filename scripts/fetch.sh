@@ -76,9 +76,9 @@ is_xml() {
 
     # test for .xml file
     case $mime in
-        xml) iconType=$mime ;;
+        xml) xmlType=$mime; return 0 ;;
     esac
-    return 0;
+    return 1;
 }
 
 ## Example urls

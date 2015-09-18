@@ -110,9 +110,9 @@ is_file_ico() {
 
     # test for .ico file
     case $mime in
-        x-icon|x-ms-bmp|png|gif|jpeg) iconType=$mime ;;
+        x-icon|x-ms-bmp|png|gif|jpeg) iconType=$mime; return 0 ;;
     esac
-    return 0;
+    return 1;
 }
 
 check_icon_size() {
