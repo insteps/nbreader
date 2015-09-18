@@ -456,10 +456,11 @@
       url: NbReader.config.apiurl+'/item/cat/'+db+'/hash/'+hash+'/row/10-'+ofs+'/filter/default'+'/format/json',
       data: '',
       success: function(data) {
+        var now = new Date(); var n = now.getTime();
+        $(a).data('fetched', { time: n, count: 1 });
         $(NbReader.RssAct).data(hash, data);
-        var items = []; var now = new Date(); var n = now.getTime();
-        m = (data.count%10) > 0 ? 1 : 0; var pgs = parseInt(data.count/10)+m; //pager data
-        // data.count = full count (unread+read)
+
+        var items = [];
         $.each( data.query, function( key ) {
           d = data.query[key];
           unread = d.unread; unreadc = unread ? 'unread' : '';
@@ -482,15 +483,17 @@
           + "<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span> "
           + "</a>" );
         });
-        $(a).data('fetched', { time: n, count: 1 });
         if( ! items.length ) { return; }
         rsslist = "<div class='list-group rss-items l0 '" + ">" + items.join("") + "</div>";
         NbReader.RssAct.innerHTML = rsslist;
-        NbReader.SearchRSS(NbReader.config);
         setTimeout(function() {
           $(NbReader.RssAct).children('.rss-items').children('a').first().trigger( "click" );
         }, 100);
 
+        NbReader.SearchRSS(NbReader.config);
+
+        // data.count = full count (unread+read)
+        m = (data.count%10) > 0 ? 1 : 0; var pgs = parseInt(data.count/10)+m; //pager data
         // ## make pagination and redo on new list
         // ---------------------------------------
         li = $(NbReader.RssActPgs).children('li');
