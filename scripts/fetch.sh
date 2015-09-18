@@ -63,11 +63,29 @@ sanitize_xml_feeds() {
     find ./ -name *.xml | while read f; do sanitize_xml $f; done;
 }
 
+is_xml() {
+    xmlType='';
+    if [ ! -f "$1" ]; then return 1; fi
+    # dependencies=file, need another option if possible
+
+    # get mime/encoding
+    local mime=$(file --mime-type --mime-encoding $1)
+    local charset=${mime##*=}
+    mime=${mime##*/}; mime=${mime%%;*}
+    #if [ ! "$charset" = 'utf-8' ]; then return 1; fi # no check for now
+
+    # test for .xml file
+    case $mime in
+        xml) iconType=$mime ;;
+    esac
+    return 0;
+}
+
 ## Example urls
 # URL="http://news.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml"
 # URL="http://www.rediff.com/rss/inrss.xml"
 fetch_url() {
-    URL=$1
+    URL=$1; xmlType=''; localXml='.current.xml';
     if [ -n "$URL" ]; then
         URLSUM=$(echo $URL | sha1sum -t | cut -b 1-40 -)
         # URLSUM=${URLSUM:0:40}
@@ -86,24 +104,30 @@ fetch_url() {
         a=$(echo $URLSUM | cut -b 1 -)
         b=$(echo $URLSUM | cut -b 1-2 -)
         mkdir -p "$a/$b"
-        if [ -f '.current.xml' ]; then rm -f '.current.xml'; fi
+        if [ -f "$localXml" ]; then rm -f "$localXml"; fi
     
         mkdir -p $VARDIR/log
         local logfile="$VARDIR/log/$DATESTAMP.log"
 
         if [ $USECURL = '1' ]; then
-          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o ".current.xml" -v --stderr - >> $logfile
+            curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> $logfile
         else
-          wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O ".current.xml" -a $logfile
+            wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O "$localXml" -a $logfile
         fi
 
-        if [ -s '.current.xml' ]; then
+        if [ -s "$localXml" ]; then
             # checkpoints
             # 1. make git/fossil friendly
-            sanitize_xml "$FEEDSDIR/.current.xml"
+            sanitize_xml "$FEEDSDIR/$localXml"
             # 2. checksize (<2mb) - TODO
-            mv -f '.current.xml' "$a/$b/$URLSUM.xml"
-            echo $EPOCH > .lastfetch
+
+            # 3. check for xml
+            if is_xml $localXml; then
+                mv -f "$localXml" "$a/$b/$URLSUM.xml"
+                echo $EPOCH > .lastfetch
+            else
+                echo -e ${cRED}'msg: not a xml/rss document'${cNORMAL};
+            fi
         fi
     else
         echo "Incorrect feeds dir"
