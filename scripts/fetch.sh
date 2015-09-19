@@ -68,6 +68,8 @@ is_xml() {
     if [ ! -f "$1" ]; then return 1; fi
     # dependencies=file, need another option if possible
 
+    if [ -n "$(grep '^<rss version' $1)" ]; then return 0; fi
+
     # get mime/encoding
     local mime=$(file --mime-type --mime-encoding $1)
     local charset=${mime##*=}
