@@ -82,20 +82,23 @@
 
     // ## ------------ Click Rss file item to View Item Content
     NbReader.Rss = rss.onclick = function(e) {
-      if(e.target) { obj = e.target } else { obj = e; }; title = obj.title;
+      if(e.target) { var obj = e.target } else { var obj = e; };
+      var title = obj.title;
       if ((obj.tagName) == 'INPUT') { return; }
-      newslist = NbReader.NewsList = NbReader.RssAct.getElementsByTagName(config.list);
-      $(newslist).removeClass('active');
-
       if ((obj.tagName) == 'SPAN') { a = obj.parentNode; }
       if ((obj.tagName) == 'A') { a = obj; }
-      var id = (/(\#)([\d]+)$/).exec(a.href)[2];
+
+      var alist = NbReader.NewsList = NbReader.RssAct.getElementsByTagName(config.list);
+      $(alist).removeClass('active');
+      $(a).toggleClass('active'); NbReader.activerss = a;
       data = $(NbReader.RssAct).data(NbReader.activehash);
-      now = new Date();
+
+      var id = (/(\#)([\d]+)$/).exec(a.href)[2];
       $.each( data.query, function( key ) {
         if(id == data.query[key].id) {
           d = data.query[key]; return; }
       });
+      now = new Date();
       var mEpoch = parseInt(d.pubDate);
       if(mEpoch < 10000000000) { mEpoch *= 1000; }
       now.setTime(mEpoch);
@@ -121,11 +124,7 @@
         + NbReader.pagersm + "</div>"
         );
       content = "<div class='list-group '" + ">"  + items.join("") + "</div>";
-
-      $(a).toggleClass('active');
       NbReader.RssView.innerHTML = content;
-//      console.log(newslist.length);
-      NbReader.activerss = a;
 
       rssViewPgrSm = $('#rssview .list-group-item .pager-simple');
       rssViewPgrSm[0].onclick = NbReader.SetRssViewPgrSm;
@@ -150,20 +149,20 @@
     // ## ------------ Double Click Rss item to mark as read
     $(rss).dblclick(function(e) {
       obj = e.target;
-      if ((obj.tagName) == 'A') { id = obj.hash.replace(/\#/, ''); r = obj; }
-        else  { r = obj.parentNode; id = obj.parentNode.hash.replace(/\#/, ''); }
+      r = (obj.tagName == 'A') ? obj : obj.parentNode;
+      id = r.hash.replace(/\#/, ''); 
 
       unread = ($(r).hasClass('unread')) ? 'no' : 'yes';
       a = NbReader.activenodeXml;
-      atn = $(a)[0].title; _s = "a[title='"+atn+"']";
       db = $( a ).attr( "data-db" ); if( ! db ) return;
-      url = NbReader.config.apiurl+'/unread_/cat/'+db+'/id/'+id+'/unread/'+unread+'/format/json';
 
+      url = NbReader.config.apiurl+'/unread_/cat/'+db+'/id/'+id+'/unread/'+unread+'/format/json';
       $.getJSON( url, function( data ) {
         if(String(data.result) == 'true') {
           console.log('change read status of: ' + db+'::'+id);
           $(r).toggleClass('unread');
           NbReader.doNodeRefresh = 'yes';
+          atn = $(a)[0].title; _s = "a[title='"+atn+"']";
           $( "#collapseOne " + _s).children('.badge').first().trigger( "click" );
         }
       });      
@@ -560,8 +559,6 @@
   // ## Search Feed list nodes
   // --------------------------
   NbReader.SearchFeedList = function (config) {
-    obj = NbReader.activenode;
-
     list = NbReader.RssList;
     search = $("#collapseOne input.search");
 
@@ -593,7 +590,6 @@
           $(list[i]).addClass('hiddenYES');
         }
       }
-      //console.log(list.length);
     });
     return false;
   }
