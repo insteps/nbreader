@@ -250,7 +250,6 @@
   }
   NbReader.IsActiveXmlUpdated = function (newNum) {
     var oldn = NbReader.GetNodeCount(NbReader.activenodeXml);
-    //if( parseInt(newNum) == NaN || parseInt(oldn) == NaN ) { return false; }
     if(oldn !== newNum) { return true; }
     return false;
   }
@@ -306,11 +305,8 @@
   }
 
   NbReader.SetRssViewReadTog = function (e, isInit) {
-    if(e.target) { e.preventDefault(); obj = e.target; } else { obj = e; };
-    if(obj.tagName == 'SPAN') { obj = obj.parentNode; }
+    if(e.target) { e.preventDefault(); }
     if( isInit != true ) { $(NbReader.activerss).trigger( "dblclick" ); }
-    // NOTE: activexml badge color turns default // FIXED
-
     setTimeout(function() {
       obj = $('#rssview .list-group-item .readtog')[0];
       $(obj).toggleClass('active');

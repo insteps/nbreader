@@ -208,6 +208,7 @@ class Newsbeuter_model extends CI_Model
         #   cat/<dbname>        = Load from category/database named <dbname>
         #   tag/<rss category>  = Rss category (`~` as separator, eg business~seo~seochat.com)
         #   unread/<yes|no>     = yes|no (get list that is either read or unread)
+        #   refresh/<yes|no>    = yes|no (use cached data)
         #
 
         $dbname = (isset($opts['dbname'])) ? '/cat/'.$opts['dbname'] : '';
@@ -403,9 +404,9 @@ class Newsbeuter_model extends CI_Model
         # 
         # /unread_/cat/dev/id/<idnum>/unread/<yes|no> : 
         # unread_      = Function call
-        #   cat/<dbname>       = Update category/database named <dbname>
-        #   id/<idnum>         = update rss item for <id>
-        #   unread/<yes|no>    = update item to read or unread
+        #   cat/<dbname>     = Update category/database named <dbname>
+        #   id/<idnum>       = update rss item for <id>
+        #   unread/<yes|no>  = update item to read or unread
         #
 
         $dbname = (isset($opts['dbname'])) ? '/cat/'.$opts['dbname'] : '';

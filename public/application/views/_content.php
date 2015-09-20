@@ -1,4 +1,5 @@
- 
+
+<!-- article -->
 <div class="content">
   <h1>Welcome!
 <span class="btn-group" role="group" aria-label="...">
@@ -16,4 +17,4 @@
   </div>
 
 </div>
-
+<!-- article end -->

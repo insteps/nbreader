@@ -184,26 +184,26 @@ class Newsbeuter
             if($k == 'img')
             {
                 $str = strip_image_tags($str);
-                $str = preg_replace(array('#</img>#'), '', $str);
+                $str = preg_replace(array('#</img>#i'), '', $str);
             }
 
             if($k == 'default')
             {
-                $pat = array('/<iframe/', '#</iframe#', '/<img/', '#</img#',
-                             '/script language="javascript"/',
-                             '/script language=\'javascript\'/', 
-                             '/<script/', '#</script#',
-                             '/<video/', '#</video#',
-                             '/<audio/', '#</audio#',
-                             '/<embed/', '#</embed#',
-                             '/<object/', '#</object#'
+                $pat = array('/<iframe/i', '#</iframe#i', '/<img/i', '#</img#i',
+                             '/script language="javascript"/i',
+                             '/script language=\'javascript\'/i', 
+                             '/<script/i', '#</script#i',
+                             '/<video/i', '#</video#i',
+                             '/<audio/i', '#</audio#i',
+                             '/<embed/i', '#</embed#i',
+                             '/<object/i', '#</object#i'
                             );
                 $rep = array('<xiframe', '</xiframe', '<omg', '</omg',
                              'script', 'script', '<noscript', '</noscript',
-                             '<novideo/', '</novideo',
-                             '<noaudio/', '</noaudio',
-                             '<noembed/', '</noembed',
-                             '<nobject/', '</nobject'
+                             '<novideo', '</novideo',
+                             '<noaudio', '</noaudio',
+                             '<noembed', '</noembed',
+                             '<nobject', '</nobject'
                             );
                 $str = preg_replace($pat, $rep, $str);
             }

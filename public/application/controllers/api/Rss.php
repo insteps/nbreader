@@ -298,6 +298,7 @@ class Rss extends REST_Controller {
         #   row/<limit>-<offset> = Fetch number of rows = <limit> starting at <offset>
         #   id/<idnum>           = Fetch rss item by id (with id row values has no effect)
         #   hash/<sha1sum>       = Fetch rss item by hash (filter records by hash)
+        #   filter/<default>     = Apply security filter on articles
         #
 
         $this->load->model('newsbeuter/newsbeuter_rss_item_model', 'rss_item');
@@ -498,6 +499,7 @@ class Rss extends REST_Controller {
         //$opts['refresh'] = $refresh;
 
         $data = $this->newsbeuter_icon->get_icon($opts);
+        $data['opts'] = $opts;
 
         if (isset($data['icon']))
         {

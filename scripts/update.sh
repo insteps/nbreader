@@ -43,7 +43,7 @@ donedir="$DONEDIR/$YEAR/$MONTH";
 urldb="$CONFIGDIR/urls.db"
 feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep -m 1 '^.*')
 #echo $feedsurl
-echo -e "${cBROWN}EPOCH -> $EPOCH${cNORMAL}";
+echo -e "${cbBROWN}EPOCH -> $EPOCH${cNORMAL}";
 isEpoch=0
 
 #eg. 1436186217
