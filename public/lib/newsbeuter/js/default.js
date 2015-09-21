@@ -20,7 +20,7 @@
       "\n\nNbReader: \n \(RSS Reader / Web frontend for Newsbeuter\)\n\n"+
       this.copyright);
   }
-}( this.NbReader = this.NbReader || {} ) );
+}( NbReader = window.NbReader || {} ) );
 
 (function( NbReader, $, undefined ) {
   var SetRssList = NbReader.SetRssList = function (config) {

@@ -351,6 +351,12 @@ class Rss extends REST_Controller {
             }
         }
 
+        $search_options['order_by'] =  'pubDate DESC';
+        if($this->get('orderby'))
+        {
+          $search_options['order_by'] =  str_replace('~', ' ', $this->get('orderby'));
+        }
+
         $data['query'] = $this->rss_item->get_rss_item($search_options, $limit, $offset, $total_rows);
         $data['backend'] = 'newsbeuter';
 
