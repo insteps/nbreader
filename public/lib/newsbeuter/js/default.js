@@ -98,11 +98,7 @@
         if(id == data.query[key].id) {
           d = data.query[key]; return; }
       });
-      now = new Date();
-      var mEpoch = parseInt(d.pubDate);
-      if(mEpoch < 10000000000) { mEpoch *= 1000; }
-      now.setTime(mEpoch);
-      var dt = dateFormat(now, "ddd, mmm dS, yyyy, h:MM TT");
+      var dt = NbReader.FmtArticleDt(d.pubDate);
       var items = [];
         items.push( 
         "<div class='list-group-item l0'>" + NbReader.readsm
@@ -223,6 +219,14 @@
 // //    if( ! $(obj).hasClass('activexml') ) { $(obj).toggleClass('activexml'); }
 //   }
 
+  NbReader.FmtArticleDt = function (epoch) {
+    now = new Date();
+    var mEpoch = parseInt(epoch);
+    if(mEpoch < 10000000000) { mEpoch *= 1000; }
+    now.setTime(mEpoch);
+    return dateFormat(now, "ddd, mmm dS, yyyy, h:MM TT");
+  }
+  
   NbReader.GetUrl2Hash = function (obj) {
     return (/\/[^\/]*\.xml$/i).exec(obj.href)[0].replace(/\//g, '').replace(/\.xml$/, '');
   }
@@ -460,12 +464,7 @@
           d = data.query[key];
           unread = d.unread; unreadc = unread ? 'unread' : '';
 
-          var epoch = parseInt(d.pubDate); 
-          if( epoch < 10000000000 ) { epoch *= 1000; }
-          now.setTime(epoch);
-          // dateFormat("Jun 9 2007", "fullDate");
-          var dt = dateFormat(now, "ddd, mmm dS, yyyy, h:MM TT");
-
+          var dt = NbReader.FmtArticleDt(d.pubDate);
           items.push(
           "<a href=#" + d.id + " class='list-group-item "+ unreadc + "'" + "title='"+d.title+"'" + ">" 
           + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span> "
