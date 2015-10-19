@@ -56,15 +56,24 @@ WEBAPPDIR="$APPDIR/public"
 ICONTXTDIR="$FEEDSDIR"
 #ICONDIR="$WEBAPPDIR/lib/icon"
 
+# Path to articles/items webpage screenshots
+ARCHIVE=""
+
+# User agents
+_USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
+
 # newsbeuter <default configs>
 # wget
 # 
-_USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
+WGET='/usr/bin/wget '
 USERAGENT_0=" --user-agent='$_USERAGENT_0' "
 WGETOPTS_1=" --timeout=20 --tries=5 --no-check-certificate "
 
 # curl
 # 
-CURLOPTS_1=" -L -f -k --connect-timeout 20 --retry 5 "
+CURL='/usr/bin/curl '
+CURL_PROXY=' '
+#CURL_PROXY=' --socks4 localhost:9999 ' # example
+CURLOPTS_1=" $CURL_PROXY -L -f -k --connect-timeout 20 --retry 5 "
 
 

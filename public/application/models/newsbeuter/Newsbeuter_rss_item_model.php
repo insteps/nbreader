@@ -51,11 +51,11 @@ class Newsbeuter_rss_item_model extends CI_Model
         }
         return $id;
     }
-     
-     
+
+
     private function _get_rss_item_result($search_options = array(), $limit = 0, $offset = 0)
     {
-         
+
         $this->db->select("
               ri.id
             , ri.guid
@@ -72,11 +72,11 @@ class Newsbeuter_rss_item_model extends CI_Model
             , ri.flags
             , ri.deleted
             , ri.base
-     
+
         ");
-         
+
         $this->db->from('rss_item ri');
-         
+
         if(isset($search_options['id']))
         {
             $this->db->where('ri.id', $search_options['id']);
@@ -137,8 +137,8 @@ class Newsbeuter_rss_item_model extends CI_Model
         {
             $this->db->where('ri.base', $search_options['base']);
         }
-         
-         
+
+
         if(isset($search_options['order_by']))
         {
             $this->db->order_by($search_options['order_by']);
@@ -147,7 +147,7 @@ class Newsbeuter_rss_item_model extends CI_Model
         {
             $this->db->order_by('ri.id DESC');
         }
-         
+
         if($limit != 0)
         {
             if($offset == 0)
@@ -159,17 +159,17 @@ class Newsbeuter_rss_item_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
         }
-         
+
         $q = $this->db->get();
-         
+
         return $q;
-         
+
     }
-     
+
     public function get_rss_item($search_options = array(), $limit = 0, $offset = 0, $total_rows = 0)
     {
         //if(empty($search_options)){ return array(); } //??
-         
+
         $search_options['limit'] = $limit;
         $search_options['offset'] = $offset;
         $search_options['total_rows'] = $total_rows;
@@ -181,9 +181,9 @@ class Newsbeuter_rss_item_model extends CI_Model
         }
 
         $result = array();
-         
+
         $q = $this->_get_rss_item_result($search_options, $limit, $offset);
-         
+
         if($q->num_rows() > 0)
         {
             $row_num = $total_rows - $offset;
@@ -200,6 +200,8 @@ class Newsbeuter_rss_item_model extends CI_Model
                 $fil =  array(); $fil['textonly'] = 'yes';
                 $row['title'] = $this->newsbeuter->apply_security_filter($fil, $row['title']);
                 $row['author'] = $this->newsbeuter->apply_security_filter($fil, $row['author']);
+                unset($fil); $fil['hashuri'] = 'yes';
+                $row['url'] = $this->newsbeuter->apply_security_filter($fil, $row['url']); // paranoia
                 unset($fil);
 
                 $result[] = $row;
@@ -216,9 +218,9 @@ class Newsbeuter_rss_item_model extends CI_Model
         $this->db->select("
               ri.feedurl
             , count(ri.feedurl) as count
-     
+
         ");
-         
+
         $this->db->from('rss_item ri');
         if(isset($search_options['unread']))
         {
@@ -272,11 +274,11 @@ class Newsbeuter_rss_item_model extends CI_Model
               ri.feedurl
             , rf.title
             , count(ri.feedurl) as count
-     
+
         ");
         // select rssurl,rss_feed.title,count(rss_item.feedurl) as count
         //   from rss_feed, rss_item where rssurl=feedurl group by feedurl;
-        
+
         # use 2 tables
         $this->db->from('rss_item ri');
         $this->db->from('rss_feed rf');
@@ -366,12 +368,12 @@ class Newsbeuter_rss_item_model extends CI_Model
                 unset($rss_item_info['id']);
                 $has_condition = true;
             }
-             
-            if($has_condition == false){ return false; }
+
+            if($has_condition == false) { return false; }
             $this->db->set($rss_item_info);
             $result = $this->db->update('rss_item');
         }
-         
+
         return $result;
     }
 
@@ -402,11 +404,11 @@ class Newsbeuter_rss_item_model extends CI_Model
                 unset($search_options['id']);
                 $has_condition = true;
             }
-             
-            if($has_condition == false){ return false; }
+
+            if($has_condition == false) { return false; }
             $result = $this->db->delete('rss_item');
         }
-         
+
         return $result;
     }
 

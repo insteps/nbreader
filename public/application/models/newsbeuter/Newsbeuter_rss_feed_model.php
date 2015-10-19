@@ -51,11 +51,11 @@ class Newsbeuter_rss_feed_model extends CI_Model
         }
         return $rssurl;
     }
- 
- 
+
+
     private function get_rss_feed_result($search_options = array(), $limit = 0, $offset = 0)
     {
-         
+
         $this->db->select("
               rf.rssurl
             , rf.url
@@ -63,11 +63,11 @@ class Newsbeuter_rss_feed_model extends CI_Model
             , rf.lastmodified
             , rf.is_rtl
             , rf.etag
-  
+
         ");
-         
+
         $this->db->from('rss_feed rf');
-         
+
         if(isset($search_options['rssurl']))
         {
             $this->db->where('rf.rssurl', $search_options['rssurl']);
@@ -92,8 +92,8 @@ class Newsbeuter_rss_feed_model extends CI_Model
         {
             $this->db->where('rf.etag', $search_options['etag']);
         }
-         
-         
+
+
         if(isset($search_options['order_by']))
         {
             $this->db->order_by($search_options['order_by']);
@@ -102,7 +102,7 @@ class Newsbeuter_rss_feed_model extends CI_Model
         {
             $this->db->order_by('rf.rssurl DESC');
         }
-         
+
         if($limit != 0)
         {
             if($offset == 0)
@@ -114,20 +114,20 @@ class Newsbeuter_rss_feed_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
         }
-         
+
         $q = $this->db->get();
-         
+
         return $q;
-         
+
     }
- 
+
     public function get_rss_feed($search_options = array(), $limit = 0, $offset = 0, $total_rows = 0)
     {
-         
+
         $result = array();
-         
+
         $q = $this->get_rss_feed_result($search_options, $limit, $offset);
-         
+
         if($q->num_rows() > 0)
         {
             $row_num = $total_rows - $offset;
@@ -135,7 +135,7 @@ class Newsbeuter_rss_feed_model extends CI_Model
             {
                 $row['row_num'] = $row_num;
                 $row_num--;
-                 
+
                 //$result[] = $row; //less useful
                 $rssurl = trim($row['rssurl']);
                 unset($row['rssurl']);
@@ -151,7 +151,7 @@ class Newsbeuter_rss_feed_model extends CI_Model
                 }
             }
         }
-         
+
         return $result;
     }
 
@@ -160,7 +160,7 @@ class Newsbeuter_rss_feed_model extends CI_Model
         $query = $this->db->get('rss_feed', 10);
         return $query->result();
     }
-     
+
 
 
 
@@ -183,7 +183,7 @@ class Newsbeuter_rss_feed_model extends CI_Model
         }
         return $result;
     }
-     
+
     private function _update_rss_feed($rss_feed_info)
     {
         $result = false;
@@ -196,15 +196,15 @@ class Newsbeuter_rss_feed_model extends CI_Model
                 unset($rss_feed_info['rssurl']);
                 $has_condition = true;
             }
-             
+
             if($has_condition == false){ return false; }
             $this->db->set($rss_feed_info);
             $result = $this->db->update('rss_feed');
         }
-         
+
         return $result;
     }
-     
+
     private function _delete_rss_feed($search_options = array())
     {
         $result = false;
@@ -217,11 +217,11 @@ class Newsbeuter_rss_feed_model extends CI_Model
                 unset($search_options['rssurl']);
                 $has_condition = true;
             }
-             
+
          if($has_condition == false){ return false; }
             $result = $this->db->delete('rss_feed');
         }
-         
+
         return $result;
     }
 

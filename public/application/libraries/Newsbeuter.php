@@ -214,6 +214,11 @@ class Newsbeuter
                 $str = htmlentities($str, ENT_QUOTES); //of whats leftover
             }
 
+            if($k == 'hashuri') // paranoia
+            {
+                $str = preg_replace(array('/\#.*$/i'), array(''), $str);
+            }
+
             if($k == 'xss')
             {
             }

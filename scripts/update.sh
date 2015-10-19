@@ -19,7 +19,6 @@
 # Code to fetch and store newsbeuter's feeds/rss/xml data, based on:
 #   tags/catogory: eg. '/news/bbc.co.uk'
 #   dbname: eg. news, business, dev
-#   
 #
 #
 
@@ -65,14 +64,7 @@ _update_all_by_dbname() {
     newsbeuter -u $localurl -c $localdb -x reload
 }
 
-_update_all_db() {
-    local dbs=$(ls -1rt $URLLOCALDIR/*)
-    for dbname in $dbs; do
-        local dbname=$(basename $dbname)
-        _update_all_by_dbname $dbname
-    done
-}
-
+# update newsbeuter db by given local rss url list
 _update_by_dbname_list() {
     local dbname=$1
     local localurl=$2
@@ -80,6 +72,14 @@ _update_by_dbname_list() {
     if [ ! -f "$localurl" ]; then exit 0; fi
     printf "${cBWHITE}update::Db-updating... ->${cNORMAL} $localdb\n"
     newsbeuter -u $localurl -c $localdb -x reload
+}
+
+_update_all_db() {
+    local dbs=$(ls -1rt $URLLOCALDIR/*)
+    for dbname in $dbs; do
+        local dbname=$(basename $dbname)
+        _update_all_by_dbname $dbname
+    done
 }
 
 update_all() {

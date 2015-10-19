@@ -299,6 +299,7 @@ class Rss extends REST_Controller {
         #   id/<idnum>           = Fetch rss item by id (with id row values has no effect)
         #   hash/<sha1sum>       = Fetch rss item by hash (filter records by hash)
         #   filter/<default>     = Apply security filter on articles
+        #   unread               = yes|no (show list that is read or unread)
         #
 
         $this->load->model('newsbeuter/newsbeuter_rss_item_model', 'rss_item');
@@ -355,6 +356,12 @@ class Rss extends REST_Controller {
         if($this->get('orderby'))
         {
           $search_options['order_by'] =  str_replace('~', ' ', $this->get('orderby'));
+        }
+
+        $unread = strtolower($this->get('unread'));
+        if($unread == 'yes' || $unread == 'no')
+        {
+            $search_options['unread'] = ($unread == 'yes') ? '1' : '0';
         }
 
         $data['query'] = $this->rss_item->get_rss_item($search_options, $limit, $offset, $total_rows);
@@ -432,6 +439,7 @@ class Rss extends REST_Controller {
         #   tag/<rss category>  = Rss category (`~` as separator, eg business~seo~seochat.com)
         #   unread/<yes|no>     = yes|no (get list that is either read or unread)
         #   refresh/<yes|no>    = yes|no (use cached data)
+        #   icon/<yes|no>       = yes|no (include icon data for items) # TODO
         #
 
         $this->load->model('newsbeuter/newsbeuter_model', 'newsbeuter_model');
