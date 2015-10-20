@@ -324,7 +324,7 @@
     isfetch = $(NbReader.RssListRoot).data('isfetch.icon.'+dbname); //unset ?
     isdata = $(NbReader.RssListRoot).data('icon.'+dbname);
     if(isdata) { NbReader.RefreshNodeIcon(NbReader.activenodeA); }
-    if(isfetch == 'yes' || isdata) return;
+    if(isfetch == 'yes' || isdata) { return; }
     console.log('GetIconByDbname:: '+dbname);
     $(NbReader.RssListRoot).data('isfetch.icon.'+dbname, 'yes');
     setTimeout(function() {
