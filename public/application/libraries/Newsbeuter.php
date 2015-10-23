@@ -216,9 +216,9 @@ class Newsbeuter
 
             if($k == 'hashuri') // paranoia
             {
-                $pat = array('/\#.*$/i', '/(\?|\&)(rss)(\=)/i'
+                $pat = array('/\#.*$/i', '/(\?|\&)(rss)(\=)/i', '#\/rss$#i'
                             );
-                $rep = array('', '$1do$3'
+                $rep = array('', '$1do$3', ''
                             );
                 $str = preg_replace($pat, $rep, $str);
             }
