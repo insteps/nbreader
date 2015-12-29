@@ -218,7 +218,10 @@ update_feedicon() {
     fi
     get_siteurl_from_db $dbname $URLSUM
 
-    if [ ! $rssurl ]; then return; fi
+    if [ ! $rssurl ]; then 
+        printf "${cRED}Nothing to do !! (no rss file)${cNORMAL}\n";
+        return;
+    fi
     get_feedicon $rssurl
 
     if [ ! -s "$localIco" ]; then return; fi

@@ -130,6 +130,8 @@ fetch_url() {
             else
                 echo -e ${cRED}'msg: not a xml/rss document'${cNORMAL};
             fi
+        else
+            echo -e ${cRED}'msg: url unreachable'${cNORMAL};
         fi
     else
         echo "Incorrect feeds dir"
@@ -212,5 +214,4 @@ fetch() {
 # fetch_by_tag '/business/crmbuyer.com' > /dev/null 2>&1
 # fetch_by_url 'http://www.crmbuyer.com/perl/syndication/rssfull.pl'
 # fetch_url http://distrowatch.com/news/dwp.xml $EPOCH
-
 

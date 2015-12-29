@@ -19,7 +19,6 @@
 # Environment variables for nbreader.
 # 
 # 
-# 
 
 fpath=$(readlink -f $0)
 if [ ! "$APPDIR" ]; then APPDIR=$(dirname $(dirname $fpath)); fi
