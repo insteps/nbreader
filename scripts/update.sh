@@ -42,6 +42,7 @@ donedir="$DONEDIR/$YEAR/$MONTH";
 urldb="$CONFIGDIR/urls.db"
 feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep -m 1 '^.*')
 #echo $feedsurl
+echo ''
 echo -e "${cbBROWN}EPOCH -> $EPOCH${cNORMAL}";
 isEpoch=0
 
@@ -154,8 +155,10 @@ fetch_update_feedicon() {
     if [ $FEEDICON = '1' ]; then
         source $SCRIPTDIR/feedicon.sh
         local list=$2;
-        local len=$(echo "$feedsurl" | wc -c);
-        len=$(($len+6))
+        #local len=$(echo "$feedsurl" | wc -c);
+        #len=$(($len+6))
+        echo '';
+        echo -e ${cBWHITE}'feedicon::update-feedicon -> start icon update ... '${cNORMAL};
         while read line; do
             if [ -n "$line" ]; then 
                 #local URLSUM=$(echo $line | cut -b $len-$(($len+39)) -)

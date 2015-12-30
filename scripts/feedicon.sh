@@ -194,10 +194,6 @@ get_feedicon() {
 }
 
 update_feedicon() {
-
-    echo '';
-    echo -e ${cBWHITE}'feedicon::update-feedicon -> start icon update ... '${cNORMAL};
-
     local URLSUM=$1
     a=$(echo $URLSUM | cut -b 1 -)
     b=$(echo $URLSUM | cut -b 1-2 -)
