@@ -86,7 +86,7 @@ parse_feed_icon_url() {
 get_site_base() {
     clean_temp_icon
     local BURL=$1
-    echo -e ${cYELLOW}'msg: fetching base site... -> '${cNORMAL}${BURL};
+    echo -e ${cYELLOW}'msg: fetching base site -> '${cNORMAL}${BURL} '...';
     local logfile="$VARDIR/log/$DATESTAMP.log"
 
     if [ $USECURL = '1' ]; then
@@ -131,7 +131,7 @@ check_icon_size() {
     if [ $size_limit -ge "$(($len))" -a 0 -lt "$(($len))" ]; then
         return 0;
     else
-        echo -e ${cRED}"msg: icon size too large or zero size ->${cNORMAL} $url ...";
+        echo -e ${cRED}"msg: icon size too large or zero size";
         return 1
     fi
 }
@@ -139,7 +139,7 @@ check_icon_size() {
 fetch_feedicon() {
     clean_temp_icon; local _fi=$1
     local logfile="$VARDIR/log/$DATESTAMP.log"
-    echo -e ${cYELLOW}"msg: fetching icon from ->${cNORMAL} $_fi ...";
+    echo -e ${cYELLOW}"msg: fetching icon ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
         if [ $USECURL = '1' ]; then
           curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$_fi" -o "$localIco" -v --stderr - >> $logfile
