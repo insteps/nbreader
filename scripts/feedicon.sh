@@ -86,11 +86,11 @@ parse_feed_icon_url() {
 get_site_base() {
     clean_temp_icon
     local BURL=$1
-    echo -e ${cYELLOW}'msg: fetching base site... -> '${cNORMAL}${BURL};
+    echo -e ${cYELLOW}'msg: fetching base site -> '${cNORMAL}${BURL} '...';
     local logfile="$VARDIR/log/$DATESTAMP.log"
 
     if [ $USECURL = '1' ]; then
-      curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
+      curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
     else
       wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
     fi
@@ -131,7 +131,7 @@ check_icon_size() {
     if [ $size_limit -ge "$(($len))" -a 0 -lt "$(($len))" ]; then
         return 0;
     else
-        echo -e ${cRED}"msg: icon size too large or zero size ->${cNORMAL} $url ...";
+        echo -e ${cRED}"msg: icon size too large or zero size";
         return 1
     fi
 }
@@ -139,7 +139,7 @@ check_icon_size() {
 fetch_feedicon() {
     clean_temp_icon; local _fi=$1
     local logfile="$VARDIR/log/$DATESTAMP.log"
-    echo -e ${cYELLOW}"msg: fetching icon from ->${cNORMAL} $_fi ...";
+    echo -e ${cYELLOW}"msg: fetching icon ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
         if [ $USECURL = '1' ]; then
           curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$_fi" -o "$localIco" -v --stderr - >> $logfile
@@ -164,7 +164,7 @@ get_feedicon() {
     fetch_feedicon "$BURL/favicon.ico"
 
     if is_file_ico $localIco; then
-        echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'downloaded successfully'${cNORMAL};
+        echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL};
         return;
     fi
     echo -e ${cRED}'msg: favicon.ico not available'${cNORMAL};
@@ -185,7 +185,7 @@ get_feedicon() {
     fi
 
     if is_file_ico $localIco; then
-        echo -e ${cGREEN}'msg: shortcut icon downloaded successfully'${cNORMAL};
+        echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
         return;
     fi
     clean_temp_icon
@@ -194,10 +194,6 @@ get_feedicon() {
 }
 
 update_feedicon() {
-
-    echo '';
-    echo -e ${cBWHITE}'feedicon::update-feedicon -> start icon update ... '${cNORMAL};
-
     local URLSUM=$1
     a=$(echo $URLSUM | cut -b 1 -)
     b=$(echo $URLSUM | cut -b 1-2 -)
@@ -232,7 +228,7 @@ update_feedicon() {
     mv -f "$_i" "$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
 
     update_icon_status "$URLSUM" '1' "$dbname"
-    echo -e ${cGREEN}'feedicon::update-feedicon -> icon updated successfully'${cNORMAL};
+    echo -e ${cGREEN}'feedicon::update-feedicon -> icon update done'${cNORMAL};
 
 }
 

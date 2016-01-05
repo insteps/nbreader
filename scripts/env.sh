@@ -44,11 +44,12 @@ RUNDIR="$APPDIR/run/newsbeuter"
 VARDIR="$APPDIR/var/newsbeuter"
 CONFIGDIR="$APPDIR/config"
 SCRIPTDIR="$APPDIR/scripts"
-DBDIR="$VARDIR/db"
-DATADIR="$VARDIR/data"
+SQLDIR="$CONFIGDIR/sql"
 URLDIR="$CONFIGDIR/url"
 URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
+DBDIR="$VARDIR/db"
+DATADIR="$VARDIR/data"
 DONEDIR="$VARDIR/.done"
 WEBAPPDIR="$APPDIR/public"
 # Icon store path
@@ -59,7 +60,7 @@ ICONTXTDIR="$FEEDSDIR"
 ARCHIVE=""
 
 # User agents
-_USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
+_USERAGENT_0='Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0'
 
 # newsbeuter <default configs>
 # wget

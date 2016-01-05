@@ -112,7 +112,7 @@ fetch_url() {
         local logfile="$VARDIR/log/$DATESTAMP.log"
 
         if [ $USECURL = '1' ]; then
-            curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> $logfile
+            curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
         else
             wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O "$localXml" -a $logfile
         fi
