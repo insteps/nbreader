@@ -107,7 +107,7 @@ create_url_db() {
         echo "Error: no rss/atom entry found. See config/readme.notes."; exit 0;
     fi
     rm -f $urldb
-    sqlite3 $urldb < "$CONFIGDIR/urls.sqlite.sql"
+    sqlite3 $urldb < "$SQLDIR/urls.sqlite.sql"
     sqlite3 $urldb ".import $csvfile rss_url"
     echo $FEEDSURL > "$CONFIGDIR/feedsurl"
     ls -1 $URLLOCALDIR | sort > "$CONFIGDIR/dbname"
