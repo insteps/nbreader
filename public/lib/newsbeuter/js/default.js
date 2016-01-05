@@ -108,15 +108,15 @@
         + "<div class='author'><strong>Author:</strong> " + d.author + "</div>"
         + "<div class='pubdate'><strong>Published:</strong> " + dt + "</div>"
         + "<div class='status'>" + NbReader.pagersm
-        + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span> "
-        + "<span class='glyphicon glyphicon-tags blue " + "' aria-hidden='true'></span> "
-        + "<span class='glyphicon glyphicon-bookmark " + "' aria-hidden='true'></span> "
-        + "<span class='glyphicon glyphicon-picture " + "' aria-hidden='true'></span> "
-        + "&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-edit " + "' aria-hidden='true'></span> "
-        + "&nbsp;&nbsp;<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span> "
+        + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span>"
+        + "<span class='glyphicon glyphicon-tags blue " + "' aria-hidden='true'></span>"
+        + "<span class='glyphicon glyphicon-bookmark " + "' aria-hidden='true'></span>"
+        + "<span class='glyphicon glyphicon-picture " + "' aria-hidden='true'></span>"
+        + "<span class='glyphicon glyphicon-edit " + "' aria-hidden='true'></span>"
+        + "<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span>"
         + "</div>"
         + "<hr />"
-        + "<div class='text'>" + d.content + "</div>"
+        + "<div class='text clearfix'>" + d.content + "</div>"
         + NbReader.pagersm + "</div>"
         );
       content = "<div class='list-group '" + ">"  + items.join("") + "</div>";
@@ -400,7 +400,7 @@
           items.push(
           "<a href='" + key + "' class='list-group-item xml " + axml + "' title='"+a.title+"' data-db='"+db[0]+"'>" 
           + "<span class='badge'>" + val.count + "</span>"
-          + "<span class='glyphicon glyphicon-tags' aria-hidden='true'></span> "
+          + "<span class='glyphicon glyphicon-tags' aria-hidden='true'></span>"
           + "<span class='text'>"+db[1]+"</span>"
           + "</a>" );
         });
@@ -467,14 +467,14 @@
           var dt = NbReader.FmtArticleDt(d.pubDate);
           items.push(
           "<a href=#" + d.id + " class='list-group-item "+ unreadc + "'" + "title='"+d.title+"'" + ">" 
-          + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span> "
-          + "<span class='glyphicon glyphicon-tag blue " + "' aria-hidden='true'></span> "
-          + "<span class='glyphicon glyphicon-bookmark " + "' aria-hidden='true'></span> "
+          + "<span class='glyphicon glyphicon-flag green " + "' aria-hidden='true'></span>"
+          + "<span class='glyphicon glyphicon-tag blue " + "' aria-hidden='true'></span>"
+          + "<span class='glyphicon glyphicon-bookmark " + "' aria-hidden='true'></span>"
           + "<span class='pubdate'>" + dt + "</span>"
           + "<span class='author hidden'>" + d.author + "</span>"
           + "<span class='title'>" + d.title + "</span>"
-          //+ "<span class='glyphicon glyphicon-edit " + "l0" + "' aria-hidden='true'></span> "
-          + "<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span> "
+          //+ "<span class='glyphicon glyphicon-edit " + "l0" + "' aria-hidden='true'></span>"
+          + "<span class='glyphicon glyphicon-cog " + "' aria-hidden='true'></span>"
           + "</a>" );
         });
         if( ! items.length ) { return; }

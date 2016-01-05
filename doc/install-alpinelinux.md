@@ -21,5 +21,5 @@ eg.
 ### Issues (see `doc/install.md`):
 1. Download required 3rd party framework/libs used in application.
 2. Set session path in `public/application/config/config.php`
-3. Set session, db, data folder permissions in `var/newsbeuter`
+3. Set `session`, `db`, `data` folder permissions in `var/newsbeuter`
 

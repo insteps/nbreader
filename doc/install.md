@@ -60,6 +60,8 @@ _Note: you need to run `sh run.sh config` every time you edit/update files in `c
 1. `var/newsbeuter/db`
 2. `var/newsbeuter/data`
 3. `var/newsbeuter/session`
+4. Check if FEEDSURL defined in `scripts/env.sh` works (`http://<domain.path>/feeds/`).
+5. Check if web url for reader works (`http://<domain.path>/nbreader/`).
 
 ## E. Issues
 

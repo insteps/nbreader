@@ -90,7 +90,8 @@ lots of cleanup TODO
 
 .bc-wrap .col-xs-12,
 .sidebar .panel-body,
-.sidebar .list-group {
+.sidebar .list-group
+{
   margin: 0px; padding: 0px;
 }
 
@@ -116,14 +117,16 @@ lots of cleanup TODO
 #collapseOne a.list-group-item span.allleft { padding-left: 0; }
 
 #collapseOne a .favicon { border: 0px; width: 16px; height: 16px; padding: 0px; margin: 0px; }
+#collapseOne a .glyphicon-tags { padding-right: 8px; }
 #collapseOne a.xml { line-height: 1; padding-top: 8px; padding-bottom: 8px; }
 
 #rss .rss-items { margin-bottom: 5px; }
 #rss .list-group-item { background-color: #eee; }
+#rss .glyphicon { padding-right: 4px; }
 #rss .pubdate { float: right; padding: 0px 0px 0px 5px; font-size: 85%; }
 #rss .author { font-weight: bold; display: block; float: right; font-size: 85%; }
 #rss .title { display: block; float: none; font-size: 95%; }
-#rss .glyphicon-cog { float: right; margin-top: -10px; }
+#rss .glyphicon-cog { float: right; margin-top: -10px; padding-right: 0px; }
 #rss .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }
 #rss .unread { background-color: #fff; }
 #rss .unread .author { color: blue; }
@@ -141,8 +144,12 @@ span.green { color: green; }
 #rssview .pubdate {
   font-size: 90%;
 }
-#rssview .status span {
-  padding: 10px 8px 0px 0px;
+#rssview .status .glyphicon { padding: 10px 6px 0px 0px; }
+#rssview .status .glyphicon-bookmark,
+#rssview .status .glyphicon-picture,
+#rssview .status .glyphicon-edit
+{
+  padding-right: 24px;
 }
 #rssview .status .pager-simple {
   float: right;
