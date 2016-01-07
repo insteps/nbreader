@@ -6,6 +6,11 @@
  * This file is part of "Newsbeuter Reader";
  * See accompanying main package for license and more details.
  *
+ * NOTE
+ * This is older working script and any new features are
+ * added only to newer nbreader.bootstrap.js and newsbeuter.api.js.
+ * Newer script used better object notation methods.
+ * 
  */
 
 (function( NbReader, undefined ) {
@@ -405,6 +410,7 @@
           + "</a>" );
         });
         if( ! items.length ) { return; }
+        var l = ''; var h = '';
         if( typeof $(a).next()[0] != 'undefined'  ) {
           h = $(a).next('div').hasClass('hidden') ? 'hidden ' : '';
           if( $(a).next()[0].tagName == 'DIV' && $(a).next()[0].title !== '') {

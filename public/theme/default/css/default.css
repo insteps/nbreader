@@ -155,6 +155,8 @@ span.green { color: green; }
   float: right;
 }
 
+
+
 /* Small devices (smartphones, upto 768px) */
 @media (max-width: 768px) {
   #contentX { display: none; }
