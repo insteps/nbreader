@@ -36,9 +36,18 @@ $query_builder = TRUE;
 
 # installation
 $config['newsbeuter']['be']['path'] = '/tmp/nbreader';
-
+$config['newsbeuter']['be']['base_url'] = 'http://192.168.1.100/nbreader';
+//$config['newsbeuter']['be']['base_url'] = 'http://localhost/nbreader';
 #see also config.php, $config['base_url']
-$config['newsbeuter']['be']['rss_api_url'] = 'http://192.168.1.100/nbreader/api/rss';
+
+if ( ! empty($_SERVER['NBREADER_IS_REWRITE']) &&
+     $_SERVER['NBREADER_IS_REWRITE'] === 'on')
+{
+  $config['newsbeuter']['be']['rss_api_url'] = $config['newsbeuter']['be']['base_url'].'/api/rss';
+} else {
+  $config['newsbeuter']['be']['rss_api_url'] =
+     $config['newsbeuter']['be']['base_url'].'/index.php?/api/rss';
+}
 
 # basic js config data
 $jsconf = array();
