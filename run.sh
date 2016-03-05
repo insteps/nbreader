@@ -94,6 +94,7 @@ if [ "$1" = 'search' ]; then
     sh $SCRIPTDIR/search.sh "$2" "$3";
 fi
 
+#usage: sh run.sh config
 if [ "$1" = 'config' ]; then
     sh $SCRIPTDIR/config.sh;
 fi

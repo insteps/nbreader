@@ -1,7 +1,7 @@
 /*<![CDATA[*/
 
 /**
- * Copyright (c) 2015 V.Krishn (vkrishn@insteps.net)
+ * Copyright (c) 2015-2016 V.Krishn (vkrishn@insteps.net)
  *
  * This file is part of "Newsbeuter Reader";
  * See accompanying main package for license and more details.
@@ -15,7 +15,7 @@
   var Config = NbReader.Config = function (conf) {
     this.config = conf;
     this.version = conf.version;
-    this.copyright = 'Copyright (c) 2015 V.Krishn (insteps.net)';
+    this.copyright = 'Copyright (c) 2015-2016 V.Krishn (insteps.net)';
     this.about = function () {
        alert(
          "\nVersion: "+this.version+
