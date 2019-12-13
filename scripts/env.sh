@@ -55,6 +55,7 @@ WEBAPPDIR="$APPDIR/public"
 # Icon store path
 ICONTXTDIR="$FEEDSDIR"
 #ICONDIR="$WEBAPPDIR/lib/icon"
+SESSDIR="$VARDIR/session"
 
 # Path to articles/items webpage screenshots
 ARCHIVE=""
