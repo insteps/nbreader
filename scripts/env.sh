@@ -37,9 +37,6 @@ USECURL='1'
 
 # Path variables
 # --------------
-FEEDSDIR="$APPDIR/feeds/feeds"
-FEEDSURL="http://localhost/feeds"
-
 RUNDIR="$APPDIR/run/newsbeuter"
 VARDIR="$APPDIR/var/newsbeuter"
 CONFIGDIR="$APPDIR/config"
@@ -48,6 +45,7 @@ SQLDIR="$CONFIGDIR/sql"
 URLDIR="$CONFIGDIR/url"
 URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
+FEEDSDIR="$VARDIR/feeds/feeds"
 DBDIR="$VARDIR/db"
 DATADIR="$VARDIR/data"
 DONEDIR="$VARDIR/.done"
@@ -57,6 +55,8 @@ ICONTXTDIR="$FEEDSDIR"
 COOKIEFILE="$FEEDSDIR/.cookie"
 #ICONDIR="$WEBAPPDIR/lib/icon"
 SESSDIR="$VARDIR/session"
+
+FEEDSURL="http://localhost/feeds"
 
 # Path to articles/items webpage screenshots
 ARCHIVE=""
