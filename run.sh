@@ -1,6 +1,6 @@
 #!/bin/sh
 # /*
-# ** Copyright (c) 2015 V.Krishn
+# ** Copyright (c) 2015-2016 V.Krishn
 # **
 # ** This program is free software; you can redistribute it and/or
 # ** modify it under the terms of the Simplified BSD License (also
@@ -55,6 +55,7 @@ fi
 #usage: sh run.sh update tag|folder|url|hash <relevant data>
 if [ "$1" = 'update' ]; then
     source $SCRIPTDIR/update.sh
+    rm -f $COOKIEFILE;
 
     case $2 in
         tag) update_by_tag $2 $3;;
@@ -63,6 +64,18 @@ if [ "$1" = 'update' ]; then
         hash) update_by_hash $2 $3;;
     esac
 
+    _when=$2
+    _type=$3
+    case $_when in
+        daily|hourly|weekly|monthly)
+           source $SCRIPTDIR/update.cron.sh
+           if [ "$_type" ]; then
+              cron_update $_when $_type
+           else
+              _cron_update "$_when"
+           fi
+        ;;
+    esac
 fi
 
 if [ "$1" = 'refresh' ]; then
@@ -70,6 +83,9 @@ if [ "$1" = 'refresh' ]; then
 
     case $2 in
         iconstatus) _remove_icons_dbstatus_all && update_icons_status_all;;
+        meta) rm -f "$DATADIR/meta.json";;
+        meta_all) rm -f "$DATADIR/meta.*";;
+        icon_all) rm -f "$DATADIR/icon.*";;
     esac
 fi
 
@@ -99,6 +115,21 @@ if [ "$1" = 'config' ]; then
     sh $SCRIPTDIR/config.sh;
 fi
 
+
+#
+# prints usage of run command
+#
+usage() {
+    echo "$program $program_version"
+    cat << EOF
+Usage: run [option]
+----------
+
+Commands:
+
+EOF
+    exit 0
+}
 
 
 

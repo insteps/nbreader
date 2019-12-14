@@ -42,7 +42,8 @@ fi
 sanitize_xml() {
     local xml="$1"
     #local xml="$FEEDSDIR/.current.xml"
-    sed -i 's/</\n</g' $xml
+    # sed -i 's/</\n</g' $xml # newline in title issue
+    sed -i 's/<\w/\n&/g' $xml
     sed -i -e 's/&lt;div/\n&/g' \
            -e 's/&lt;table/\n&/g' \
            -e 's/&lt;p/\n&/g' \
@@ -112,7 +113,8 @@ fetch_url() {
         local logfile="$VARDIR/log/$DATESTAMP.log"
 
         if [ $USECURL = '1' ]; then
-            curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
+            ##. curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
+            curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
         else
             wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O "$localXml" -a $logfile
         fi

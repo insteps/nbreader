@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015 V.Krishn
+# Copyright (c) 2015-2016 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -54,6 +54,7 @@ DONEDIR="$VARDIR/.done"
 WEBAPPDIR="$APPDIR/public"
 # Icon store path
 ICONTXTDIR="$FEEDSDIR"
+COOKIEFILE="$FEEDSDIR/.cookie"
 #ICONDIR="$WEBAPPDIR/lib/icon"
 SESSDIR="$VARDIR/session"
 
@@ -61,7 +62,7 @@ SESSDIR="$VARDIR/session"
 ARCHIVE=""
 
 # User agents
-_USERAGENT_0='Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0'
+_USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
 
 # newsbeuter <default configs>
 # wget
@@ -75,6 +76,6 @@ WGETOPTS_1=" --timeout=20 --tries=5 --no-check-certificate "
 CURL='/usr/bin/curl '
 CURL_PROXY=' '
 #CURL_PROXY=' --socks4 localhost:9999 ' # example
-CURLOPTS_1=" $CURL_PROXY -L -f -k --connect-timeout 20 --retry 5 "
+CURLOPTS_1=" $CURL_PROXY -L -f -k --connect-timeout 20 --retry 5 -c $COOKIEFILE -b $COOKIEFILE"
 
 
