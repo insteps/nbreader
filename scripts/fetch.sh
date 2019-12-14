@@ -102,7 +102,7 @@ fetch_url() {
         echo 'Feeds dir missing, run config/setup first.'; exit 0;
     fi
 
-    if [ -f '.feeds.PLACEHOLDER' ]; then
+    if [ -f '.feeds' ]; then
         a=$(echo $URLSUM | cut -b 1 -)
         b=$(echo $URLSUM | cut -b 1-2 -)
         mkdir -p "$a/$b"
