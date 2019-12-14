@@ -37,14 +37,14 @@ USECURL='1'
 
 # Path variables
 # --------------
-RUNDIR="$APPDIR/run/newsbeuter"
-VARDIR="$APPDIR/var/newsbeuter"
 CONFIGDIR="$APPDIR/config"
 SCRIPTDIR="$APPDIR/scripts"
 SQLDIR="$CONFIGDIR/sql"
 URLDIR="$CONFIGDIR/url"
 URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
+VARDIR="$APPDIR/var/newsbeuter"
+RUNDIR="$VARDIR/run/newsbeuter"
 FEEDSDIR="$VARDIR/feeds/feeds"
 DBDIR="$VARDIR/db"
 DATADIR="$VARDIR/data"
