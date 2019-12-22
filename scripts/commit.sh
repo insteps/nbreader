@@ -48,21 +48,6 @@ commit_feeddir() {
     git commit --quiet -am "${commitmsg}" > /dev/null 2>&1
 }
 
-commit_fetch() { # deprecate ?
-    if [ $COMMITDATA != '1' ]; then
-        echo "Msg: not committing now, see COMMITDATA in env.sh"; exit 0;
-    fi
-
-    if [ -n "$1" ]; then epoch=$1; else exit 0; fi
-    type=$2;
-    tag=$3; if [ "$tag" = "" ]; then exit 0; fi;
-
-    cd $FEEDSDIR
-    printf "${cBBLUE}Committing XX -> fetch:${cNORMAL} $RUNDIR/fetch/$epoch\n"
-    # fossil addremove --dotfiles && fossil status
-    # fossil --user knoppix commit --no-warnings -m "fetch: $epoch (by $type - $tag)"
-}
-
 commit_update() {
     if [ $COMMITDATA != '1' ]; then
         echo "Msg: not committing now, see COMMITDATA in env.sh"; exit 0;
