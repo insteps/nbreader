@@ -1,26 +1,26 @@
 #!/bin/sh
-# /*
-# ** Copyright (c) 2015-2016 V.Krishn
-# **
-# ** This program is free software; you can redistribute it and/or
-# ** modify it under the terms of the Simplified BSD License (also
-# ** known as the "2-Clause License" or "FreeBSD License".)
-# 
-# ** This program is distributed in the hope that it will be useful,
-# ** but without any warranty; without even the implied warranty of
-# ** merchantability or fitness for a particular purpose.
-# **
-# ** Author contact information:
-# **   vkrishn@insteps.net
-# **   http://www.insteps.net
-# **
-# *******************************************************************************
-# **
-# ** Code to run various feeds data fetch/update for newsbeuter,
-# **   Search database or call newsbeuter cli.
-# */
-# 
-# 
+#
+# Copyright (c) 2015-2016 V.Krishn
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the Simplified BSD License (also
+# known as the "2-Clause License" or "FreeBSD License".)
+#
+# This program is distributed in the hope that it will be useful,
+# but without any warranty; without even the implied warranty of
+# merchantability or fitness for a particular purpose.
+#
+# Author contact information:
+#   vkrishn@insteps.net
+#   http://www.insteps.net
+#
+# *******************************************************************
+#
+# Code to run various feeds data fetch/update for newsbeuter,
+#   Search database or call newsbeuter cli.
+#
+#
+#
 
 fpath=$(readlink -f $0)
 APPDIR=$(dirname $fpath)

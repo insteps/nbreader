@@ -19,7 +19,7 @@
 # Code to fetch and store newsbeuter's feeds/rss/xml data, based on:
 #   tags/catogory: eg. '/news/bbc.co.uk'
 #   dbname: eg. news, business, dev
-#   
+#
 #
 #
 

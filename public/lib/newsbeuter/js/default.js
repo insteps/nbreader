@@ -9,7 +9,7 @@
  * NOTE
  * This is older working script and any new features are
  * added only to newer nbreader.bootstrap.js and newsbeuter.api.js.
- * Newer script used better object notation methods.
+ * Newer script uses better object notation methods.
  * 
  */
 
