@@ -708,7 +708,7 @@
       var dt = NBR.Client.Util.fmtDt(d.pubDate, 'article');
       var items = []; var uD = NBR.UI.Data;
         items.push( 
-        "<div class='list-group-item l0'>" + uD.readSm()
+        "<div class='list-group-item l0'><div class='l1'>" + uD.readSm()
         + "<a href='"+d.url+"'" + "class=' '" + "title='"+d.title+"'" + " target='_blank'>" 
         + "<span class='title'>" + d.title + "</span>"
         + "</a>"
@@ -721,7 +721,7 @@
         + uD.glyphicon('glyphicon-picture picture')
         + uD.glyphicon('glyphicon-edit edit')
         + uD.glyphicon('glyphicon-cog options')
-        + "</div>"
+        + "</div></div>"
         + "<hr />"
         + "<div id='article1' class='text clearfix'>" + d.content + "</div>"
         + uD.pgrSm() + "</div>"
