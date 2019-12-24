@@ -765,10 +765,6 @@
       var elm = obj.tagName;
       if(elm === 'SPAN') { a = obj.parentNode; }
       if(elm === 'DIV') { a = obj; }
-      if(typeof a !== 'undefined') {
-        this.NBR.UI.Dragbar.set(a, this.NBR);
-      }
-
 
       return this;
     },
