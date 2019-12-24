@@ -131,7 +131,7 @@ lots of cleanup TODO
 #rss .glyphicon-cog { padding: 0px 2px 0px 2px; }
 #rss .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }
 #rss .author { font-weight: bold; display: block; float: right; font-size: 85%; }
-#rss .title { font-size: 90%; }
+#rss .title { font-size: 85%; }
 #rss .unread { background-color: #fff; }
 #rss .unread .author { color: blue; }
 #rssactive .rss-items a.list-group-item { padding: 3px 5px; }
