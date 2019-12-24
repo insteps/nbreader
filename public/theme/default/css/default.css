@@ -132,7 +132,12 @@ lots of cleanup TODO
 #rss .glyphicon-cog { padding: 0px 2px 0px 2px; }
 /*#rss .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }*/
 #rss .author { font-weight: bold; display: block; float: right; font-size: 85%; }
-#rss .title { font-size: 85%; vertical-align: top; }
+#rss .title {
+  font-size: 85%; vertical-align: top;
+  display: inline-block; width: 60%;
+  white-space: nowrap; overflow: hidden;
+}
+#rsscol2 .col-md-6 .title { width: 97% !important; }
 #rss .unread { background-color: #fff; }
 #rss .unread .author { color: blue; }
 #rssactive .rss-items a.list-group-item { padding: 3px 5px; }
@@ -159,6 +164,11 @@ span.green { color: green; }
 #rssview .readtog {
   float: right;
 }
+#rssview .author {
+  clear: left;
+}
+
+#rssview .title,
 #rssview .author,
 #rssview .pubdate {
   font-size: 90%;
