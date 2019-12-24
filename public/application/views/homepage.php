@@ -43,12 +43,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php include_once '_navbar_left.php' ?>
 </div>
 
-<div id='rss' class="col-md-4">
+<div id='rsscol2' class="col-md-8">
+<div id='rss'>
 <?php include_once '_navbar_center.php' ?>
 </div>
-<div id='rssview' class="col-md-4">
+<div class="clearfix visible-xs-block"></div>
+<div id='rssview'>
 <?php include_once '_content.php' ?>
 </div>
+</div>
+
 
 </div>
 </div>
@@ -119,6 +123,8 @@ setTimeout(function() {
  NB.UI.init(NB);
 
 }, 50);
+
+
 /*]]>*/
 </script>
 

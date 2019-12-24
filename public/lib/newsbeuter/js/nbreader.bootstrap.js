@@ -12,11 +12,11 @@
  */
 
 (function( NbReader, undefined ) {
-  var Config = NbReader.Config = function (conf) {
+  var Config = NbReader.Config = function(conf) {
     this.config = conf;
     this.version = conf.version;
     this.copyright = 'Copyright (c) 2015-2016 V.Krishn (insteps.net)';
-    this.about = function () {
+    this.about = function() {
        alert(
          "\nVersion: "+this.version+
          "\n\nNbReader: \n \(RSS Reader / Web frontend for Newsbeuter\)\n\n"+
@@ -28,63 +28,64 @@
 
 (function( NbReader, $, undefined ) {
   var UI = NbReader.UI = {
-    init: function (self) {
+    init: function(self) {
       this.Frame.init(self);
       this.Header.init(self);
+      this.HeadNavs.init(self);
       this.BreadCrb.init(self);
       this.RssList.init(self);
       this.Rss.init(self);
       this.Article.init(self);
       return this;
     },
-    isGlyph: function (obj) {
+    isGlyph: function(obj) {
       return (obj.tagName) == 'SPAN' && $(obj).hasClass('glyphicon') ? true : false;
     },
-    isFavicon: function (obj) {
+    isFavicon: function(obj) {
       return (obj.tagName) == 'IMG' && $(obj).hasClass('favicon') ? true : false;
     },
-    isBadge: function (obj) {
+    isBadge: function(obj) {
       return (obj.tagName) == 'SPAN' && $(obj).hasClass('badge') ? true : false;
     },
-    isText: function (obj) {
+    isText: function(obj) {
       return (obj.tagName) == 'SPAN' && $(obj).hasClass('text') ? true : false;
     },
-    isSearch: function (obj) {
+    isSearch: function(obj) {
       return (obj.tagName) == 'INPUT' ? true : false;
     }
 
   };
 
   var Data = NbReader.UI.Data = {
-    glyphicon: function (glyphicon) {
-      if ( ! glyphicon ) { return ''; }
+    glyphicon: function(glyphicon) {
+      if( ! glyphicon ) { return ''; }
       return '<span class="glyphicon ' + glyphicon + '" aria-hidden="true"></span>';
     },
-    btn: function (cls, text) {
+    btn: function(cls, text) {
       return '<button type="button" class="btn ' + cls + '">' + text + '</button>';
     },
-    aBtnSt: function (href, cls) {
+    aBtnSt: function(href, cls) {
       return '<a href="'+ href +'" class="btn ' + cls + '" role="button">';
     },
-    pgrSm: function () {
+    pgrSm: function() {
       return '<div class="btn-group pager-simple">'
         + this.btn('prev', '&laquo;') + this.btn('next', '&raquo;') + '</div>';
     },
-    readSm: function () {
+    readSm: function() {
       return this.aBtnSt('#', 'btn-default btn-sm readtog')
         + this.glyphicon('glyphicon-unchecked') + '</a>';
     },
-    icon: function (cls, type, base64) {
+    icon: function(cls, type, base64) {
       cls = (cls === '') ? 'favicon' : cls;
       var src = (type == 'base64') ? 'data:'+base64 : type;
       return '<img class="'+cls+'" src="'+src+'" align="left" alt="" title="" />';
     },
-    glyph2icon64: function (obj, gcls, cls, base64) {
+    glyph2icon64: function(obj, gcls, cls, base64) {
       var span = $(obj).children('.glyphicon')[0];
       if(span) { $(span).removeClass(gcls);
         span.innerHTML = this.icon(cls, 'base64', base64); }
     },
-    rsspgr: function () {
+    rsspgr: function() {
        return '<ul id="rssactive-pager" class="pagination pagination-sm"><li>x</li></ul>';
     }
   };
@@ -93,21 +94,48 @@
 
 (function( NbReader, $, undefined ) {
   var Frame = NbReader.UI.Frame = {
-    init: function () {
-      this.setHeights();
-      window.onresize = this.setHeights;
+    init: function() {
+      this.setHeights(2);
+      window.onresize = function() { this.setHeights(); }
       return this;
     },
-    setHeights: function () {
+    setHeight1P: function(h) {
+      $('#rsslist').css({ height: "auto" });
+      $('#rss').css({ height: "auto" });
+      $('#rssview').css({ height: "auto" });
+      $('#rssactive').css({ height: "auto" });
+      $('#article1').css({ height: "auto" });
+      return this;
+    },
+    setHeight2P: function(h) {
+      $('#rsslist').data('pLayout', 2);
+      $('#rss').removeClass('col-md-6');
+      $('#rss br').css({ display: 'none' });
+      $('#rssview').removeClass('col-md-6');
+      $('#rssactive').height(h/3.2).css({ overflow: "auto" });
+      $('#article1').height(h-(h/1.60)).css({ overflow: "auto" });
+      return this;
+    },
+    setHeight3P: function(h) {
+      $('#rsslist').data('pLayout', 3);
+      $('#rss').addClass('col-md-6').height(h-5).css({ overflow: "auto" });
+      $('#rss br').css({ display: 'block' });
+      $('#rssview').addClass('col-md-6').height(h-5).css({ overflow: "auto" });
+      return this;
+    },
+    setHeights: function(p) {
+      var contentHt = $( window ).height()-$('#breadcrumb').height()- $('.navbar').height()-10;
+      if($('#rsslist').data('pLayout') !== p) {
+        this.setHeight1P(contentHt); //reset
+      }
+      console.log(contentHt+' setting pLayout -> '+p);
       if($( window ).width() > 768) {
-        var contentHt = $( window ).height()-$('#breadcrumb').height()- $('.navbar').height()-10;
-        $('#rsslist').height(contentHt).css({ overflow: "auto" });
-        $('#rss').height(contentHt).css({ overflow: "auto" });
-        $('#rssview').height(contentHt).css({ overflow: "auto" });
-      } else {
-        $('#rsslist').css({ height: "auto" });
-        $('#rss').css({ height: "auto" });
-        $('#rssview').css({ height: "auto" });
+          $('#rsslist').height(contentHt).css({ overflow: "auto" });
+          if(p == 2) { this.setHeight2P(contentHt); }
+          if(p == 3) { this.setHeight3P(contentHt); }
+          if( typeof p == 'undefined' ) {
+            console.log(contentHt+ ' undefined -> pLayout');
+          }
       }
       return this;
     }
@@ -116,16 +144,17 @@
 
 (function( NbReader, $, undefined ) {
   var Header = NbReader.UI.Header = {
-    event: function (e) {
+    event: function(e) {
+      e.preventDefault(); 
       return this;
     },
-    init: function (NBR) {
+    init: function(NBR) {
       this.header = $('#navbar-header');
       this.header[0].NBR = NBR;
       this.header[0].onclick = this.onclick;
       return this;
     },
-    onclick: function (e) {
+    onclick: function(e) {
       e.preventDefault(); var obj = e.target;
       if(obj.tagName != 'A') { return; }
       var hash = obj.hash;
@@ -139,22 +168,38 @@
 
 (function( NbReader, $, undefined ) {
   var HeadNavs = NbReader.UI.HeadNavs = {
-    event: function (e) {
+    event: function(e) {
       return this;
     },
-    init: function () {
+    init: function(NBR) {
+      this.hnavs = $('#navbar');
+      this.hnavs[0].NBR = NBR;
+      this.hnavs[0].onclick = this.menuClick;
       return this;
     },
-    btns: function () {
+    btns: function() {
       return this;
     },
-    btnsClick: function () {
+    btnsClick: function() {
       return this;
     },
-    menu: function () {
+    menu: function() {
       return this;
     },
-    menuClick: function () {
+    menuClick: function(e) {
+      e.preventDefault(); var obj = e.target;
+      if(obj.tagName != 'A') { return; }
+      //for (a in this.NBR.UI.Frame) { console.log(a); }
+      //return;
+      var hash = obj.hash;
+      if(hash == '#toglayout' || hash == '#toglayout2') {
+        obj.href = '#toglayout3';
+        this.NBR.UI.Frame.setHeights(3);
+      }
+      if(hash == '#toglayout3') {
+        obj.href = '#toglayout2';
+        this.NBR.UI.Frame.setHeights(2);
+      }
       return this;
     }
   };
@@ -162,24 +207,24 @@
 
 (function( NbReader, $, undefined ) {
   var BreadCrb = NbReader.UI.BreadCrb = {
-    event: function (e) {
+    event: function(e) {
       return this;
     },
-    init: function (NBR) {
+    init: function(NBR) {
       this.breadcrumb_ = NBR.config.breadcrumb;
       this.breadcrumb = document.getElementById(this.breadcrumb_); 
       return this;
     },
-    set: function () {
+    set: function() {
       $(this.breadcrumb).children('ol').children('.xml').remove();
     },
-    show: function () {
+    show: function() {
       return this;
     },
-    hide: function () {
+    hide: function() {
       return this;
     },
-    update: function (obj, isXml) {
+    update: function(obj, isXml) {
       this.set(); // ## set breadcrumb
       var bc = obj.title.split(/\//); var _bc = [];
       for (var i = 0; i < bc.length-1; i++) {
@@ -196,13 +241,13 @@
 
 (function( NbReader, $, undefined ) {
   var RssList = NbReader.UI.RssList = {
-    event: function (e) {
+    event: function(e) {
       e.preventDefault();
       if(e.target) { obj = e.target; } else { obj = e; }
       this.NBR.UI.RssList.activenode = obj;
       this.NBR.UI.RssList.nodeClick(obj, this.NBR);
     },
-    init: function (NBR) {
+    init: function(NBR) {
       var root = NBR.config.nodes;
       if(typeof root !== 'object') {
         this.Root = document.getElementById(root);
@@ -215,7 +260,7 @@
       }
       return this;
     },
-    searchReset: function (list) {
+    searchReset: function(list) {
       // reset styles first
       $(list).removeClass('hiddenYES');
       $(list).next('div').removeClass('hiddenNO');
@@ -223,7 +268,7 @@
       $(list).children('.glyphicon').removeClass('allleft');
       return this;
     },
-    search: function () {
+    search: function() {
       var list = this.List; var RssList = this;
 
       $(this.Search).keydown(function(e) {
@@ -249,38 +294,38 @@
       });
       return this;
     },
-    setActiveXmlNode: function (a) {
+    setActiveXmlNode: function(a) {
       $(this.activenodeXml).removeClass('activexml');
       $(a).addClass('activexml');
       this.activenodeXml = a; this.activenodeXmlHref = a.href;
     },
-    getXmlFolder: function (a) {
+    getXmlFolder: function(a) {
       if( typeof $(a).next()[0] != 'undefined' ) {
         return ($(a).next()[0].tagName == 'DIV' &&
                 $(a).next()[0].title !== '') ? $(a).next() : false;
       }
       return false;
     },
-    getNextNode: function (a) {
+    getNextNode: function(a) {
       if( typeof $(a).next()[0] != 'undefined' ) {
         return $(a).next('div');
       }
       return false;
     },
-    nodeBadge: function (obj) {
+    nodeBadge: function(obj) {
       return $(obj).children('.badge')[0];
     },
-    nodeCount: function (obj) {
+    nodeCount: function(obj) {
       return parseInt(this.nodeBadge(obj).innerHTML);
     },
-    activeXmlBadge: function () {
+    activeXmlBadge: function() {
         return this.nodeBadge($(this.activenodeXml.parentNode).prev('a')[0]);
     },
-    isNodeUpdated: function (newNum, node) {
+    isNodeUpdated: function(newNum, node) {
       var oldn = this.nodeCount(node);
       return (oldn !== newNum) ? true : false;
     },
-    node: function (a, NBR) {
+    node: function(a, NBR) {
       this.nodeType = 'node';
       refresh = this.doNodeRefresh == 'yes' ? 'yes' : 'no';
 
@@ -298,25 +343,25 @@
       this.folderClick(a, refresh, NBR);
       return this;
     },
-    nodeToggle: function (a) {
+    nodeToggle: function(a) {
       $(obj).toggleClass('active');
       $(obj).next('div').toggleClass('hidden');
       if($(obj).next('div').next('div')) { $(obj).next('div').next('div').toggleClass('hidden'); }
       $(obj).children('.glyphicon').toggleClass('glyphicon-folder-close');
       $(obj).children('.glyphicon').toggleClass('glyphicon-folder-open');
     },
-    nodeClick: function (obj, NBR) {
+    nodeClick: function(obj, NBR) {
       UI = NBR.UI;
       if( UI.isSearch(obj) ) { return; }
       if( UI.isFavicon(obj) ) { return; }
       if( UI.isGlyph(obj) ) { return; }
       if( UI.isBadge(obj) ) { a = obj.parentNode; this.badge(a, NBR); }
       if( UI.isText(obj) ) { a = obj.parentNode; }
-      if ((obj.tagName) == 'A') { a = obj; }
+      if((obj.tagName) == 'A') { a = obj; }
       this.node(a, NBR);
       return;
     },
-    folder: function (data, status, xhr) {
+    folder: function(data, status, xhr) {
       if(status != 'success' && xhr.readyState != 4) { return; }
       var NBR = this; var list = NBR.UI.RssList;
       var a = list.activenodeA;
@@ -370,8 +415,8 @@
         
       return;
     },
-    folderClick: function (a, refresh, NBR) {
-      f = $(a).data('fetched'); // no action if already fetched;
+    folderClick: function(a, refresh, NBR) {
+      var f = $(a).data('fetched'); // no action if already fetched;
       if( typeof f != 'undefined' && refresh != 'yes' ) { return this; }
 
       this.doNodeRefresh = '';
@@ -382,10 +427,10 @@
 
       return this;
     },
-    xml: function (data, status, xhr) {
+    xml: function(data, status, xhr) {
       if(status != 'success' && xhr.readyState != 4) { return; }
       var NBR = this; var rss = NBR.UI.Rss; var list = NBR.UI.RssList;
-      n = NBR.Client.Util.epoch();
+      var n = NBR.Client.Util.epoch();
       $(list.activenodeA).data('fetched', { time: n, count: 1 });
       $(rss.Active).data(list.activehash, data);
 
@@ -398,11 +443,11 @@
       rss.list(data, NBR).search().pager(data, NBR);
       return;
     },
-    getXml: function (NBR) {
+    getXml: function(NBR) {
       a = this.activenodeXml;
       this.doXmlRefresh = '';
 
-      f = $(a).data('fetched');
+      var f = $(a).data('fetched');
       //if( typeof f != 'undefined' ) { return; } # TODO
 
       db = $( a ).attr( "data-db" ); if( ! db ) { return this; }
@@ -415,7 +460,7 @@
   
       return this;
     },
-    xmlClick: function (obj, NBR) {
+    xmlClick: function(obj, NBR) {
       this.nodeType = 'xml';
       this.setActiveXmlNode(obj);
       NBR.UI.BreadCrb.update(obj, true);
@@ -427,31 +472,31 @@
       this.getXml(NBR);
       return this;
     },
-    badge: function (a, NBR) {
+    badge: function(a, NBR) {
       // TODO - add popup opts
       if( NBR.Client.Util.IsXml(a) ) { this.doXmlRefresh = 'yes'; }
         else { this.doNodeRefresh = 'yes'; }
       NBR.Client.Log.con('Badge:: refresh (yes)');
       return this;
     },
-    getBadgeByTitle: function (title) {
+    getBadgeByTitle: function(title) {
       _s = "a[title='"+title+"']";
       return $( "#collapseOne " + _s).children('.badge');
     },
-    badgeUpdate: function (title, text) {
+    badgeUpdate: function(title, text) {
       this.getBadgeByTitle(title)[0].innerHTML = text;
       return this;
     },
-    badgeShowOpts: function () {
+    badgeShowOpts: function() {
       return this;
     },
-    badgeHideOpts: function () {
+    badgeHideOpts: function() {
       return this;
     },
-    badgeClick: function () {
+    badgeClick: function() {
       return this;
     },
-    refreshNodeIcon: function (node, NBR) {
+    refreshNodeIcon: function(node, NBR) {
       alist = $(node).next('div').children('a');
       for (var i = 0; i < alist.length; i++) {
         var t1 = alist[i];
@@ -466,12 +511,12 @@
       }
       return this;
     },
-    setIconByDbname: function (dbname, data) {
+    setIconByDbname: function(dbname, data) {
       $(this.Root).data('icon.'+dbname, data);
       $(this.Root).data('isfetch.icon.'+dbname, 'done');
       return this;
     },
-    getIconByDbName: function (dbname, a, NBR) {
+    getIconByDbName: function(dbname, a, NBR) {
       isfetch = $(this.Root).data('isfetch.icon.'+dbname); //unset ?
       isdata = $(this.Root).data('icon.'+dbname);
       if(isdata) { this.refreshNodeIcon(a, NBR); }
@@ -493,8 +538,8 @@
 
 (function( NbReader, $, undefined ) {
   var Rss = NbReader.UI.Rss = {
-    init: function (NBR) {
-      this.Active = document.getElementById(NBR.config.rssactive);
+    init: function(NBR) {
+      this.Active = document.getElementById(NBR.config.rssactive); //list of 10 rss items
       this.feedoffset = 0;
       this.rsspager = document.getElementById('rssactive-pager');
       this.rsspagerwrap = document.getElementById('rssactive-pager-wrap'); 
@@ -506,7 +551,7 @@
       this.Active.ondblclick = this.listDblClick;
       return this;
     },
-    search: function () {
+    search: function() {
       // Search Active RSS Items
       setTimeout(function() {
         var options = {
@@ -517,28 +562,29 @@
       }, 200);
       return this;
     },
-    searchChange: function () {
+    searchChange: function() {
       // For persistent/sticky search
       return this;
     },
-    pgrPrev: function () {
+    pgrPrev: function() {
       prev = $(this.rsspager).children('li.prev').children('a');
       $(prev[0]).trigger( "click" );
       return this;
     },
-    pgrNext: function () {
+    pgrNext: function() {
       next = $(this.rsspager).children('li.next').children('a');
       $(next[0]).trigger( "click" );
       return this;
     },
-    pagersm: function (e) {
+    pagersm: function(e) {
+      e.preventDefault();
       var obj = e.target; var rss = this.NBR.UI.Rss;
       var li = $(rss.rsspager).children('li');
       if(li.length < 3) { return; }
       if( $(obj).hasClass('prev') ) { return rss.pgrPrev(); }
       if( $(obj).hasClass('next') ) { return rss.pgrNext(); }
     },
-    list: function (data, NBR) {
+    list: function(data, NBR) {
       var items = []; var uD = NBR.UI.Data;
       $.each( data.query, function( key ) {
         d = data.query[key];
@@ -549,10 +595,9 @@
         + uD.glyphicon('glyphicon-flag green')
         + uD.glyphicon('glyphicon-tags blue')
         + uD.glyphicon('glyphicon-bookmark')
-        + "<span class='pubdate'>" + dt + "</span>"
+        + "<span class='pubdate'>" + dt + ' ' + uD.glyphicon('glyphicon-cog') + " </span>"
         + "<span class='author hidden'>" + d.author + "</span>"
-        + "<span class='title'>" + d.title + "</span>"
-        + uD.glyphicon('glyphicon-cog')
+        + "<br class='br' /><span class='title'>" + d.title + "</span>"
         + "</a>" );
       });
       if( ! items.length ) { return this; }
@@ -563,7 +608,7 @@
       }, 100);
       return this;
     },
-    pager: function (data, NBR) {
+    pager: function(data, NBR) {
       // data.count = full count (unread+read)
       var m = (data.count%10) > 0 ? 1 : 0;
       var pgs = parseInt(data.count/10)+m; //pager data
@@ -582,7 +627,7 @@
             totalPages: pgs,   visiblePages: 4,
             prev: '&lt;',      next: '&gt;',
             first: '&lt;&lt;', last: '&gt;&gt;',
-            onPageClick: function (event, page) {
+            onPageClick: function(event, page) {
               NBR.UI.Rss.feedoffset = (parseInt(page)-1)*10;
               NBR.UI.RssList.getXml(NBR);
               $(search2).attr( "placeholder", 'Search for...      Pgs: '+page+'/'+pgs );
@@ -592,26 +637,31 @@
       }
       return this;
     },
-    listClick: function (e) {
+    listClick: function(e) {
+      e.preventDefault(); 
       if(e.target) { obj = e.target; } else { obj = e; }
-      var title = obj.title;
-      var NBR = this.NBR; var Rss = NBR.UI.Rss;
-      if ((obj.tagName) == 'INPUT') { return; }
-      if ((obj.tagName) == 'SPAN') { a = obj.parentNode; }
-      if ((obj.tagName) == 'A') { a = obj; }
+      var title = obj.title; var elm = obj.tagName;
+      var NBR = this.NBR; var Rss = NBR.UI.Rss; var a = '';
+      if(elm === 'INPUT') { return; }
+      if(elm === 'SPAN') { a = obj.parentNode; }
+      if(elm === 'A') { a = obj; }
 
       var lst = Rss.Active.getElementsByTagName(NBR.config.list);
-      $(lst).removeClass('active');
-      $(a).toggleClass('active');
+      $(lst).removeClass('active'); $(a).toggleClass('active');
       Rss.activerss = a;
       data = $(Rss.Active).data(NBR.UI.RssList.activehash);
 
       var ar = NBR.UI.Article.view(a, data, NBR).pager(NBR).btnRead(NBR);
+      // activate actions on current article view
+      var ar = NBR.UI.Article.view(a, data, NBR)
+                 .pager(NBR).btnRead(NBR).btnStatus(NBR);
       if( ! $(a).hasClass('unread')) { ar.btnReadTog(); }
+
       return;
     },
-    listDblClick: function (e) {
-      obj = e.target;
+    listDblClick: function(e) {
+      e.preventDefault();
+      if(e.target) { obj = e.target; } else { obj = e; }
       r = (obj.tagName == 'A') ? obj : obj.parentNode;
       id = r.hash.replace(/\#/, ''); 
       var NBR = this.NBR; var rsslist = NBR.UI.RssList;
@@ -640,13 +690,16 @@
 
 (function( NbReader, $, undefined ) {
   var Article = NbReader.UI.Article = {
-    init: function (NBR) {
+    init: function(NBR) {
       this.rssview = document.getElementById('rssview');
-      this.pgr = '#rssview .list-group-item .pager-simple';
-      this.btnread = '#rssview .list-group-item .readtog';
+      var id = this.rssview.id;
+      this.pgr = '#'+id + ' .list-group-item .pager-simple';
+      this.btnread = '#'+id + ' .list-group-item .readtog';
+      this.btnstatus = '#'+id + ' .status';
+      this.rssview.onclick = this.aClick;
       return this;
     },
-    view: function (a, data, NBR) {
+    view: function(a, data, NBR) {
       var id = (/(\#)([\d]+)$/).exec(a.href)[2];
       $.each( data.query, function( key ) {
         if(id == data.query[key].id) {
@@ -656,61 +709,90 @@
       var items = []; var uD = NBR.UI.Data;
         items.push( 
         "<div class='list-group-item l0'>" + uD.readSm()
-        + "<a href='"+d.url+"'" + "class=' '" + "title='"+d.title+"'" + ">" 
+        + "<a href='"+d.url+"'" + "class=' '" + "title='"+d.title+"'" + " target='_blank'>" 
         + "<span class='title'>" + d.title + "</span>"
         + "</a>"
         + "<div class='author'><strong>Author:</strong> " + d.author + "</div>"
         + "<div class='pubdate'><strong>Published:</strong> " + dt + "</div>"
         + "<div class='status'>" + uD.pgrSm()
-        + uD.glyphicon('glyphicon-flag green')
-        + uD.glyphicon('glyphicon-tags blue')
-        + uD.glyphicon('glyphicon-bookmark')
-        + uD.glyphicon('glyphicon-picture')
-        + uD.glyphicon('glyphicon-edit')
-        + uD.glyphicon('glyphicon-cog')
+        + uD.glyphicon('glyphicon-flag flag green')
+        + uD.glyphicon('glyphicon-tags tags blue')
+        + uD.glyphicon('glyphicon-bookmark bookmark')
+        + uD.glyphicon('glyphicon-picture picture')
+        + uD.glyphicon('glyphicon-edit edit')
+        + uD.glyphicon('glyphicon-cog options')
         + "</div>"
         + "<hr />"
-        + "<div class='text clearfix'>" + d.content + "</div>"
+        + "<div id='article1' class='text clearfix'>" + d.content + "</div>"
         + uD.pgrSm() + "</div>"
         );
       content = "<div class='list-group '" + ">"  + items.join("") + "</div>";
       this.rssview.innerHTML = content;
+      NBR.UI.Frame.setHeights($('#rsslist').data('pLayout'));
 
       return this;
     },
-    btnReadTog: function () {
+    aClick: function(e) {
+      var obj = e.target;
+      if(obj.tagName == 'A') { obj.target = '_blank'; }
+      return this;
+    },
+    btnReadTog: function() {
       obj = $(this.btnread)[0];
       $(obj).toggleClass('active');
       $(obj).children('.glyphicon').toggleClass('glyphicon-check');
       $(obj).children('.glyphicon').toggleClass('glyphicon-unchecked');
       return this;
     },
-    btnReadClick: function (e) {
+    btnReadClick: function(e) {
       e.preventDefault(); var ui = this.NBR.UI;
       $(ui.Rss.activerss).trigger( "dblclick" );
       return this;
     },
-    btnRead: function (NBR) {
-      rtog = $(this.btnread)[0]; rtog.NBR = NBR;
+    btnRead: function(NBR) {
+      var rtog = $(this.btnread)[0]; rtog.NBR = NBR;
       rtog.onclick = this.btnReadClick;
       return this;
     },
-    pagerClick: function (e) {
+    btnStatusClick: function(e) {
+      e.preventDefault(); var a = '';
+      if(e.target) { obj = e.target; } else { obj = e; }
+
+      var ui = this.NBR.UI;
+      var NBR = this.NBR;  
+	  var Rss = NBR.UI.Rss;
+
+      var elm = obj.tagName;
+      if(elm === 'SPAN') { a = obj.parentNode; }
+      if(elm === 'DIV') { a = obj; }
+      if(typeof a !== 'undefined') {
+        this.NBR.UI.Dragbar.set(a, this.NBR);
+      }
+
+
+      return this;
+    },
+    btnStatus: function(NBR) {
+      var st = $(this.btnstatus)[0]; st.NBR = NBR;
+      st.onclick = this.btnStatusClick;
+      return this;
+    },
+    pagerClick: function(e) {
       e.preventDefault();
       var obj = e.target; var rss = this.NBR.UI.Rss;
       if( $(obj).hasClass('prev') ) {
-        if ( $(rss.activerss).prev('a')[0] ) {
+        if( $(rss.activerss).prev('a')[0] ) {
           $(rss.activerss).prev('a').trigger( "click" );
         } else { rss.pgrPrev(); }
       }
       if( $(obj).hasClass('next') ) {
-        if ( $(rss.activerss).next('a')[0] ) {
+        if( $(rss.activerss).next('a')[0] ) {
           $(rss.activerss).next('a').trigger( "click" ); 
         } else { rss.pgrNext(); }
       }
       return this;
     },
-    pager: function (NBR) {
+    pager: function(NBR) {
       pgr = $(this.pgr);
       pgr[0].NBR = NBR; pgr[0].onclick = this.pagerClick;
       pgr[1].NBR = NBR; pgr[1].onclick = this.pagerClick;
@@ -722,10 +804,11 @@
 
 (function( NbReader, $, undefined ) {
   var Footer = NbReader.UI.Footer = {
-    event: function (e) {
+    event: function(e) {
+      e.preventDefault();
       return this;
     },
-    init: function () {
+    init: function() {
       return this;
     }
   };
