@@ -305,6 +305,7 @@
     },
     datefmts: {
       article: 'ddd, mmm dS, yyyy, h:MM TT',
+      articleshort: 'mm/dd/yy, h:MM TT',
       time: 'h:MM TT'
     },
     fmtDt: function (epoch, fmt) {

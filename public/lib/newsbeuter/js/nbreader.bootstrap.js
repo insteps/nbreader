@@ -589,7 +589,7 @@
       $.each( data.query, function( key ) {
         d = data.query[key];
         unread = d.unread; unreadc = unread ? 'unread' : '';
-        var dt = NBR.Client.Util.fmtDt(d.pubDate, 'article');
+        var dt = NBR.Client.Util.fmtDt(d.pubDate, 'articleshort');
         items.push(
         "<a href=#" + d.id + " class='list-group-item "+ unreadc + "'" + "title='"+d.title+"'" + ">" 
         + uD.glyphicon('glyphicon-flag green')
@@ -711,7 +711,7 @@
         "<div class='list-group-item l0'><div class='l1'>" + uD.readSm()
         + "<a href='"+d.url+"'" + "class=' '" + "title='"+d.title+"'" + " target='_blank'>" 
         + "<span class='title'>" + d.title + "</span>"
-        + "</a>"
+        + "</a><br/>"
         + "<div class='author'><strong>Author:</strong> " + d.author + "</div>"
         + "<div class='pubdate'><strong>Published:</strong> " + dt + "</div>"
         + "<div class='status'>" + uD.pgrSm()

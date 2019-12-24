@@ -1,71 +1,43 @@
-/* 
-test
-lots of cleanup TODO
-*/
 
-	::selection { background-color: #E13300; color: white; }
-	::-moz-selection { background-color: #E13300; color: white; }
+html, body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', 'Helvetica', Sans-serif;
+  font-size:15px;
+  background-color: #f7f7f7;
+  color: black;
+  min-height: 100%;
+}
 
-	body {
-		background-color: #fff;
-		margin: 5px 0px 5px 0px;
-		padding-top: 50px;
-/*		font: 13px/20px normal Helvetica, Arial, sans-serif;*/
-		color: #4F5155;
-	}
+body {
+  padding-top: 50px;
+}
 
-	.content {
-		margin: 0px;
-		border: 1px solid #D0D0D0;
-		box-shadow: 0 0 8px #D0D0D0;
-	}
-	
-	#body {
-		margin: 0 15px 0 15px;
-	}
-	
-	div.footer, p.footerX {
-		text-align: right;
-		font-size: 11px;
-		border-top: 1px solid #D0D0D0;
-		line-height: 32px;
-		padding: 0 10px 0 10px;
-		margin: 20px 0 0 0;
-	}
+div.footer {
+  text-align: right;
+  font-size: 11px;
+  border-top: 1px solid #D0D0D0;
+  padding: 0px 10px 0px 10px;
+}
 
-	a {
-		color: #003399;
-		background-color: transparent;
-		font-weight: normal;
-	}
+code {
+  font-family: Consolas, Monaco, Courier New, Courier, monospace;
+  font-size: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #D0D0D0;
+  color: #002166;
+  display: block;
+  margin: 14px 5px 14px 5px;
+  padding: 12px 10px 12px 10px;
+}
 
-	h1 {
-		color: #444;
-		background-color: transparent;
-		border-bottom: 1px solid #D0D0D0;
-		font-size: 19px;
-		font-weight: normal;
-		margin: 0 0 14px 0;
-		padding: 14px 15px 10px 15px;
-	}
-
-	code {
-		font-family: Consolas, Monaco, Courier New, Courier, monospace;
-		font-size: 12px;
-		background-color: #f9f9f9;
-		border: 1px solid #D0D0D0;
-		color: #002166;
-		display: block;
-		margin: 14px 5px 14px 5px;
-		padding: 12px 10px 12px 10px;
-	}
-
-	.grid-gutter-width {}
+.red { color: red; }
+.blue { color: blue; }
+.yellow { color: yellow; }
+.green { color: green; }
 
 
-/*.content-wrap .container,
-.content-wrap .container-fluid,
-*/
 .content-wrap .col-md-4,
 .bc-wrap .col-xs-6
 {
@@ -74,19 +46,14 @@ lots of cleanup TODO
   
 }
 
+/* top btns in mobile */
 #navbar-header {
   width: 50%;
 }
 #navbar-header .btn {
   margin-top: 8px;
 }
-#navbar .dropdown {
-}
-
-.breadcrumb {
-  margin: 0px 0px 2px 10px !important;
-  padding: 2px 5px !important;
-}
+/* top btns in mobile end */
 
 .bc-wrap .col-xs-12,
 .sidebar .panel-body,
@@ -95,6 +62,12 @@ lots of cleanup TODO
   margin: 0px; padding: 0px;
 }
 
+.breadcrumb {
+  margin: 0px 0px 2px 10px !important;
+  padding: 2px 5px !important;
+}
+
+/* side bar */
 .sidebar div.l0 .glyphicon { padding-left: 0px;  }
 .sidebar div.l1 .glyphicon { padding-left: 10pt; }
 .sidebar div.l2 .glyphicon { padding-left: 20pt; }
@@ -104,7 +77,6 @@ lots of cleanup TODO
 .sidebar div.l6 .glyphicon { padding-left: 60pt; }
 #rsslist div .glyphicon { padding-right: 4px; }
 
-.sidebar { margin-right: 2px; }
 #collapseOne .list-group-item { padding: 5px 5px; border: 0px; }
 #collapseOne .list-group-item .text { display: inline-block; overflow: hidden; white-space: nowrap; }
 #collapseOne .l1 .list-group-item .text { width: 71%; }
@@ -120,57 +92,60 @@ lots of cleanup TODO
 #collapseOne a .favicon { border: 0px; width: 16px; height: 16px; padding: 0px; margin: 0px; }
 #collapseOne a .glyphicon-tags { padding-right: 8px; }
 #collapseOne a.xml { line-height: 1; padding-top: 8px; padding-bottom: 8px; }
+/* side bar end */
 
-
+/* list and single article */
 #rsscol2 { margin: 0px; padding: 0px; }
 #rss, #rssview { padding: 0px 2px 2px 2px; }
 
-#rss, #rss .rss-items { margin-bottom: 4px; }
-#rss .list-group-item { background-color: #eee; outline: 0px; }
-#rss .glyphicon { padding-right: 4px; }
-#rss .pubdate { float: right; padding: 0px 0px 0px 5px; font-size: 85%; }
-#rss .glyphicon-cog { padding: 0px 2px 0px 2px; }
-/*#rss .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }*/
-#rss .author { font-weight: bold; display: block; float: right; font-size: 85%; }
-#rss .title {
-  font-size: 85%; vertical-align: top;
-  display: inline-block; width: 60%;
+/* rss articles list */
+#rss { margin-bottom: 4px; }
+#rssactive { font-size: 85%; }
+#rssactive .rss-items { margin-bottom: 4px; }
+#rssactive a { padding: 3px 5px;  background-color: #e5e5e5; outline: 0px; }
+#rssactive .glyphicon { padding-right: 4px; }
+#rssactive .glyphicon-cog { padding: 0px 2px 0px 2px; }
+/*#rssactive .glyphicon-trash { float: right; margin-top: -10px; padding-right: 10px; }*/
+#rssactive .pubdate { float: right; padding: 0px 0px 0px 5px; }
+#rssactive .author { font-weight: bold; display: block; float: right; }
+#rssactive .title {
+  vertical-align: top;
+  display: inline-block; width: 65%;
   white-space: nowrap; overflow: hidden;
 }
-#rsscol2 .col-md-6 .title { width: 97% !important; }
-#rss .unread { background-color: #fff; }
-#rss .unread .author { color: blue; }
-#rssactive .rss-items a.list-group-item { padding: 3px 5px; }
-.rss .pagination { margin-top: 8px; display: none; }
+#rssactive .unread { background-color: #fff; }
+#rssactive .unread .author { color: blue; }
+#rssactive-pager { margin-top: 8px; display: none; }
+/* rss articles list end */
 
-span.red { color: red; }
-span.blue { color: blue; }
-span.yellow { color: yellow; }
-span.green { color: green; }
-
-#rssview {
-  border-top: 1px solid #eee;
-}
-#rssview .l0 {
+/* rss article */
+#rssview .list-group,
+#rssview .list-group-item
+{
   margin: 0px; padding: 0px;
+  border: 1px solid #eee;
 }
 #rssview .l1 {
   background-color: #eee !important;
   padding: 2px 4px 5px 4px;
+  font-size: 90%;
 }
-#rssview .text {
-  background-color: #fff;
+#rssview .title {
+  display: inline-block; width: 75%;
+  white-space: nowrap; overflow: hidden;
+  vertical-align: top;
 }
-#rssview .readtog {
-  float: right;
-}
-#rssview .author {
-  clear: left;
-}
-
-#rssview .title,
+#rssview .readtog { float: right; }
 #rssview .author,
-#rssview .pubdate {
+#rssview .pubdate
+{
+  display: inline-block; width: 44%;
+}
+#rssview .pubdate { text-align: right; }
+#rssview .pubdate strong { display: none; }
+#rssview .author,
+#rssview .pubdate
+{
   font-size: 90%;
 }
 #rssview .status .glyphicon { padding: 10px 6px 0px 0px; }
@@ -181,7 +156,6 @@ span.green { color: green; }
   padding-right: 24px;
 }
 #rssview .pager-simple {
-  display: none;
 }
 #rssview .status .pager-simple {
   float: right; display: block !important;
@@ -189,13 +163,20 @@ span.green { color: green; }
 #rssview hr {
   height: 1px; margin: 0px; padding: 0px;
 }
-#rssview #article1 {
+#article1 {
   margin: 0px; padding: 2px 4px;
+  background-color: #fff;
 }
+/* rss article end */
 
-  float: right;
+/* layout 3col */
+#rsscol2 .col-md-6 .title { width: 85% !important; }
+#rsscol2 .col-md-6 .author,
+#rsscol2 .col-md-6 .pubdate
+{
+  display: inline-block; width: 44% !important;
 }
-
+/* layout 3col end */
 
 
 /* Small devices (smartphones, upto 768px) */

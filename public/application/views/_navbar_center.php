@@ -1,10 +1,8 @@
-  <div class="rss">
 
-    <div class="input-group">
+    <div id="rss-input-group" class="input-group">
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
+          <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu">
           <li><a href="#">Today</a></li>
@@ -25,13 +23,12 @@
     </div><!-- /.input-group -->
 
     <div id="rssactive">
-    </div>
+    </div><!-- /.rssactive -->
 
     <nav id='rssactive-pager-wrap'>
       <ul id='rssactive-pager' class="pagination pagination-sm">
         <li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
         <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
       </ul>
-    </nav>
+    </nav><!-- /.rssactive-pager -->
 
-  </div>
