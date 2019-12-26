@@ -113,7 +113,7 @@
       $('#rss br').css({ display: 'none' });
       $('#rssview').removeClass('col-md-6');
       $('#rssactive').height(h/3.2).css({ overflow: "auto" });
-      $('#article1').height(h-(h/1.60)).css({ overflow: "auto" });
+      $('#article1').height(h-(h/1.75)).css({ overflow: "auto" });
       return this;
     },
     setHeight3P: function(h) {
@@ -708,7 +708,7 @@
       var dt = NBR.Client.Util.fmtDt(d.pubDate, 'article');
       var items = []; var uD = NBR.UI.Data;
         items.push( 
-        "<div class='list-group-item l0'><div class='l1'>" + uD.readSm()
+        "<div class='list-group-item l1'><div class='l2'>" + uD.readSm()
         + "<a href='"+d.url+"'" + "class=' '" + "title='"+d.title+"'" + " target='_blank'>" 
         + "<span class='title'>" + d.title + "</span>"
         + "</a><br/>"
@@ -726,7 +726,7 @@
         + "<div id='article1' class='text clearfix'>" + d.content + "</div>"
         + uD.pgrSm() + "</div>"
         );
-      content = "<div class='list-group '" + ">"  + items.join("") + "</div>";
+      content = "<div class='list-group l0 '" + ">"  + items.join("") + "</div>";
       this.rssview.innerHTML = content;
       NBR.UI.Frame.setHeights($('#rsslist').data('pLayout'));
 

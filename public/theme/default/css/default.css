@@ -96,10 +96,9 @@ code {
 
 /* list and single article */
 #rsscol2 { margin: 0px; padding: 0px; }
-#rss, #rssview { padding: 0px 2px 2px 2px; }
+#rss { margin-bottom: 4px; padding: 0px 2px 2px 2px; }
 
 /* rss articles list */
-#rss { margin-bottom: 4px; }
 #rssactive { font-size: 85%; }
 #rssactive .rss-items { margin-bottom: 4px; }
 #rssactive a { padding: 3px 5px;  background-color: #e5e5e5; outline: 0px; }
@@ -115,17 +114,19 @@ code {
 }
 #rssactive .unread { background-color: #fff; }
 #rssactive .unread .author { color: blue; }
-#rssactive-pager { margin-top: 8px; display: none; }
+#rssactive-pager-wrap { margin: 0px; padding: 0px; border: 1px solid #fff; }
+#rssactive-pager-wrap ul { margin: 4px 0px; display: none; }
 /* rss articles list end */
 
 /* rss article */
+#rssview { padding: 0px 2px 2px 2px; }
 #rssview .list-group,
 #rssview .list-group-item
 {
   margin: 0px; padding: 0px;
   border: 1px solid #eee;
 }
-#rssview .l1 {
+#rssview .list-group-item .l2 {
   background-color: #eee !important;
   padding: 2px 4px 5px 4px;
   font-size: 90%;
@@ -156,9 +157,10 @@ code {
   padding-right: 24px;
 }
 #rssview .pager-simple {
+  display: none;
 }
 #rssview .status .pager-simple {
-  float: right; display: block !important;
+  float: right; display: block;
 }
 #rssview hr {
   height: 1px; margin: 0px; padding: 0px;
@@ -170,32 +172,35 @@ code {
 /* rss article end */
 
 /* layout 3col */
-#rsscol2 .col-md-6 .title { width: 85% !important; }
-#rsscol2 .col-md-6 .author,
+#rsscol2 .col-md-6 #rssactive-pager { display: block; }
+#rsscol2 .col-md-6 .title { width: 85%; }
 #rsscol2 .col-md-6 .pubdate
 {
-  display: inline-block; width: 44% !important;
+  display: inline-block; width: normal;
 }
+#rsscol2 .col-md-6 #rssactive .pubdate
+{
+  width: normal; text-align: right;
+}
+#rsscol2 .col-md-6 #rssactive .title {
+  display: block; width: 97%;
+  white-space: normal; overflow: normal;
+}
+.col-md-6 #article1 + .pager-simple { display: block; }
 /* layout 3col end */
 
 
 /* Small devices (smartphones, upto 768px) */
 @media (max-width: 768px) {
-  #contentX { display: none; }
-  #sidebarX {
-    float: left; position: absolute;
-    top: 55px; left: 0px; max-height: 400px;
-    border: 1px solid red;
-    
-  }
   #navbar-header {
     width: auto;
   }
   #rssactive .rss-items a.list-group-item { padding: 5px; }
-  .rss .pagination { margin-top: 10px; display: block; }
+  #rssactive-pager-wrap ul { margin: 4px 0px; display: block; }
   #rssview {
     margin: 4px 0px 0px 0px;
   }
+  #article1 + .pager-simple { display: block; }
 }
 
 /* Small devices (tablets, 768px and up) */
