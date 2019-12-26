@@ -231,8 +231,9 @@
         _bc.push( '<li><a href="#">' + bc[i] + '</a></li>' );
       } _bc.push( '<li class="active">' + bc[i] + '</li>' );
       $(this.breadcrumb).children('ol')[0].innerHTML = _bc.join("");
+      var t = obj.text.replace(/^\d+/g, '');
       if(isXml) { // ## append to breadcrumb
-        $(this.breadcrumb).children('ol').append('<li class="xml">'+obj.text+'</li>');
+        $(this.breadcrumb).children('ol').append('<li class="xml">'+t+'</li>');
       }
       return this;
     }
