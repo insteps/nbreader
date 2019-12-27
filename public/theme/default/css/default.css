@@ -43,7 +43,6 @@ code {
 {
   margin: 0px !important;
   padding: 0px 5px !important;
-  
 }
 
 /* top btns in mobile */
@@ -99,7 +98,7 @@ code {
 #rss { margin-bottom: 4px; padding: 0px 2px 2px 2px; }
 
 /* rss articles list */
-#rssactive { font-size: 85%; }
+#rssactive { font-size: 90%; }
 #rssactive .rss-items { margin-bottom: 4px; }
 #rssactive a { padding: 3px 5px;  background-color: #e5e5e5; outline: 0px; }
 #rssactive .glyphicon { padding-right: 4px; }
