@@ -77,7 +77,10 @@ code {
 #rsslist div .glyphicon { padding-right: 4px; }
 
 #collapseOne .list-group-item { padding: 5px 5px; border: 0px; }
-#collapseOne .list-group-item .text { display: inline-block; overflow: hidden; white-space: nowrap; }
+#collapseOne .list-group-item .text {
+  display: inline-block; overflow: hidden;
+  white-space: nowrap; text-overflow:ellipsis;
+}
 #collapseOne .l1 .list-group-item .text { width: 71%; }
 #collapseOne .l2 .list-group-item .text { width: 66%; }
 #collapseOne .l3 .list-group-item .text { width: 61%; }
@@ -107,9 +110,8 @@ code {
 #rssactive .pubdate { float: right; padding: 0px 0px 0px 5px; }
 #rssactive .author { font-weight: bold; display: block; float: right; }
 #rssactive .title {
-  vertical-align: top;
-  display: inline-block; width: 65%;
-  white-space: nowrap; overflow: hidden;
+  display: inline-block; width: 65%; vertical-align: top;
+  white-space: nowrap; overflow: hidden; text-overflow:ellipsis;
 }
 #rssactive .unread { background-color: #fff; }
 #rssactive .unread .author { color: blue; }
@@ -131,9 +133,8 @@ code {
   font-size: 90%;
 }
 #rssview .title {
-  display: inline-block; width: 75%;
-  white-space: nowrap; overflow: hidden;
-  vertical-align: top;
+  display: inline-block; width: 75%; vertical-align: top;
+  white-space: nowrap; overflow: hidden; text-overflow:ellipsis;
 }
 #rssview .readtog { float: right; }
 #rssview .author,
