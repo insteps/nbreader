@@ -18,6 +18,15 @@
       <input type="text" class="form-control search" placeholder="Search for...">
       <div class="input-group-btn pager-simple">
         <button type="button" class="btn btn-default prev">&laquo;</button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><nav id='rssactive-pager-top-wrap'>
+            <form id="gotoPage" class="input-with-button">
+            <input id="rssactive-pager2" type="number" min="1" max="1" value="1" class="form-control js-total-pages-value" placeholder="Goto Page ..." ></form>
+          </nav></li>
+        </ul>
         <button type="button" class="btn btn-default next">&raquo;</button>
       </div>
     </div><!-- /.input-group -->

@@ -542,8 +542,9 @@
     init: function(NBR) {
       this.Active = document.getElementById(NBR.config.rssactive); //list of 10 rss items
       this.feedoffset = 0;
-      this.rsspager = document.getElementById('rssactive-pager');
+      //this.rsspager = document.getElementById('rssactive-pager'); //remove ?
       this.rsspagerwrap = document.getElementById('rssactive-pager-wrap');
+      this.rsspagerwrap2 = document.getElementById('rssactive-pager-top-wrap');
       this.rsspgrsm = $("#rss div.pager-simple");
       this.rsspgrsm[0].NBR = NBR;
       this.rsspgrsm[0].onclick = this.pagersm;
@@ -579,11 +580,54 @@
     },
     pagersm: function(e) {
       e.preventDefault();
-      var obj = e.target; var rss = this.NBR.UI.Rss;
+      if(e.target) { var obj = e.target; } else { var obj = e; }
+      var rss = this.NBR.UI.Rss;
       var li = $(rss.rsspager).children('li');
       if(li.length < 3) { return; }
       if( $(obj).hasClass('prev') ) { return rss.pgrPrev(); }
       if( $(obj).hasClass('next') ) { return rss.pgrNext(); }
+    },
+    pagerFeedUpdate: function(NBR, num) {
+      NBR.UI.Rss.feedoffset = (parseInt(num)-1)*10;
+      NBR.UI.RssList.getXml(NBR);
+      return this;
+    },
+    pagerSearchUpdate: function(opts, s) {
+      opts.startPage = s;
+      search2 = $("#rss input.search");
+      $(search2).attr( "placeholder", 'Search for...    Pgs: '+s+'/'+opts.totalPages );
+      return this;
+    },
+    pagerSetTwbs: function(pager, opts, NBR) {
+      $(pager).twbsPagination($.extend({}, opts, { // 3rd-party
+         onPageClick: function(event, page) {
+           NBR.UI.Rss.pagerFeedUpdate(NBR, page)
+           NBR.UI.Rss.pagerSearchUpdate(opts, page);
+         }
+      }));
+    },
+    pagerTopSubmit: function(e) {
+      e.preventDefault(); var obj = e.target;
+      if(obj.tagName != 'FORM') { return; }
+      var pgr2 = $(obj).children('input');
+      var num = parseInt($(pgr2)[0].value);
+      num = num >= 1 ? num : 1;
+      this.num = num;
+      var NBR = this.NBR;
+      pgr = $('#rssactive-pager');
+      defaultOpts = pgr.data('opts');
+      NBR.UI.Rss.pagerFeedUpdate(NBR, num);
+      NBR.UI.Rss.pagerSearchUpdate(defaultOpts, num);
+      $(pgr).twbsPagination('destroy');
+      NBR.UI.Rss.pagerSetTwbs(pgr, defaultOpts, NBR); // call 3rd party
+    },
+    pagerTopSet: function(pgs, NBR) {
+      var form = $(this.rsspagerwrap2).children('form');
+      var pgr2 = $(form).children('input');
+      $(pgr2)[0].max = pgs;
+      $(form)[0].NBR = NBR;
+      $(form)[0].onsubmit = this.pagerTopSubmit;
+      return this;
     },
     list: function(data, NBR) {
       var items = []; var uD = NBR.UI.Data;
@@ -613,27 +657,22 @@
       // data.count = full count (unread+read)
       var m = (data.count%10) > 0 ? 1 : 0;
       var pgs = parseInt(data.count/10)+m; //pager data
-
       // make pagination and redo on new list
-      var pgr = this.rsspager;
-      li = $(pgr).children('li');
-      search2 = $("#rss input.search");
+      var pgr = this.rsspager; li = $(pgr).children('li');
       if(li.length < 3 || this.feedoffset === 0) {
-        $(pgr).remove();
         this.rsspagerwrap.innerHTML = NBR.UI.Data.rsspgr();
         pgr = this.rsspager = $('#rssactive-pager');
+        this.pagerTopSet(pgs, NBR);
+        var defaultOpts = {
+          totalPages: pgs, visiblePages: 4,
+          startPage: 1,
+          prev: '&lt;',      next: '&gt;',
+          first: '&lt;&lt;', last: '&gt;&gt;',
+        };
+        this.rsspager.data('opts', defaultOpts);
         setTimeout(function() {
-          $(search2).attr( "placeholder", 'Search for...      Pgs: 1/'+pgs );
-          $(pgr).twbsPagination({
-            totalPages: pgs,   visiblePages: 4,
-            prev: '&lt;',      next: '&gt;',
-            first: '&lt;&lt;', last: '&gt;&gt;',
-            onPageClick: function(event, page) {
-              NBR.UI.Rss.feedoffset = (parseInt(page)-1)*10;
-              NBR.UI.RssList.getXml(NBR);
-              $(search2).attr( "placeholder", 'Search for...      Pgs: '+page+'/'+pgs );
-            }
-          });
+          NBR.UI.Rss.pagerSearchUpdate(defaultOpts, 1);
+          NBR.UI.Rss.pagerSetTwbs(pgr, defaultOpts, NBR); // call 3rd party
         }, 100);
       }
       return this;

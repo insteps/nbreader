@@ -100,6 +100,17 @@ code {
 #rsscol2 { margin: 0px; padding: 0px; }
 #rss { margin-bottom: 4px; padding: 0px 2px 2px 2px; }
 
+/* rss articles list pager */
+#rssactive-pager-top-wrap { margin: 0px; padding: 0px; }
+#rssactive-pager2 {
+  margin: 0px 0px 0px 4px;
+  width: 150px; max-height: 400px;
+  overflow: auto;
+  padding: 0px;
+}
+#rssactive-pager2 li { margin: 0px; padding: 0px; } 
+#rssactive-pager2 li a { margin: 2px 2px 2px 2px; } 
+
 /* rss articles list */
 #rssactive { font-size: 90%; }
 #rssactive .rss-items { margin-bottom: 4px; }
