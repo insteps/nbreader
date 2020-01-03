@@ -109,7 +109,7 @@
     },
     setHeight2P: function(h) {
       $('#rsslist').data('pLayout', 2);
-      $('#rss').removeClass('col-md-6');
+      $('#rss').removeClass('col-md-6').css({ overflow: "visible" });
       $('#rss br').css({ display: 'none' });
       $('#rssview').removeClass('col-md-6');
       $('#rssactive').height(h/3.2).css({ overflow: "auto" });
@@ -118,13 +118,13 @@
     },
     setHeight3P: function(h) {
       $('#rsslist').data('pLayout', 3);
-      $('#rss').addClass('col-md-6').height(h-5).css({ overflow: "auto" });
+      $('#rss').height(h-5).addClass('col-md-6').css({ overflow: "auto" });
       $('#rss br').css({ display: 'block' });
-      $('#rssview').addClass('col-md-6').height(h-5).css({ overflow: "auto" });
+      $('#rssview').height(h-5).addClass('col-md-6').css({ overflow: "auto" });
       return this;
     },
     setHeights: function(p) {
-      var contentHt = $( window ).height()-$('#breadcrumb').height()- $('.navbar').height()-10;
+      var contentHt = $( window ).height()-$('#breadcrumb').height()-$('.navbar').height()-10;
       if($('#rsslist').data('pLayout') !== p) {
         this.setHeight1P(contentHt); //reset
       }
@@ -543,7 +543,7 @@
       this.Active = document.getElementById(NBR.config.rssactive); //list of 10 rss items
       this.feedoffset = 0;
       this.rsspager = document.getElementById('rssactive-pager');
-      this.rsspagerwrap = document.getElementById('rssactive-pager-wrap'); 
+      this.rsspagerwrap = document.getElementById('rssactive-pager-wrap');
       this.rsspgrsm = $("#rss div.pager-simple");
       this.rsspgrsm[0].NBR = NBR;
       this.rsspgrsm[0].onclick = this.pagersm;
