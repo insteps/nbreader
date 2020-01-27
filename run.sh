@@ -1,26 +1,26 @@
 #!/bin/sh
-# /*
-# ** Copyright (c) 2015 V.Krishn
-# **
-# ** This program is free software; you can redistribute it and/or
-# ** modify it under the terms of the Simplified BSD License (also
-# ** known as the "2-Clause License" or "FreeBSD License".)
-# 
-# ** This program is distributed in the hope that it will be useful,
-# ** but without any warranty; without even the implied warranty of
-# ** merchantability or fitness for a particular purpose.
-# **
-# ** Author contact information:
-# **   vkrishn@insteps.net
-# **   http://www.insteps.net
-# **
-# *******************************************************************************
-# **
-# ** Code to run various feeds data fetch/update for newsbeuter,
-# **   Search database or call newsbeuter cli.
-# */
-# 
-# 
+#
+# Copyright (c) 2015-2020 V.Krishn
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the Simplified BSD License (also
+# known as the "2-Clause License" or "FreeBSD License".)
+#
+# This program is distributed in the hope that it will be useful,
+# but without any warranty; without even the implied warranty of
+# merchantability or fitness for a particular purpose.
+#
+# Author contact information:
+#   vkrishn@insteps.net
+#   http://www.insteps.net
+#
+# *******************************************************************
+#
+# Code to run various feeds data fetch/update for newsbeuter,
+#   Search database or call newsbeuter cli.
+#
+#
+#
 
 fpath=$(readlink -f $0)
 APPDIR=$(dirname $fpath)
@@ -55,6 +55,7 @@ fi
 #usage: sh run.sh update tag|folder|url|hash <relevant data>
 if [ "$1" = 'update' ]; then
     source $SCRIPTDIR/update.sh
+    rm -f $COOKIEFILE;
 
     case $2 in
         tag) update_by_tag $2 $3;;
@@ -63,6 +64,18 @@ if [ "$1" = 'update' ]; then
         hash) update_by_hash $2 $3;;
     esac
 
+    _when=$2
+    _type=$3
+    case $_when in
+        daily|hourly|weekly|monthly)
+           source $SCRIPTDIR/update.cron.sh
+           if [ "$_type" ]; then
+              cron_update $_when $_type
+           else
+              _cron_update "$_when"
+           fi
+        ;;
+    esac
 fi
 
 if [ "$1" = 'refresh' ]; then
@@ -70,6 +83,9 @@ if [ "$1" = 'refresh' ]; then
 
     case $2 in
         iconstatus) _remove_icons_dbstatus_all && update_icons_status_all;;
+        meta) rm -f "$DATADIR/meta.json";;
+        meta_all) rm -f "$DATADIR/meta.*";;
+        icon_all) rm -f "$DATADIR/icon.*";;
     esac
 fi
 
@@ -94,10 +110,26 @@ if [ "$1" = 'search' ]; then
     sh $SCRIPTDIR/search.sh "$2" "$3";
 fi
 
+#usage: sh run.sh config
 if [ "$1" = 'config' ]; then
     sh $SCRIPTDIR/config.sh;
 fi
 
+
+#
+# prints usage of run command
+#
+usage() {
+    echo "$program $program_version"
+    cat << EOF
+Usage: run [option]
+----------
+
+Commands:
+
+EOF
+    exit 0
+}
 
 
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015 V.Krishn
+# Copyright (c) 2015-2020 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -90,7 +90,7 @@ get_site_base() {
     local logfile="$VARDIR/log/$DATESTAMP.log"
 
     if [ $USECURL = '1' ]; then
-      curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
+      curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
     else
       wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$BURL" -O "$localHtml" -a $logfile
     fi
@@ -110,7 +110,7 @@ is_file_ico() {
 
     # test for .ico file
     case $mime in
-        x-icon|x-ms-bmp|png|gif|jpeg) iconType=$mime; return 0 ;;
+        x-icon|vnd.microsoft.icon|x-ms-bmp|png|gif|jpeg) iconType=$mime; return 0 ;;
     esac
     return 1;
 }
@@ -156,7 +156,6 @@ clean_temp_icon() {
 }
 
 get_feedicon() {
-
     # get "$url/favicon.ico"
     parse_url $1
     BURL=${proto}${host}
@@ -164,7 +163,7 @@ get_feedicon() {
     fetch_feedicon "$BURL/favicon.ico"
 
     if is_file_ico $localIco; then
-        echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'downloaded successfully'${cNORMAL};
+        echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL};
         return;
     fi
     echo -e ${cRED}'msg: favicon.ico not available'${cNORMAL};
@@ -185,7 +184,7 @@ get_feedicon() {
     fi
 
     if is_file_ico $localIco; then
-        echo -e ${cGREEN}'msg: shortcut icon downloaded successfully'${cNORMAL};
+        echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
         return;
     fi
     clean_temp_icon
@@ -228,7 +227,7 @@ update_feedicon() {
     mv -f "$_i" "$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
 
     update_icon_status "$URLSUM" '1' "$dbname"
-    echo -e ${cGREEN}'feedicon::update-feedicon -> icon updated successfully'${cNORMAL};
+    echo -e ${cGREEN}'feedicon::update-feedicon -> icon update done'${cNORMAL};
 
 }
 

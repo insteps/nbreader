@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015 V.Krishn
+# Copyright (c) 2015-2020 V.Krishn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -58,22 +58,29 @@ for db in $dbs; do
 
 done;
 
-content=''; limit=''; offset='';
+content=''; limit=''; offset=''; unread='';
 
 if [ "$1" ]; then
- content="$1"
+    content="$1"
 fi
 
 if [ "$2" ]; then
- limit="limit $2"
+    limit="limit $2"
 else
- limit="limit 10"
+    limit="limit 10"
 fi
 
 if [ "$3" ]; then
- offset=" offset $3"
+    offset=" offset $3"
 else
- offset=" offset 0"
+    offset=" offset 0"
+fi
+
+if [ "$4" ]; then
+    case $4 in
+        0) unread="AND unread=0" ;;
+        1) unread="AND unread=1" ;;
+    esac
 fi
 
 searchall() {
@@ -84,9 +91,9 @@ searchall() {
     sqlite3 -header '__newsbeuter.sqlite' \
     "$str1;
     SELECT datetime(pubDate,'unixepoch') AS date,
-       id,title,url FROM ($str2)
-       WHERE content LIKE '%$content%'
-       OR title LIKE '%$content%'
+       id,unread,title,url FROM ($str2)
+       WHERE ( content LIKE '%$content%' OR title LIKE '%$content%' )
+       $unread
        ORDER BY pubDate DESC $limit $offset;
     ";
 }

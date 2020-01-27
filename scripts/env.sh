@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015 V.Krishn
+# Copyright (c) 2015-2020 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -37,23 +37,26 @@ USECURL='1'
 
 # Path variables
 # --------------
-FEEDSDIR="$APPDIR/feeds/feeds"
-FEEDSURL="http://localhost/feeds"
-
-RUNDIR="$APPDIR/run/newsbeuter"
-VARDIR="$APPDIR/var/newsbeuter"
 CONFIGDIR="$APPDIR/config"
 SCRIPTDIR="$APPDIR/scripts"
-DBDIR="$VARDIR/db"
-DATADIR="$VARDIR/data"
+SQLDIR="$CONFIGDIR/sql"
 URLDIR="$CONFIGDIR/url"
 URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
+VARDIR="$APPDIR/var/newsbeuter"
+RUNDIR="$APPDIR/var/run/newsbeuter"
+FEEDSDIR="$VARDIR/feeds/feeds"
+DBDIR="$VARDIR/db"
+DATADIR="$VARDIR/data"
 DONEDIR="$VARDIR/.done"
 WEBAPPDIR="$APPDIR/public"
 # Icon store path
 ICONTXTDIR="$FEEDSDIR"
+COOKIEFILE="$FEEDSDIR/.cookie"
 #ICONDIR="$WEBAPPDIR/lib/icon"
+SESSDIR="$VARDIR/session"
+
+FEEDSURL="http://localhost/feeds"
 
 # Path to articles/items webpage screenshots
 ARCHIVE=""
@@ -73,6 +76,6 @@ WGETOPTS_1=" --timeout=20 --tries=5 --no-check-certificate "
 CURL='/usr/bin/curl '
 CURL_PROXY=' '
 #CURL_PROXY=' --socks4 localhost:9999 ' # example
-CURLOPTS_1=" $CURL_PROXY -L -f -k --connect-timeout 20 --retry 5 "
+CURLOPTS_1=" $CURL_PROXY -L -f -k --connect-timeout 20 --retry 5 -c $COOKIEFILE -b $COOKIEFILE"
 
 

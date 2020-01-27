@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015 V.Krishn
+# Copyright (c) 2015-2020 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -37,7 +37,7 @@ if [ ! -d "$DBDIR" ]; then mkdir -p $DBDIR; fi;
 if [ ! -d "$DATADIR" ]; then mkdir -p $DATADIR; fi;
 if [ ! -d "$URLDIR" ]; then mkdir -p $URLDIR; fi;
 if [ ! -d "$URLLOCALDIR" ]; then mkdir -p $URLLOCALDIR; fi;
-if [ ! -d "$FEEDSDIR" ]; then mkdir -p $FEEDSDIR; touch "$FEEDSDIR/.feeds.PLACEHOLDER"; fi;
+if [ ! -d "$FEEDSDIR" ]; then mkdir -p $FEEDSDIR; touch "$FEEDSDIR/.feeds"; fi;
 
 csvfile="$RUNDIR/urls.csv";
 urldb="$CONFIGDIR/urls.db"
@@ -107,7 +107,7 @@ create_url_db() {
         echo "Error: no rss/atom entry found. See config/readme.notes."; exit 0;
     fi
     rm -f $urldb
-    sqlite3 $urldb < "$CONFIGDIR/urls.sqlite.sql"
+    sqlite3 $urldb < "$SQLDIR/urls.sqlite.sql"
     sqlite3 $urldb ".import $csvfile rss_url"
     echo $FEEDSURL > "$CONFIGDIR/feedsurl"
     ls -1 $URLLOCALDIR | sort > "$CONFIGDIR/dbname"

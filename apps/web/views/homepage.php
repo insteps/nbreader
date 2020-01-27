@@ -42,17 +42,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div id='rsslist' class="col-md-4">
 <?php include_once '_navbar_left.php' ?>
 </div>
-<div id='rss' class="col-md-4">
+
+<div id='rsscol2' class="col-md-8">
+<div id='rss'>
 <?php include_once '_navbar_center.php' ?>
 </div>
-<div id='rssview' class="col-md-4">
+<div class="clearfix visible-xs-block"></div>
+<div id='rssview'>
 <?php include_once '_content.php' ?>
 </div>
+</div>
+
 
 </div>
 </div>
 </div>
-
 
   <div class="modal fade about" tabindex="-1" role="dialog" aria-labelledby="about">
     <div class="modal-dialog modal-sm">
@@ -90,11 +94,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="lib/holderjs/2.8.0/holder.min.js"></script>
     <script src="lib/bootstrap/starter/js/ie10-viewport-bug-workaround.js"></script>
-
+    <!-- Misc utils/tools
+    ================================================== -->
     <script src="lib/util/dt/date.format.js"></script>
     <script src="lib/twbs-pagination/1.2.5/jquery.twbsPagination.min.js"></script>
     <script src="lib/listjs/1.1.1/list.min.js"></script>
-    <script type="text/javascript" src="lib/newsbeuter/js/default.js"></script>
+
+    <!-- NbReader libs
+    ================================================== -->
+    <script type="text/javascript">/*<![CDATA[*/
+    var NbReader_Config = <?php echo $jsconf."\n"; ?>
+    /*]]>*/</script>
+    <script type="text/javascript" src="lib/newsbeuter/js/newsbeuter.api.js"></script>
+    <script type="text/javascript" src="lib/newsbeuter/js/nbreader.bootstrap.js"></script>
 
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -102,13 +114,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //})
 setTimeout(function() {
 
-  var NbReader_Config = <?php echo $jsconf."\n"; ?>
-  NbReader.Config(NbReader_Config); 
-  NbReader.SetRssList(NbReader.config);
-  NbReader.SearchFeedList(NbReader_Config);
-  ////NbReader.SetRssPagerSimple();
+ var Cl = new NbClients(document.body, {message: '~~ New Client ~~'});
+ Cl.init().Config(NbReader_Config);
+ var NB = Object.create(NbReader);
+ NB.Config(NbReader_Config);
+ NB.Client = Cl;
+ NB.config.breadcrumb = 'breadcrumb';
+ NB.UI.init(NB);
 
 }, 50);
+
+
 /*]]>*/
 </script>
 

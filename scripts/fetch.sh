@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015 V.Krishn
+# Copyright (c) 2015-2020 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -42,7 +42,8 @@ fi
 sanitize_xml() {
     local xml="$1"
     #local xml="$FEEDSDIR/.current.xml"
-    sed -i 's/</\n</g' $xml
+    # sed -i 's/</\n</g' $xml # newline in title issue
+    sed -i 's/<\w/\n&/g' $xml
     sed -i -e 's/&lt;div/\n&/g' \
            -e 's/&lt;table/\n&/g' \
            -e 's/&lt;p/\n&/g' \
@@ -102,7 +103,7 @@ fetch_url() {
         echo 'Feeds dir missing, run config/setup first.'; exit 0;
     fi
 
-    if [ -f '.feeds.PLACEHOLDER' ]; then
+    if [ -f '.feeds' ]; then
         a=$(echo $URLSUM | cut -b 1 -)
         b=$(echo $URLSUM | cut -b 1-2 -)
         mkdir -p "$a/$b"
@@ -112,7 +113,8 @@ fetch_url() {
         local logfile="$VARDIR/log/$DATESTAMP.log"
 
         if [ $USECURL = '1' ]; then
-            curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> $logfile
+            ##. curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
+            curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
         else
             wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$URL" -O "$localXml" -a $logfile
         fi

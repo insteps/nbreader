@@ -5,6 +5,20 @@ Rss reader *(web based)* for Newsbeuter.
 
 _NOTE: Alpha-release_
 
+:Author:    vkrishn@insteps.net
+:Date:      2015-10-23
+:Version:   0.1.2
+
+#### Table of Contents
+
+1. [Features](#features)
+2. [Features (todo)](#features-todo)
+3. [Why a hybrid application](#why-a-hybrid-application)
+4. [Requirements / Dependencies](#requirements--dependencies)
+5. [Reference](#reference)
+6. [Limitations - OS compatibility, etc.](#limitations)
+7. [Development - Guide for contributing to the module](#development)
+
 ## Features
 
 1. Feed list supporting *hierarchy* in category.
@@ -12,10 +26,11 @@ _NOTE: Alpha-release_
 3. Search on active rss items.
 4. Responsive layout that adapts on mobile/desktop devices.
 5. Mark article as read (manual).
-6. Support for multiple databases.
-7. Search multiple databases (cli only for now).
-8. Rest api for accessing via web (json).
-9. Convert existing newsbeuter db to nbreader format (experimental).
+6. Passive update of new feed in UI.
+7. Support for multiple databases.
+8. Search multiple databases (cli only for now).
+9. Rest api for accessing via web (json).
+10. Convert existing newsbeuter db to nbreader format (experimental).
 
 ![Layout](http://dev1.insteps.net/nbreader/layout-features.png)
 
@@ -48,4 +63,11 @@ _NOTE: Alpha-release_
    easy way is download the precompiled single binary file.
 9. Jq (optional)
 10. 
+
+## Reference
+
+## Limitations
+
+## Development
+
 
