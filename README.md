@@ -3,21 +3,20 @@
 
 Rss reader *(web based)* for Newsbeuter.
 
-_NOTE: Alpha-release_
+_NOTE: Beta-release_
 
 :Author:    vkrishn@insteps.net
-:Date:      2015-10-23
-:Version:   0.1.2
+:Date:      2020-10-23
+:Version:   0.2.0-beta1
 
 #### Table of Contents
 
 1. [Features](#features)
-2. [Features (todo)](#features-todo)
-3. [Why a hybrid application](#why-a-hybrid-application)
-4. [Requirements / Dependencies](#requirements--dependencies)
-5. [Reference](#reference)
-6. [Limitations - OS compatibility, etc.](#limitations)
-7. [Development - Guide for contributing to the module](#development)
+2. [Why a hybrid application](#why-a-hybrid-application)
+3. [Requirements / Dependencies](#requirements--dependencies)
+4. [Reference](#reference)
+5. [Limitations - OS compatibility, etc.](#limitations)
+6. [Development - Guide for contributing to the module](#development)
 
 ## Features
 
@@ -34,14 +33,6 @@ _NOTE: Alpha-release_
 
 ![Layout](http://dev1.insteps.net/nbreader/layout-features.png)
 
-## Features (TODO)
-
-1. Add way to mark/filter articles, eg. flag, tag and bookmark.
-2. Improve search on active rss (all pages).
-3. Special folders.
-4. Browser based settings/configs to run update/changes on backend.
-5. ...
-
 ![Layout](http://dev1.insteps.net/nbreader/layout-alpha-todo.png)
 
 ## Why a hybrid application
@@ -52,14 +43,15 @@ _NOTE: Alpha-release_
 
 ## Requirements / Dependencies
 
-1. Newsbeuter
+1. Newsbeuter (or Newsboat, make link for Newsbeuter)
 2. Sqlite3
 3. Curl(default) or Wget
 4. PHP 5.4+
 5. Any PHP supporting web-server (tested on Apache with .htaccess file support).
 6. CodeIgniter-3.x (PHP Framework)
 7. File (for icon download)
-8. Fossil scm, https://www.fossil-scm.org  (optional),
+8. Git/Fossil scm,  (optional),
+   url: https://www.fossil-scm.org (optional),
    easy way is download the precompiled single binary file.
 9. Jq (optional)
 10. 
