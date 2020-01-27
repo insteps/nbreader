@@ -8,7 +8,16 @@
 
 4. Some files/directory are generated in config folder,
    i.e baseurl, dbname, urls.db, url.local
+   
    DO NOT ALTER OR DELETE THEM
+   
    If they are missing or corrupted run `config.sh` to 
    regenerate them again.
+
+   For every url list-file in `config/url.local`
+   there should be a generated database file
+   in `var/newsbeuter/db/`.
+
+   eg. for file `config/url/news` the database file
+   would be `var/newsbeuter/db/news.loc.db`
 
