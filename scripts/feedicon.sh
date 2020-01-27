@@ -110,7 +110,7 @@ is_file_ico() {
 
     # test for .ico file
     case $mime in
-        x-icon|x-ms-bmp|png|gif|jpeg) iconType=$mime; return 0 ;;
+        x-icon|vnd.microsoft.icon|x-ms-bmp|png|gif|jpeg) iconType=$mime; return 0 ;;
     esac
     return 1;
 }
@@ -156,7 +156,6 @@ clean_temp_icon() {
 }
 
 get_feedicon() {
-
     # get "$url/favicon.ico"
     parse_url $1
     BURL=${proto}${host}
