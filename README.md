@@ -31,6 +31,10 @@ _NOTE: Beta-release_
 9. Rest api for accessing via web (json).
 10. Convert existing newsbeuter db to nbreader format (experimental).
 
+## Demo
+
+http://dev.insteps.net/rss/
+
 ![Layout](http://download.tuxfamily.org/pmreader/screenshots/nbreader-layout-01.png)
 
 ![Layout](http://download.tuxfamily.org/pmreader/screenshots/nbreader-layout-02.png)
