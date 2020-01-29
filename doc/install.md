@@ -6,7 +6,7 @@
 2. Download 3rd party libs/css used in application,
    extract libs content it in `public/lib/` accordingly.
 
-_For convenience the bundle can be found at `http://dev1.insteps.net/nbreader/lib.tar.gz`_
+_For convenience the bundle can be found at `http://download.tuxfamily.org/pmreader/nb/lib.01-20200129.tar.gz`_
 
 ## B. Configs
 

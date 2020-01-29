@@ -29,8 +29,6 @@ PWD=$(pwd)
 source $APPDIR/scripts/env.sh
 source $APPDIR/scripts/date.inc
 
-## examples/execs
-# newsbeuter -u urls -c u.db -x reload
 
 #usage: sh run.sh newsbeuter <dbname>
 if [ "$1" = 'newsbeuter' ]; then
@@ -48,6 +46,8 @@ if [ "$1" = 'newsbeuter' ]; then
         db='news';
     fi
     if [ -f "$DBDIR/$db.loc.db" ]; then
+        ## examples/execs
+        # newsbeuter -u urls -c u.db -x reload
         newsbeuter -u "$CONFIGDIR/url.local/$db" -c $DBDIR/$db.loc.db
     fi
 fi
