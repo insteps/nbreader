@@ -71,7 +71,7 @@ parse_feed_icon_url() {
         ICONURL=$(cat "$localHtml" | grep -i "rel\=[\"\']icon" )
     fi
     ICONURL=$(echo "$ICONURL" |
-        grep -i -o "href\=[\"\']\(.*\)[\"\']" |
+        grep -i -o "href\=\(.*\)" | tr -d '"' | tr -d "'" | \
         sed -e "s/href//" \
             -e "s/\"//g" \
             -e "s/'//g" \
@@ -79,7 +79,9 @@ parse_feed_icon_url() {
             -e "s/>.*$//g"
         )
     ICONURL=$( echo "$ICONURL" | awk '{print $1}' )
-    # echo $ICONURL;
+    local no_proto=$(echo $ICONURL | grep -i '^\/\/')
+    if [ "$no_proto" ]; then ICONURL='https:'${ICONURL}; fi # add protocol https
+    # echo -e ${cYELLOW}'msg: base site icon url -> '${cNORMAL}${ICONURL} '...';
 }
 
 # get baseurl site to look for 'shortcut icon' in <link ... />
