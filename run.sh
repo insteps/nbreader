@@ -83,9 +83,9 @@ if [ "$1" = 'refresh' ]; then
 
     case $2 in
         iconstatus) _remove_icons_dbstatus_all && update_icons_status_all;;
-        meta) rm -f "$DATADIR/meta.json";;
-        meta_all) rm -f "$DATADIR/meta.*";;
-        icon_all) rm -f "$DATADIR/icon.*";;
+        meta) rm -f ${DATADIR}/meta.json;;
+        meta_all) rm -f ${DATADIR}/meta.*;;
+        icon_all) rm -f ${DATADIR}/icon.*;;
     esac
 fi
 
