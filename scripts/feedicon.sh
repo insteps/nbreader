@@ -49,15 +49,16 @@ get_siteurl_from_db() {
     local query="SELECT url FROM rss_feed WHERE rssurl LIKE '%$hash%' LIMIT 1;"
     rssurl=$(echo "$query" | sqlite3 "$db")
 
+    parse_url $FEEDSURL; local lhost=$host
     parse_url $rssurl
-    if [ "$host" = 'localhost' ]; then
+    if [ "$host" = "$lhost" ]; then
         rssurl='';
         query="SELECT rssurl FROM rss_url WHERE sha1sum='$URLSUM';";
         rssurl=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     fi
 
     parse_url $rssurl
-    if [ "$host" = 'localhost' ]; then rssurl=''; fi
+    if [ "$host" = "$lhost" ]; then rssurl=''; fi
 
     echo -e "$hash --> $rssurl";
 }
@@ -71,9 +72,9 @@ parse_feed_icon_url() {
         ICONURL=$(cat "$localHtml" | grep -i "rel\=[\"\']icon" )
     fi
     ICONURL=$(echo "$ICONURL" |
-        grep -i -o "href\=\(.*\)" | tr -d '"' | tr -d "'" | \
+        grep -i -o "href\=\(.*\) " | \
         sed -e "s/href//" \
-            -e "s/\"//g" \
+            -e 's/\"//g' \
             -e "s/'//g" \
             -e "s/\=//" \
             -e "s/>.*$//g"
