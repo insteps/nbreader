@@ -291,8 +291,8 @@
   
   var util = NbClient.Util = {
     epoch: function () {
-     var now = new Date();
-     return now.getTime();
+      var now = new Date();
+      return now.getTime();
     },
     fixEpoch: function (epoch) {
       var mEpoch = parseInt(epoch);
@@ -385,7 +385,7 @@
   window.NbClients = NbClients;
 
 
-})( jQuery, window , document );
+})( jQuery, window, document );
 
 
 

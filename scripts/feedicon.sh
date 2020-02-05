@@ -49,15 +49,16 @@ get_siteurl_from_db() {
     local query="SELECT url FROM rss_feed WHERE rssurl LIKE '%$hash%' LIMIT 1;"
     rssurl=$(echo "$query" | sqlite3 "$db")
 
+    parse_url $FEEDSURL; local lhost=$host
     parse_url $rssurl
-    if [ "$host" = 'localhost' ]; then
+    if [ "$host" = "$lhost" ]; then
         rssurl='';
         query="SELECT rssurl FROM rss_url WHERE sha1sum='$URLSUM';";
         rssurl=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     fi
 
     parse_url $rssurl
-    if [ "$host" = 'localhost' ]; then rssurl=''; fi
+    if [ "$host" = "$lhost" ]; then rssurl=''; fi
 
     echo -e "$hash --> $rssurl";
 }
@@ -71,15 +72,17 @@ parse_feed_icon_url() {
         ICONURL=$(cat "$localHtml" | grep -i "rel\=[\"\']icon" )
     fi
     ICONURL=$(echo "$ICONURL" |
-        grep -i -o "href\=[\"\']\(.*\)[\"\']" |
+        grep -i -o "href\=\(.*\)" | \
         sed -e "s/href//" \
-            -e "s/\"//g" \
+            -e 's/\"//g' \
             -e "s/'//g" \
             -e "s/\=//" \
             -e "s/>.*$//g"
         )
     ICONURL=$( echo "$ICONURL" | awk '{print $1}' )
-    # echo $ICONURL;
+    local no_proto=$(echo $ICONURL | grep -i '^\/\/')
+    if [ "$no_proto" ]; then ICONURL='https:'${ICONURL}; fi # add protocol https
+    # echo -e ${cYELLOW}'msg: base site icon url -> '${cNORMAL}${ICONURL} '...';
 }
 
 # get baseurl site to look for 'shortcut icon' in <link ... />

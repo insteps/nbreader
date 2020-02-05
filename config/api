@@ -1,12 +1,12 @@
 {
   "api": {
     "v1": {
-      'local': 'http://localhost/api/v1',
-      'public': 'http://localhost/api/v1',
+      "local": "http://localhost/api/v1",
+      "public": "http://localhost/api/v1"
     },
     "v2": {
-      'local': 'http://localhost/api/v2',
-      'public': 'http://localhost/api/v2',
+      "local": "http://localhost/api/v2",
+      "public": "http://localhost/api/v2"
     }
   }
 }
