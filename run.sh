@@ -107,7 +107,8 @@ fi
 
 #usage: sh run.sh search <search text> <limit>
 if [ "$1" = 'search' ]; then
-    sh $SCRIPTDIR/search.sh "$2" "$3";
+    shift 1
+    sh $SCRIPTDIR/search.sh "$@";
 fi
 
 #usage: sh run.sh config
