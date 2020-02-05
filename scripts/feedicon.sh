@@ -72,7 +72,7 @@ parse_feed_icon_url() {
         ICONURL=$(cat "$localHtml" | grep -i "rel\=[\"\']icon" )
     fi
     ICONURL=$(echo "$ICONURL" |
-        grep -i -o "href\=\(.*\) " | \
+        grep -i -o "href\=\(.*\)" | \
         sed -e "s/href//" \
             -e 's/\"//g' \
             -e "s/'//g" \
