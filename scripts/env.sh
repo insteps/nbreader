@@ -62,7 +62,8 @@ FEEDSURL="http://localhost/feeds"
 ARCHIVE=""
 
 # User agents
-_USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
+# _USERAGENT_0="Mozilla/5.0 (X11; Linux i686 on x86_64; rv:21.0) Gecko/20100101 Firefox/21.0 Iceweasel/21.0"
+_USERAGENT_0='Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
 
 # newsbeuter <default configs>
 # wget

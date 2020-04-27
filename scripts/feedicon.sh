@@ -123,7 +123,7 @@ check_icon_size() {
     local url=$1
 
     if [ $USECURL = '1' ]; then
-        curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$url" -s --dump-header "$localSHdr" > /dev/null 2>&1
+        curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$url" -s --dump-header "$localSHdr" > /dev/null 2>&1
         lentxt='^Content-Length'
     else
         wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" -S --spider "$url" -a "$localSHdr"
@@ -145,7 +145,7 @@ fetch_feedicon() {
     echo -e ${cYELLOW}"msg: fetching icon ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
         if [ $USECURL = '1' ]; then
-          curl $CURLOPTS_1 --user-agent "'$_USERAGENT_0'" "$_fi" -o "$localIco" -v --stderr - >> $logfile
+          curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$_fi" -o "$localIco" -v --stderr - >> $logfile
         else
           wget $WGETOPTS_1 --user-agent="'$_USERAGENT_0'" "$_fi" -O "$localIco" -a $logfile
         fi
