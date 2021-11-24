@@ -15,6 +15,9 @@ tmp/
 *.o
 temp/
 config/urls.db
+config/url.local
+config/dbname
+config/feedsurl
 feeds/
 run/
 var/
