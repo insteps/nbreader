@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <script src="lib/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link href="theme/default/css/default.css" rel="stylesheet">
+    <link href="nbreader/theme/default/css/default.css" rel="stylesheet">
   <style type="text/css">
 
 
@@ -105,8 +105,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <script type="text/javascript">/*<![CDATA[*/
     var NbReader_Config = <?php echo $jsconf."\n"; ?>
     /*]]>*/</script>
-    <script type="text/javascript" src="lib/newsbeuter/js/newsbeuter.api.js"></script>
-    <script type="text/javascript" src="lib/newsbeuter/js/nbreader.bootstrap.js"></script>
+    <script type="text/javascript" src="nbreader/default/js/newsbeuter.api.js"></script>
+    <script type="text/javascript" src="nbreader/default/js/nbreader.bootstrap.js"></script>
 
 <script type="text/javascript">
 /*<![CDATA[*/

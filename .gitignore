@@ -19,5 +19,7 @@ config/url.local
 config/dbname
 config/feedsurl
 feeds/
+public/lib
 run/
 var/
+!public/lib/.lib

@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -33,6 +33,7 @@ if [ ! -d "$RUNDIR" ]; then
     mkdir -p $RUNDIR/update;
     touch $RUNDIR/.run;
 fi;
+if [ ! -d "$WEBAPPDIR/lib" ]; then mkdir -p $WEBAPPDIR/lib; touch "$WEBAPPDIR/lib/.lib"; fi;
 if [ ! -d "$DBDIR" ]; then mkdir -p $DBDIR; fi;
 if [ ! -d "$DATADIR" ]; then mkdir -p $DATADIR; fi;
 if [ ! -d "$URLDIR" ]; then mkdir -p $URLDIR; fi;
