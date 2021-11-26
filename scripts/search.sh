@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -96,6 +96,19 @@ searchall() {
        $unread
        ORDER BY pubDate DESC $limit $offset;
     ";
+}
+
+# add color to search output
+searchallc() {
+    local tmpf='/tmp/nbreader.search.txt'
+    searchall > $tmpf
+    echo -e $cYELLOW
+    cat $tmpf | while read l; do
+        l2=$(echo $l | sed -E "s#(\|http.*$)#\\${cGREEN}\1\\${cNORMAL}#" \
+                     | sed -E "s#^(.*\|[12]\|)#\\${cRED}\1\\${cNORMAL}#");
+        echo -e $l2
+    done
+    echo ""
 }
 
 searchall

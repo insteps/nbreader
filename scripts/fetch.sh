@@ -144,7 +144,7 @@ fetch_url() {
 _fetch_querylist() {
     local s=$1; local epoch=$2;
     if [ ! "$s" ]; then
-        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        printf "${cRED}Nothing done ! (no record found)${cNORMAL}\n";
         return;
     fi
 

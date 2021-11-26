@@ -203,7 +203,7 @@ update_feedicon() {
     local iconfile="$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
 
     if [ -f "$iconfile" ]; then
-        printf "${cGREEN}Nothing to do !! icon already downloaded${cNORMAL} -> $URLSUM\n";
+        printf "${cGREEN}Nothing done ! icon already downloaded${cNORMAL} -> $URLSUM\n";
         return;
     fi
 
@@ -211,13 +211,13 @@ update_feedicon() {
     query="SELECT dbname FROM rss_url WHERE sha1sum='$URLSUM';";
     local dbname=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     if [ ! $dbname ]; then
-        printf "${cRED}Nothing to do !! (no record found)${cNORMAL}\n";
+        printf "${cRED}Nothing done !! (no record found)${cNORMAL}\n";
         return;
     fi
     get_siteurl_from_db $dbname $URLSUM
 
     if [ ! $rssurl ]; then 
-        printf "${cRED}Nothing to do !! (no rss file)${cNORMAL}\n";
+        printf "${cRED}Nothing done !! (no rss file)${cNORMAL}\n";
         return;
     fi
     get_feedicon $rssurl
