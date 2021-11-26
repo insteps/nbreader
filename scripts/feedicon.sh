@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -90,7 +90,7 @@ get_site_base() {
     clean_temp_icon
     local BURL=$1
     echo -e ${cYELLOW}'msg: fetching base site -> '${cNORMAL}${BURL} '...';
-    local logfile="$VARDIR/log/$DATESTAMP.log"
+    local logfile="$LOGDIR/$MONTHLY-$DAY.log"
 
     if [ $USECURL = '1' ]; then
       curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
@@ -141,7 +141,7 @@ check_icon_size() {
 
 fetch_feedicon() {
     clean_temp_icon; local _fi=$1
-    local logfile="$VARDIR/log/$DATESTAMP.log"
+    local logfile="$LOGDIR/$MONTHLY-$DAY.log"
     echo -e ${cYELLOW}"msg: fetching icon ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
         if [ $USECURL = '1' ]; then

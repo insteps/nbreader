@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -44,6 +44,7 @@ URLDIR="$CONFIGDIR/url"
 URLLOCALDIR="$CONFIGDIR/url.local"
 #URLDIR="$CONFIGDIR/test"
 VARDIR="$APPDIR/var/newsbeuter"
+LOGDIR="$APPDIR/var/log/newsbeuter"
 RUNDIR="$APPDIR/var/run/newsbeuter"
 FEEDSDIR="$VARDIR/feeds/feeds"
 DBDIR="$VARDIR/db"

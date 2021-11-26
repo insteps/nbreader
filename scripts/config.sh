@@ -39,6 +39,7 @@ if [ ! -d "$DATADIR" ]; then mkdir -p $DATADIR; fi;
 if [ ! -d "$URLDIR" ]; then mkdir -p $URLDIR; fi;
 if [ ! -d "$URLLOCALDIR" ]; then mkdir -p $URLLOCALDIR; fi;
 if [ ! -d "$FEEDSDIR" ]; then mkdir -p $FEEDSDIR; touch "$FEEDSDIR/.feeds"; fi;
+if [ ! -d "$LOGDIR" ]; then mkdir -p $LOGDIR; fi;
 
 csvfile="$RUNDIR/urls.csv";
 urldb="$CONFIGDIR/urls.db"

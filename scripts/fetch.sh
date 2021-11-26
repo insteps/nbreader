@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -109,8 +109,8 @@ fetch_url() {
         mkdir -p "$a/$b"
         if [ -f "$localXml" ]; then rm -f "$localXml"; fi
     
-        mkdir -p $VARDIR/log
-        local logfile="$VARDIR/log/$DATESTAMP.log"
+        mkdir -p $LOGDIR
+        local logfile="$LOGDIR/$MONTHLY-$DAY.log"
 
         if [ $USECURL = '1' ]; then
             curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$URL" -o "$localXml" -v --stderr - >> "$logfile"
