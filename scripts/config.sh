@@ -87,7 +87,8 @@ create_url_csv() {
                 rm -f "$URLLOCALDIR/$filename";
             fi
             while read line; do
-                if [ "$line" != "" ]; then
+                local commentl="$(echo $line | grep -o '^#')";
+                if [ "$line" != "" -a "$commentl" != "#" ]; then
                     URLSUM=$(echo $line | awk '{print $1}' | sha1sum -t);
                     URLSUM=${URLSUM:0:40};
                     TAG=$(echo $line | awk '{print $2}');
@@ -135,8 +136,8 @@ config_init_icon_status() {
 }
 
 config() {
-    create_url_csv 
-    create_url_db 
+    create_url_csv
+    create_url_db
     create_empty_dbs
     config_init_icon_status
 }
