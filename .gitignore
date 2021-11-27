@@ -15,6 +15,7 @@ tmp/
 *.o
 temp/
 config/urls.db
+config/url
 config/url.local
 config/dbname
 config/feedsurl
