@@ -208,7 +208,7 @@ get_feedicon() {
 
 _make_datauri_file() {
     local _i="${localIco%%.ico}.ico.txt"
-    if [ $DATAURI != "" ]; then
+    if [ "$DATAURI" != "" ]; then
         echo $DATAURI > "$_i"
     else
         if [ ! -s "$localIco" ]; then return; fi
