@@ -1,12 +1,14 @@
 
 # NB Reader
 
-Rss reader *(web based)* for Newsbeuter.
+Rss reader *(web based)* for Newsbeuter/Newsboat.
 
 _NOTE: Beta-release_
 
 :Author:    vkrishn@insteps.net
+
 :Date:      2020-10-23
+
 :Version:   0.2.0-beta1
 
 #### Table of Contents
@@ -47,7 +49,7 @@ http://dev.insteps.net/rss/
 
 ## Requirements / Dependencies
 
-1. Newsbeuter (or Newsboat, make link for Newsbeuter)
+1. Newsbeuter (or Newsboat, with link for Newsbeuter)
 2. Sqlite3
 3. Curl(default) or Wget
 4. PHP 5.4+
@@ -55,8 +57,11 @@ http://dev.insteps.net/rss/
 6. CodeIgniter-3.x (PHP Framework)
 7. File (for icon download)
 8. Git/Fossil scm,  (optional),
+
    url: https://www.fossil-scm.org (optional),
-   easy way is download the precompiled single binary file.
+
+   easy way is to download the precompiled single binary file.
+
 9. Jq (optional)
 10. 
 

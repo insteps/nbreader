@@ -34,7 +34,7 @@ Note: the commands below may require sudo or root access.
 
 14. edit apps/web/config/newsbeuter.php and change
 
-   `$config['newsbeuter']['be']['path'] = '<WEBFOLDER>/nbreader';`
+    `$config['newsbeuter']['be']['path'] = '<WEBFOLDER>/nbreader';`
 
 15. `cd <WEBFOLDER>`
 16. `ln -s nbreader/public rss`
