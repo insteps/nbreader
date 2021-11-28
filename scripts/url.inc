@@ -17,7 +17,7 @@ parse_url () {
     user="$(echo $url | grep @ | cut -d@ -f1)"
 
     # extract the host
-    host=$(echo $url | sed -e s,$user@,,g | cut -d/ -f1)
+    host=$(echo $url | sed -e s,$user@,,g -e s,?.*$,, | cut -d/ -f1)
 
     # extract the path (if any)
     path="$(echo $url | grep / | cut -d/ -f2-)"

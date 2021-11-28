@@ -46,13 +46,16 @@ get_siteurl_from_db() {
     local hash=$2
     db="$DBDIR/${db}.loc.db"
     if [ ! -f "$db" ]; then return; fi;
+    # value eg. url = <link>....</link> is from fetched feed/rss,
+    # which may not be the actual/original RSS url itself
     local query="SELECT url FROM rss_feed WHERE rssurl LIKE '%$hash%' LIMIT 1;"
     rssurl=$(echo "$query" | sqlite3 "$db")
 
-    parse_url $FEEDSURL; local lhost=$host
+    parse_url $FEEDSURL; local lhost=$host #get localhost url
     parse_url $rssurl
     if [ "$host" = "$lhost" ]; then
         rssurl='';
+        # get the actual/original RSS url # maybe use this always ?
         query="SELECT rssurl FROM rss_url WHERE sha1sum='$URLSUM';";
         rssurl=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     fi
@@ -77,7 +80,8 @@ parse_feed_icon_url() {
             -e 's/\"//g' \
             -e "s/'//g" \
             -e "s/\=//" \
-            -e "s/>.*$//g"
+            -e "s/>.*$//g" \
+            -e "s,/*$,,"
         )
     ICONURL=$( echo "$ICONURL" | awk '{print $1}' )
     local no_proto=$(echo $ICONURL | grep -i '^\/\/')
@@ -89,8 +93,8 @@ parse_feed_icon_url() {
 get_site_base() {
     clean_temp_icon
     local BURL=$1
-    echo -e ${cYELLOW}'msg: fetching base site -> '${cNORMAL}${BURL} '...';
     local logfile="$LOGDIR/$MONTHLY-$DAY.log"
+    echo -e ${cYELLOW}'msg: fetching base site -> '${cNORMAL}${BURL} '...';
 
     if [ $USECURL = '1' ]; then
       curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
@@ -169,7 +173,7 @@ get_feedicon() {
         echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL};
         return;
     fi
-    echo -e ${cRED}'msg: favicon.ico not available'${cNORMAL};
+    echo -e ${cRED}'msg: favicon.ico not available, retrying ...'${cNORMAL};
 
     get_site_base "$BURL"
     parse_feed_icon_url
@@ -180,16 +184,17 @@ get_feedicon() {
     fi
 
     is_furl=$(echo $ICONURL | grep -i '^http')
-    if [ "$is_furl" ]; then
-        fetch_feedicon $ICONURL
-    else
-        fetch_feedicon "$BURL/$ICONURL"
-    fi
-
-    if is_file_ico $localIco; then
-        echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
-        return;
-    fi
+    for u in $ICONURL; do # handle sites with multiple favicons
+        if [ "$is_furl" ]; then
+            fetch_feedicon $u
+        else
+            fetch_feedicon "$BURL/$u"
+        fi
+        if is_file_ico $localIco; then
+            echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
+            return;
+        fi
+    done
     clean_temp_icon
     echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
 
@@ -211,13 +216,13 @@ update_feedicon() {
     query="SELECT dbname FROM rss_url WHERE sha1sum='$URLSUM';";
     local dbname=$(echo "$query" | sqlite3 "$CONFIGDIR/urls.db");
     if [ ! $dbname ]; then
-        printf "${cRED}Nothing done !! (no record found)${cNORMAL}\n";
+        printf "${cRED}Nothing done ! (no record found)${cNORMAL}\n";
         return;
     fi
     get_siteurl_from_db $dbname $URLSUM
 
     if [ ! $rssurl ]; then 
-        printf "${cRED}Nothing done !! (no rss file)${cNORMAL}\n";
+        printf "${cRED}Nothing done ! (no rss file)${cNORMAL}\n";
         return;
     fi
     get_feedicon $rssurl
@@ -308,5 +313,4 @@ fi
 
 ## examples
 # update_feedicon '9a4a872c5eb377df7aa2c5feea4d02c6022264db'
-
 
