@@ -183,12 +183,18 @@ get_feedicon() {
         return;
     fi
 
-    is_furl=$(echo $ICONURL | grep -i '^http')
+    is_furl=$(echo $ICONURL | grep -i '^http'); DATAURI='';
     for u in $ICONURL; do # handle sites with multiple favicons
         if [ "$is_furl" ]; then
             fetch_feedicon $u
         else
-            fetch_feedicon "$BURL/$u"
+            if is_datauri $u; then #is a datauri
+                DATAURI=$u;
+                echo -e ${cGREEN}'msg: shortcut datauri-icon download success'${cNORMAL};
+                return;
+            else
+                fetch_feedicon "$BURL/$u"
+            fi
         fi
         if is_file_ico $localIco; then
             echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
@@ -198,6 +204,21 @@ get_feedicon() {
     clean_temp_icon
     echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
 
+}
+
+_make_datauri_file() {
+    local _i="${localIco%%.ico}.ico.txt"
+    if [ $DATAURI != "" ]; then
+        echo $DATAURI > "$_i"
+    else
+        if [ ! -s "$localIco" ]; then return; fi
+        echo 'image/'${iconType}';base64,' > "$_i"
+        base64 "$localIco" >> "$_i"
+    fi
+
+    chmod 0644 "$_i"
+    mv -f "$_i" "$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
+    echo -e ${cGREEN}'feedicon::update-feedicon -> creating datauri file done'${cNORMAL};
 }
 
 update_feedicon() {
@@ -227,12 +248,7 @@ update_feedicon() {
     fi
     get_feedicon $rssurl
 
-    if [ ! -s "$localIco" ]; then return; fi
-    local _i="${localIco%%.ico}.ico.txt"
-    echo 'image/'${iconType}';base64,' > "$_i"
-    base64 "$localIco" >> "$_i"
-    chmod 0644 "$_i"
-    mv -f "$_i" "$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
+    _make_datauri_file
 
     update_icon_status "$URLSUM" '1' "$dbname"
     echo -e ${cGREEN}'feedicon::update-feedicon -> icon update done'${cNORMAL};

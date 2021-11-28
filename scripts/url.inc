@@ -23,3 +23,15 @@ parse_url () {
     path="$(echo $url | grep / | cut -d/ -f2-)"
 }
 
+is_datauri () {
+    # http://en.wikipedia.org/wiki/Data_URI_scheme
+    # eg. href=data:image/gif;base64
+    #     src=data:image/png;base64
+
+    if [ ! -n "$1" ]; then return; fi
+    isHeader=0
+    # check header
+    local header=$(echo $1 | grep -o -E '(^data:image/)(x-icon|png|gif|jpeg)(\;base64)')
+    if [ $header != "" ]; then isHeader=1; fi
+}
+
