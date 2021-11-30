@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -67,7 +67,7 @@ if [ "$1" = 'update' ]; then
     _when=$2
     _type=$3
     case $_when in
-        daily|hourly|weekly|monthly)
+        15min|hourly|daily|weekly|monthly)
            source $SCRIPTDIR/update.cron.sh
            if [ "$_type" ]; then
               cron_update $_when $_type

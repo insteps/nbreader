@@ -1,6 +1,6 @@
 
-make opml file non-blob like
------------------------------
+Howto make opml file non-blob like
+-----------------------------------
 1. make it non-blob like
    `sed -i 's/</\n</g' feedlist-liferea.opml`
 

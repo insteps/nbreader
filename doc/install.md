@@ -1,4 +1,4 @@
- 
+
 
 ## A. 3rd Party frameworks/libs
 
@@ -6,7 +6,10 @@
 2. Download 3rd party libs/css used in application,
    extract libs content it in `public/lib/` accordingly.
 
-_For convenience the bundle can be found at `http://download.tuxfamily.org/pmreader/nb/lib.01-20200129.tar.gz`_
+_For convenience the requied lib bundles can be found at_
+
+* `http://download.tuxfamily.org/pmreader/nb/lib.01-20200129.tar.gz`
+* `http://download.tuxfamily.org/pmreader/nb/codeigniter-3.1.11.phar`
 
 ## B. Configs
 

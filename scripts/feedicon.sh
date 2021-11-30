@@ -194,7 +194,7 @@ get_feedicon() {
         if [ "$fs" = 0 ]; then fs=1; fi # run atleast once
         seq $fs | while read s; do
             echo "  $s --- $BURL"
-            get_site_base "${proto}/$BURL"
+            get_site_base "${proto}$BURL"
             parse_feed_icon_url
             BURL=$(dirname $BURL)
         done
