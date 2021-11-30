@@ -158,6 +158,7 @@ fetch_feedicon() {
 }
 
 clean_temp_icon() {
+    ICONURL=''
     if [ -f "$localIco" ]; then rm -f "$localIco"; fi
     if [ -f "$localSHdr" ]; then rm -f "$localSHdr"; fi
     if [ -f "$localHtml" ]; then rm -f "$localHtml"; fi
@@ -169,12 +170,12 @@ get_feedicon() {
     parse_url $1 # get url parts
     BURL=${proto}${host}
     if [ ! "$BURL" ]; then return; fi
-
+    ICONURL=''
     BURL=$(echo $url | sed -e "s,?.*$,," -e "s,/*$,,")
 
     # 1. Use RSS url dirname variants (direct guess and fetch)
     local u1=$BURL
-    local fs=$(echo $u1 | grep -o '/' | wc -l)
+    local fs=$(($(echo $u1 | grep -o '/' | wc -l) + 1))
     seq $fs | while read s; do
         echo "  $s --- $u1"
         fetch_feedicon "${proto}$u1/favicon.ico"
@@ -189,15 +190,15 @@ get_feedicon() {
 
     clean_temp_icon
     # 2. Try to extract from RSS url dirname variant pages
-    if [ "$fs" = 0 ]; then fs=1; fi # run atleast once
-    seq $fs | while read s; do
-        if [ ! "$ICONURL" ]; then
+    if [ ! "$ICONURL" ]; then
+        if [ "$fs" = 0 ]; then fs=1; fi # run atleast once
+        seq $fs | while read s; do
             echo "  $s --- $BURL"
             get_site_base "${proto}/$BURL"
             parse_feed_icon_url
             BURL=$(dirname $BURL)
-        fi
-    done
+        done
+    fi
 
     if [ -s "$localIcoUrl" ]; then ICONURL=$(cat $localIcoUrl); fi
     if [ ! "$ICONURL" ]; then
@@ -242,6 +243,7 @@ _make_datauri_file() {
     chmod 0644 "$_i"
     mv -f "$_i" "$ICONTXTDIR/$a/$b/$URLSUM.ico.txt"
     echo -e ${cGREEN}'feedicon::update-feedicon -> creating datauri file done'${cNORMAL};
+    clean_temp_icon
 }
 
 update_feedicon() {
