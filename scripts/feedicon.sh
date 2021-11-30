@@ -170,13 +170,15 @@ get_feedicon() {
     BURL=${proto}${host}
     if [ ! "$BURL" ]; then return; fi
 
+    BURL=$(echo $url | sed -e "s,?.*$,," -e "s,/*$,,")
+
     # 1. Use RSS url dirname variants (direct guess and fetch)
-    local u1=$(echo $url | sed -e "s,?.*$,,")
+    local u1=$BURL
     local fs=$(echo $u1 | grep -o '/' | wc -l)
     seq $fs | while read s; do
-        echo $s --- $u1
-        u1=$(dirname $u1)
+        echo "  $s --- $u1"
         fetch_feedicon "${proto}$u1/favicon.ico"
+        u1=$(dirname $u1)
     done
     if is_file_ico $localIco; then
         echo -e ${cYELLOW}'  msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL};
@@ -185,14 +187,14 @@ get_feedicon() {
         echo -e ${cRED}'  msg: favicon.ico not available, retrying ...'${cNORMAL};
     fi
 
+    clean_temp_icon
     # 2. Try to extract from RSS url dirname variant pages
-    BURL=$(echo $url | sed -e "s,?.*$,,")
     seq $fs | while read s; do
         if [ ! "$ICONURL" ]; then
-            echo $s --- $BURL
-            BURL=${proto}$(dirname $BURL)
+            echo "  $s --- $BURL"
             get_site_base "$BURL"
             parse_feed_icon_url
+            BURL=${proto}$(dirname $BURL)
         fi
     done
 
