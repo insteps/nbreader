@@ -189,16 +189,17 @@ get_feedicon() {
 
     clean_temp_icon
     # 2. Try to extract from RSS url dirname variant pages
+    if [ "$fs" = 0 ]; then fs=1; fi # run atleast once
     seq $fs | while read s; do
         if [ ! "$ICONURL" ]; then
             echo "  $s --- $BURL"
-            get_site_base "$BURL"
+            get_site_base "${proto}/$BURL"
             parse_feed_icon_url
-            BURL=${proto}$(dirname $BURL)
+            BURL=$(dirname $BURL)
         fi
     done
 
-    touch $localIcoUrl; ICONURL=$(cat $localIcoUrl)
+    if [ -s "$localIcoUrl" ]; then ICONURL=$(cat $localIcoUrl); fi
     if [ ! "$ICONURL" ]; then
         echo -e ${cRED}'  msg: shortcut icon not available'${cNORMAL};
         return;
