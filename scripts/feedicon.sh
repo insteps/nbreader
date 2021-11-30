@@ -177,12 +177,13 @@ get_feedicon() {
         echo $s --- $u1
         u1=$(dirname $u1)
         fetch_feedicon "${proto}$u1/favicon.ico"
-        if is_file_ico $localIco; then
-            echo -e ${cYELLOW}'  msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL}
-            return;
-        fi
     done
-    echo -e ${cRED}'  msg: favicon.ico not available, retrying ...'${cNORMAL};
+    if is_file_ico $localIco; then
+        echo -e ${cYELLOW}'  msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL};
+        return;
+    else
+        echo -e ${cRED}'  msg: favicon.ico not available, retrying ...'${cNORMAL};
+    fi
 
     # 2. Try to extract from RSS url dirname variant pages
     BURL=$(echo $url | sed -e "s,?.*$,,")
