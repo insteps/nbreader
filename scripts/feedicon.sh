@@ -36,6 +36,7 @@ fi
 # Temp files
 localSHdr="$ICONTXTDIR/.site.hdr.txt"
 localIco="$ICONTXTDIR/.site.ico"
+localIcoUrl="$ICONTXTDIR/.site.ico.url"
 localHtml="$ICONTXTDIR/.site.html"
 
 size_limit=102400; # 100Kb limit
@@ -80,12 +81,12 @@ parse_feed_icon_url() {
             -e 's/\"//g' \
             -e "s/'//g" \
             -e "s/\=//" \
-            -e "s/>.*$//g" \
-            -e "s,/*$,,"
+            -e "s/>.*$//g"
         )
     ICONURL=$( echo "$ICONURL" | awk '{print $1}' )
-    local no_proto=$(echo $ICONURL | grep -i '^\/\/')
+    local no_proto=$(echo $ICONURL | grep -i '^\/\/') # eg. //example.com/favicon.ico
     if [ "$no_proto" ]; then ICONURL='https:'${ICONURL}; fi # add protocol https
+    echo $ICONURL > $localIcoUrl
     # echo -e ${cYELLOW}'msg: base site icon url -> '${cNORMAL}${ICONURL} '...';
 }
 
@@ -138,7 +139,7 @@ check_icon_size() {
     if [ $size_limit -ge "$(($len))" -a 0 -lt "$(($len))" ]; then
         return 0;
     else
-        echo -e ${cRED}"msg: icon size too large or zero size";
+        echo -e ${cRED}"msg: icon size too large or zero size"${cNORMAL};
         return 1
     fi
 }
@@ -160,24 +161,41 @@ clean_temp_icon() {
     if [ -f "$localIco" ]; then rm -f "$localIco"; fi
     if [ -f "$localSHdr" ]; then rm -f "$localSHdr"; fi
     if [ -f "$localHtml" ]; then rm -f "$localHtml"; fi
+    if [ -s "$localIcoUrl" ]; then rm -f $localIcoUrl; fi
 }
 
+# get "$url/favicon.ico" # (ico|png|jpeg|...)
 get_feedicon() {
-    # get "$url/favicon.ico"
-    parse_url $1
+    parse_url $1 # get url parts
     BURL=${proto}${host}
     if [ ! "$BURL" ]; then return; fi
-    fetch_feedicon "$BURL/favicon.ico"
 
-    if is_file_ico $localIco; then
-        echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL};
-        return;
-    fi
+    # 1. Use RSS url dirname variants (direct guess and fetch)
+    local u1=$(echo $url | sed -e "s,?.*$,,")
+    local fs=$(echo $u1 | grep -o '/' | wc -l)
+    seq $fs | while read s; do
+        echo $s --- $u1
+        u1=$(dirname $u1)
+        fetch_feedicon "${proto}$u1/favicon.ico"
+        if is_file_ico $localIco; then
+            echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL}
+            return;
+        fi
+    done
     echo -e ${cRED}'msg: favicon.ico not available, retrying ...'${cNORMAL};
 
-    get_site_base "$BURL"
-    parse_feed_icon_url
+    # 2. Try to extract from RSS url dirname variant pages
+    BURL=$(echo $url | sed -e "s,?.*$,,")
+    seq $fs | while read s; do
+        if [ ! "$ICONURL" ]; then
+            echo $s --- $BURL
+            BURL=${proto}$(dirname $BURL)
+            get_site_base "$BURL"
+            parse_feed_icon_url
+        fi
+    done
 
+    touch $localIcoUrl; ICONURL=$(cat $localIcoUrl)
     if [ ! "$ICONURL" ]; then
         echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
         return;
@@ -185,16 +203,16 @@ get_feedicon() {
 
     is_furl=$(echo $ICONURL | grep -i '^http'); DATAURI='';
     for u in $ICONURL; do # handle sites with multiple favicons
+        if is_datauri $u; then #is a datauri
+            DATAURI=$u;
+            echo -e ${cGREEN}'msg: shortcut datauri-icon download success'${cNORMAL};
+            return;
+        fi
         if [ "$is_furl" ]; then
             fetch_feedicon $u
         else
-            if is_datauri $u; then #is a datauri
-                DATAURI=$u;
-                echo -e ${cGREEN}'msg: shortcut datauri-icon download success'${cNORMAL};
-                return;
-            else
-                fetch_feedicon "$BURL/$u"
-            fi
+            BURL=${proto}${host}
+            fetch_feedicon "$BURL/$u"
         fi
         if is_file_ico $localIco; then
             echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
@@ -249,6 +267,7 @@ update_feedicon() {
     get_feedicon $rssurl
 
     _make_datauri_file
+    if [ ! -s "$iconfile" ]; then return; fi
 
     update_icon_status "$URLSUM" '1' "$dbname"
     echo -e ${cGREEN}'feedicon::update-feedicon -> icon update done'${cNORMAL};
@@ -329,4 +348,5 @@ fi
 
 ## examples
 # update_feedicon '9a4a872c5eb377df7aa2c5feea4d02c6022264db'
+
 
