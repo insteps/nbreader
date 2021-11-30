@@ -64,7 +64,7 @@ get_siteurl_from_db() {
     parse_url $rssurl
     if [ "$host" = "$lhost" ]; then rssurl=''; fi
 
-    echo -e "$hash --> $rssurl";
+    echo -e ">>> $hash --> $rssurl";
 }
 
 # look for 'shortcut icon' in <link ... />
@@ -87,7 +87,7 @@ parse_feed_icon_url() {
     local no_proto=$(echo $ICONURL | grep -i '^\/\/') # eg. //example.com/favicon.ico
     if [ "$no_proto" ]; then ICONURL='https:'${ICONURL}; fi # add protocol https
     echo $ICONURL > $localIcoUrl
-    # echo -e ${cYELLOW}'msg: base site icon url -> '${cNORMAL}${ICONURL} '...';
+    # echo -e ${cYELLOW}'  msg: base site icon url -> '${cNORMAL}${ICONURL} '...';
 }
 
 # get baseurl site to look for 'shortcut icon' in <link ... />
@@ -95,7 +95,7 @@ get_site_base() {
     clean_temp_icon
     local BURL=$1
     local logfile="$LOGDIR/$MONTHLY-$DAY.log"
-    echo -e ${cYELLOW}'msg: fetching base site -> '${cNORMAL}${BURL} '...';
+    echo -e ${cYELLOW}'  msg: fetching base site -> '${cNORMAL}${BURL} '...';
 
     if [ $USECURL = '1' ]; then
       curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$BURL" -o "$localHtml" -v --stderr - >> $logfile
@@ -139,7 +139,7 @@ check_icon_size() {
     if [ $size_limit -ge "$(($len))" -a 0 -lt "$(($len))" ]; then
         return 0;
     else
-        echo -e ${cRED}"msg: icon size too large or zero size"${cNORMAL};
+        echo -e ${cRED}"  msg: icon size too large or zero size"${cNORMAL};
         return 1
     fi
 }
@@ -147,7 +147,7 @@ check_icon_size() {
 fetch_feedicon() {
     clean_temp_icon; local _fi=$1
     local logfile="$LOGDIR/$MONTHLY-$DAY.log"
-    echo -e ${cYELLOW}"msg: fetching icon ->${cNORMAL} $_fi ...";
+    echo -e ${cYELLOW}"  msg: fetching icon ->${cNORMAL} $_fi ...";
     if check_icon_size "$_fi"; then
         if [ $USECURL = '1' ]; then
           curl $CURLOPTS_1 --user-agent "$_USERAGENT_0" "$_fi" -o "$localIco" -v --stderr - >> $logfile
@@ -178,11 +178,11 @@ get_feedicon() {
         u1=$(dirname $u1)
         fetch_feedicon "${proto}$u1/favicon.ico"
         if is_file_ico $localIco; then
-            echo -e ${cYELLOW}'msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL}
+            echo -e ${cYELLOW}'  msg: favicon.ico is available - '${cGREEN}'download success'${cNORMAL}
             return;
         fi
     done
-    echo -e ${cRED}'msg: favicon.ico not available, retrying ...'${cNORMAL};
+    echo -e ${cRED}'  msg: favicon.ico not available, retrying ...'${cNORMAL};
 
     # 2. Try to extract from RSS url dirname variant pages
     BURL=$(echo $url | sed -e "s,?.*$,,")
@@ -197,7 +197,7 @@ get_feedicon() {
 
     touch $localIcoUrl; ICONURL=$(cat $localIcoUrl)
     if [ ! "$ICONURL" ]; then
-        echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
+        echo -e ${cRED}'  msg: shortcut icon not available'${cNORMAL};
         return;
     fi
 
@@ -205,9 +205,10 @@ get_feedicon() {
     for u in $ICONURL; do # handle sites with multiple favicons
         if is_datauri $u; then #is a datauri
             DATAURI=$u;
-            echo -e ${cGREEN}'msg: shortcut datauri-icon download success'${cNORMAL};
+            echo -e ${cGREEN}'  msg: shortcut datauri-icon download success'${cNORMAL};
             return;
         fi
+        u=$(echo $u | sed -e "s,/*$,,")
         if [ "$is_furl" ]; then
             fetch_feedicon $u
         else
@@ -215,12 +216,12 @@ get_feedicon() {
             fetch_feedicon "$BURL/$u"
         fi
         if is_file_ico $localIco; then
-            echo -e ${cGREEN}'msg: shortcut icon download success'${cNORMAL};
+            echo -e ${cGREEN}'  msg: shortcut icon download success'${cNORMAL};
             return;
         fi
     done
     clean_temp_icon
-    echo -e ${cRED}'msg: shortcut icon not available'${cNORMAL};
+    echo -e ${cRED}'  msg: shortcut icon not available'${cNORMAL};
 
 }
 
