@@ -17,7 +17,7 @@
 # *******************************************************************
 # 
 # Code to fetch and store newsbeuter's feeds/rss/xml icon, based on:
-#   urls (rss/atom)
+#   urls (in rss/atom)
 # 
 # 
 
@@ -86,7 +86,7 @@ parse_feed_icon_url() {
     ICONURL=$( echo "$ICONURL" | awk '{print $1}' )
     local no_proto=$(echo $ICONURL | grep -i '^\/\/') # eg. //example.com/favicon.ico
     if [ "$no_proto" ]; then ICONURL='https:'${ICONURL}; fi # add protocol https
-    echo $ICONURL > $localIcoUrl
+    if [ "$ICONURL" ]; then echo $ICONURL > $localIcoUrl; fi
     # echo -e ${cYELLOW}'  msg: base site icon url -> '${cNORMAL}${ICONURL} '...';
 }
 
@@ -188,14 +188,15 @@ get_feedicon() {
         echo -e ${cRED}'  msg: favicon.ico not available, retrying ...'${cNORMAL};
     fi
 
-    clean_temp_icon
     # 2. Try to extract from RSS url dirname variant pages
     if [ ! "$ICONURL" ]; then
         if [ "$fs" = 0 ]; then fs=1; fi # run atleast once
         seq $fs | while read s; do
+            clean_temp_icon
             echo "  $s --- $BURL"
             get_site_base "${proto}$BURL"
             parse_feed_icon_url
+            if [ -s "$localIcoUrl" ]; then return; fi
             BURL=$(dirname $BURL)
         done
     fi
