@@ -58,7 +58,7 @@ for db in $dbs; do
 
 done;
 
-content=''; limit=''; offset=''; unread='';
+content=''; limit=''; limitn=''; offset=''; unread='';
 
 if [ "$1" ]; then
     content="$1"
@@ -66,8 +66,10 @@ fi
 
 if [ "$2" ]; then
     limit="limit $2"
+    limitn="-n $(($2+2))"
 else
     limit="limit 10"
+    limitn="-n $((10+2))"
 fi
 
 if [ "$3" ]; then
@@ -98,12 +100,29 @@ searchall() {
     ";
 }
 
+searchall2() {
+    hdr='date|id|unread|title|url'
+    str2='rss_item'
+    sql="SELECT datetime(pubDate,'unixepoch') AS date,
+       id,unread,title,url FROM ($str2)
+       WHERE ( content LIKE '%$content%' OR title LIKE '%$content%' )
+       $unread
+       ORDER BY pubDate DESC $limit $offset;
+    ";
+
+    echo $hdr
+    ls -1 ${DBDIR}/*.loc.db > /tmp/dbs.lst
+    cat /tmp/dbs.lst | while read f; do sqlite3 "$f" "$sql"; done # why different results ?
+    # cat /tmp/dbs.lst | parallel -i -j 2 sqlite3 {} "\"$sql\""
+}
+
 # add color to search output
 searchallc() {
     local tmpf='/tmp/nbreader.search.txt'
-    searchall > $tmpf
+    rm -f $tmpf
+    searchall >> $tmpf
     echo -e $cYELLOW
-    cat $tmpf | while read l; do
+    sort -r $tmpf | head "$limitn" | while read l; do
         l2=$(echo $l | sed -E "s#(\|http.*$)#\\${cGREEN}\1\\${cNORMAL}#" \
                      | sed -E "s#^(.*\|[12]\|)#\\${cRED}\1\\${cNORMAL}#");
         echo -e $l2
