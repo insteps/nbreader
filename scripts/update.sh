@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -43,7 +43,7 @@ urldb="$CONFIGDIR/urls.db"
 feedsurl=$(cat "$CONFIGDIR/feedsurl"| grep -m 1 '^.*')
 #echo $feedsurl
 echo ''
-echo -e "${cbBROWN}EPOCH -> $EPOCH${cNORMAL}";
+echo -e "${cBROWN}${cbLGRAY}EPOCH -> $EPOCH${cNORMAL}";
 isEpoch=0
 
 #eg. 1436186217

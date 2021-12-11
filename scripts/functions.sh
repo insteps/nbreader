@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015-2020 V.Krishn
+# Copyright (c) 2015-2021 V.Krishn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -37,9 +37,9 @@ die() {
 #
 sanity_check()
 {
-    which wget > /dev/null 2>&1 || die "This script need wget in the PATH to function"
-    which tar > /dev/null 2>&1 || die "This script need tar in the PATH to function"
-    which bzip2 > /dev/null 2>&1 || die "This script need bzips in the PATH to function"
+    which wget > /dev/null 2>&1 || die "Application needs wget in the PATH to function"
+    which tar > /dev/null 2>&1 || die "Application needs tar in the PATH to function"
+    which bzip2 > /dev/null 2>&1 || die "Application needs bzips in the PATH to function"
 }
 
 
