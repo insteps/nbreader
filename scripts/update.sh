@@ -259,6 +259,13 @@ update_by_taglist() {
     echo '--'
 }
 
+update_by_hashlist() {
+    if [ -s "$missedlst" ]; then
+        printf "${cBWHITE}update::missed-hash-list ->${cNORMAL} $f\n"
+        cat $missedlst | while read line; do update_by_hash 'hash' $line; done
+    fi
+}
+
 update() {
     echo '--'
 }

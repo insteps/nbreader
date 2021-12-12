@@ -132,6 +132,7 @@ fetch_url() {
                 echo -e ${cRED}'msg: not a xml/rss document'${cNORMAL};
             fi
         else
+            echo $URLSUM >> $missedlst
             echo -e ${cRED}'msg: url unreachable'${cNORMAL};
         fi
     else

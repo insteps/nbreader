@@ -39,11 +39,11 @@ if [ "$1" = 'newsbeuter' ]; then
         echo ''
     fi
     echo '---------------------------------'
-    db=$2;
+    db=$2
     if [ "$db" = '' ]; then
         echo "Defaulting to news db"
         echo '---------------------------------'
-        db='news';
+        db='news'
     fi
     if [ -f "$DBDIR/$db.loc.db" ]; then
         ## examples/execs
@@ -55,13 +55,18 @@ fi
 #usage: sh run.sh update tag|folder|url|hash <relevant data>
 if [ "$1" = 'update' ]; then
     source $SCRIPTDIR/update.sh
-    rm -f $COOKIEFILE;
+    rm -f $COOKIEFILE
+    missedlst='/tmp/nbreader.missed.lst'
 
     case $2 in
         tag) update_by_tag $2 $3;;
         folder) update_by_tag $2 $3;;
         url) update_by_url $2 $3;;
         hash) update_by_hash $2 $3;;
+        missed)
+            update_by_hashlist $@
+            rm -f $missedlst
+        ;;
     esac
 
     _when=$2
