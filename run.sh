@@ -81,6 +81,11 @@ if [ "$1" = 'update' ]; then
            fi
         ;;
     esac
+
+    if [ -s "${missedlst}.tmp" ]; then
+        cat ${missedlst}.tmp > ${missedlst}
+        rm -f ${missedlst}.tmp
+    fi
 fi
 
 if [ "$1" = 'refresh' ]; then

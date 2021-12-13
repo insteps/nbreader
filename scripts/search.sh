@@ -69,7 +69,7 @@ if [ "$2" ]; then
     limitn="-n $(($2+2))"
 else
     limit="limit 10"
-    limitn="-n $((10+2))"
+    limitn="-n 12"
 fi
 
 if [ "$3" ]; then
