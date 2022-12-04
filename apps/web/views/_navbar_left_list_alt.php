@@ -46,5 +46,5 @@ $spacing=''; //use css
 <?php echo $divlast;?>
 <?php endforeach;?>
 <?php //echo $ncatcount;?>
-</div><span id="data-total" data-total=<?php echo $t;?>></span>
+</div><span id="data-total" data-total=<?php echo @$t;?>></span>
 

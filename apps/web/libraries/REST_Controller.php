@@ -217,7 +217,7 @@ abstract class REST_Controller extends CI_Controller {
         parent::__construct();
 
         // Disable XML Entity (security vulnerability)
-        libxml_disable_entity_loader(TRUE);
+        @libxml_disable_entity_loader(TRUE);
 
         // Check to see if PHP is equal to or greater than 5.4.x
         if (is_php('5.4') === FALSE)
@@ -530,7 +530,7 @@ abstract class REST_Controller extends CI_Controller {
                 if (extension_loaded('zlib'))
                 {
                     $http_encoding = $this->input->server('HTTP_ACCEPT_ENCODING');
-                    if ($http_encoding !== NULL && strpos($http_encoding, 'gzip') !== FALSE)
+                    if ($http_encoding !== NULL && @strpos($http_encoding, 'gzip') !== FALSE)
                     {
                         ob_start('ob_gzhandler');
                     }
@@ -620,7 +620,7 @@ abstract class REST_Controller extends CI_Controller {
 
                 // If a semi-colon exists in the string, then explode by ; and get the value of where
                 // the current array pointer resides. This will generally be the first element of the array
-                $contentType = (strpos($contentType, ';') !== FALSE ? current(explode(';', $contentType)) : $contentType);
+                $contentType = (@strpos($contentType, ';') !== FALSE ? current(explode(';', $contentType)) : $contentType);
 
                 // If both the mime types match, then return the format
                 if ($contentType === $value)
@@ -678,7 +678,7 @@ abstract class REST_Controller extends CI_Controller {
             foreach (array_keys($this->_supported_formats) as $format)
             {
                 // Has this format been requested?
-                if (strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE)
+                if (@strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE)
                 {
                     // If not HTML or XML assume its right and send it on its way
                     if ($format !== 'html' && $format !== 'xml')
@@ -690,13 +690,13 @@ abstract class REST_Controller extends CI_Controller {
                     else
                     {
                         // If it is truly HTML, it wont want any XML
-                        if ($format == 'html' && strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
+                        if ($format == 'html' && @strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
                         {
                             return $format;
                         }
 
                         // If it is truly XML, it wont want any HTML
-                        elseif ($format == 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
+                        elseif ($format == 'xml' && @strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
                         {
                             return $format;
                         }
@@ -834,7 +834,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // They might have sent a few, make it an array
-        if (strpos($lang, ',') !== FALSE)
+        if (@strpos($lang, ',') !== FALSE)
         {
             $langs = explode(',', $lang);
 
@@ -905,7 +905,7 @@ abstract class REST_Controller extends CI_Controller {
         $limit = $this->methods[$controller_method]['limit'];
 
         $uri_noext = $this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0) 
+        if (@strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0)
         { 
             $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
         }
@@ -1644,7 +1644,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             // If the authentication header is set as basic, then extract the username and password from
             // HTTP_AUTHORIZATION e.g. my_username:my_password. This is passed in the .htaccess file
-            if (strpos(strtolower($http_auth), 'basic') === 0)
+            if (@strpos(strtolower($http_auth), 'basic') === 0)
             {
                 // Search online for HTTP_AUTHORIZATION workaround to explain what this is doing
                 list($username, $password) = explode(':', base64_decode(substr($this->input->server('HTTP_AUTHORIZATION'), 6)));
