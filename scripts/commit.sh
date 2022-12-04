@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-# Copyright (c) 2015-2021 V.Krishn
+# Copyright (c) 2015-2022 V.Krishn
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also

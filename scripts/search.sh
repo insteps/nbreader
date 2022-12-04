@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2015-2021 V.Krishn
+# Copyright (c) 2015-2022 V.Krishn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the Simplified BSD License (also
@@ -110,10 +110,11 @@ searchall2() {
        ORDER BY pubDate DESC $limit $offset;
     ";
 
+    local dbslist=/tmp/nbreader.search.dbs.lst
     echo $hdr
-    ls -1 ${DBDIR}/*.loc.db > /tmp/dbs.lst
-    cat /tmp/dbs.lst | while read f; do sqlite3 "$f" "$sql"; done # why different results ?
-    # cat /tmp/dbs.lst | parallel -i -j 2 sqlite3 {} "\"$sql\""
+    ls -1 ${DBDIR}/*.loc.db > ${dbslist}
+    cat ${dbslist} | while read f; do sqlite3 "$f" "$sql"; done # why different results ?
+    # cat ${dbslist} | parallel -i -j 2 sqlite3 {} "\"$sql\""
 }
 
 # add color to search output
