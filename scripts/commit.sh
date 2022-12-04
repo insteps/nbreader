@@ -40,6 +40,7 @@ commit_feeddir() {
 
     cd $FEEDSDIR
     printf "${cBBLUE}Committing -> ${act}:${cNORMAL} $RUNDIR/fetch/$epoch\n"
+    if [ x"$act" = 'xfetchicon' ]; then echo -e ${cBROWN}'  ----'${cNORMAL}; fi
     # --- fossil ---
     # fossil addremove --dotfiles && fossil status
     # fossil --user knoppix commit --no-warnings -m "$commitmsg"
