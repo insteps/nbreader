@@ -69,7 +69,9 @@ is_xml() {
     if [ ! -f "$1" ]; then return 1; fi
     # dependencies=file, need another option if possible
 
-    if [ -n "$(grep '^<rss version' $1)" ]; then return 0; fi
+    isAtom=$(grep '^<feed xmlns' $1 | grep -i 'atom')
+    isRss=$(grep '^<rss version' $1)
+    if [ -n "$isRss" -o -n "$isAtom" ]; then return 0; fi
 
     # get mime/encoding
     local mime=$(file --mime-type --mime-encoding $1)
