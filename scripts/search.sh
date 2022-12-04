@@ -124,7 +124,7 @@ searchallc() {
     echo -e $cYELLOW
     sort -r $tmpf | head "$limitn" | while read l; do
         l2=$(echo $l | sed -E "s#(\|http.*$)#\\${cGREEN}\1\\${cNORMAL}#" \
-                     | sed -E "s#^(.*\|[12]\|)#\\${cRED}\1\\${cNORMAL}#");
+                     | sed -E "s#^(.*\|[01]\|)#\\${cRED}\1\\${cNORMAL}#");
         echo -e $l2
     done
     echo ""
