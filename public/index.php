@@ -100,7 +100,7 @@ switch (ENVIRONMENT)
  */
 	# $system_path = 'system'; // basic installation method
 	# $system_path = 'phar:///tmp/codeigniter-3.0.0.phar'; // eg. with absolute path
-	$system_path = 'phar://lib/codeigniter/codeigniter-3.1.11.phar';
+	$system_path = 'phar://lib/codeigniter/codeigniter-3.1.13.phar';
 
 
 /*
